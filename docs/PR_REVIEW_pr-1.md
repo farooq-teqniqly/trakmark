@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `11c2ffd` on branch `starter`
+**Reviewed commit:** `c852e5b` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -16,6 +16,10 @@
 - 2026-05-27 `63f3f62` — fix #6: add missing `$` interpolation in ConfirmEmailChange error message
 - 2026-05-27 `5755e6d` — fix #7: URL-encode email in passkey request query string
 - 2026-05-27 `11c2ffd` — fix #8: move `$conn.Open()` inside `try` in Clear-IdentityUsers verify section
+- 2026-05-27 `0bf3c06` — fix #9: add `DOTNET_ENVIRONMENT=Development` to launchSettings.json
+- 2026-05-27 `2a7d9dd` — fix #12: remove duplicate favicon `<link>` from App.razor
+- 2026-05-27 `75975a5` — fix #14: add `PrivateAssets="all"` to EF Core Tools package reference
+- 2026-05-27 `c852e5b` — fix #17: remove stale scaffold nav links (counter, weather)
 
 ---
 
@@ -31,15 +35,15 @@
 | 6 | ~~**Medium**~~ | ~~BUG~~ | ~~String interpolation missing in error message — renders literal `{userId}`~~ | ~~`Trakmark/Components/Account/Pages/ConfirmEmailChange.razor:45`~~ | Copilot, Claude | **✅ Resolved in `63f3f62`** |
 | 7 | ~~**Medium**~~ | ~~SECURITY~~ | ~~Email address not URL-encoded before injecting into passkey query string~~ | ~~`Trakmark/Components/Account/Shared/PasskeySubmit.razor.js:36`~~ | Copilot, Claude | **✅ Resolved in `5755e6d`** |
 | 8 | ~~**Medium**~~ | ~~BUG~~ | ~~`$conn.Open()` outside `try` block in verify section — connection failures bypass error handler~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:139`~~ | Copilot, Claude | **✅ Resolved in `11c2ffd`** |
-| 9 | **Medium** | CONVENTION | `DOTNET_ENVIRONMENT=Development` missing from `launchSettings.json` (only `ASPNETCORE_ENVIRONMENT` set) | `Trakmark/Properties/launchSettings.json:10,21` | Copilot, Qodo, Claude |
+| 9 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`DOTNET_ENVIRONMENT=Development` missing from `launchSettings.json` (only `ASPNETCORE_ENVIRONMENT` set)~~ | ~~`Trakmark/Properties/launchSettings.json:10,21`~~ | Copilot, Qodo, Claude | **✅ Resolved in `0bf3c06`** |
 | 10 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` states database is SQLite; actual implementation uses SQL Server~~ | ~~`Trakmark/AGENTS.md:9`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
 | 11 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` theme list omits `yellow`; `App.razor` sets `data-cf-theme="yellow"`~~ | ~~`Trakmark/AGENTS.md:69`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
-| 12 | **Medium** | BUG | Duplicate `<link rel="icon">` tag renders favicon twice | `Trakmark/Components/App.razor:25,33` | Copilot, Claude |
+| 12 | ~~**Medium**~~ | ~~BUG~~ | ~~Duplicate `<link rel="icon">` tag renders favicon twice~~ | ~~`Trakmark/Components/App.razor:25,33`~~ | Copilot, Claude | **✅ Resolved in `2a7d9dd`** |
 | 13 | **Medium** | BUG | CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule | `Trakmark/Components/Layout/ReconnectModal.razor.css:34-39` | Copilot, Claude |
-| 14 | **Medium** | CONVENTION | `Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output | `Trakmark/Trakmark.csproj:19` | Copilot, Claude |
+| 14 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output~~ | ~~`Trakmark/Trakmark.csproj:19`~~ | Copilot, Claude | **✅ Resolved in `75975a5`** |
 | 15 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`downloadLogger.LogInformation(...)` direct call at endpoint registration site~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174`~~ | Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 16 | **Medium** | SCRIPT | `Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule) | `Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12` | Copilot, Claude |
-| 17 | **Low** | BLAZOR | `NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages | `Trakmark/Components/Layout/NavMenu.razor:22-28` | Claude |
+| 17 | ~~**Low**~~ | ~~BLAZOR~~ | ~~`NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages~~ | ~~`Trakmark/Components/Layout/NavMenu.razor:22-28`~~ | Claude | **✅ Resolved in `c852e5b`** |
 | 18 | **Low** | BLAZOR | No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout | `Trakmark/Components/Layout/MainLayout.razor:6` | Claude |
 | 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude |
 | 20 | **Info** | CONVENTION | XML `<summary>` docs absent on the `InputModel` nested classes inside several Manage pages | Multiple `*.razor` `@code` blocks | Claude |
