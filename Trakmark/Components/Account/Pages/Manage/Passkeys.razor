@@ -21,7 +21,7 @@
         <tbody>
             @foreach (var passkey in currentPasskeys)
             {
-                <tr>
+                <tr @key="passkey.CredentialId">
                     <td>@(passkey.Name ?? "Unnamed passkey")</td>
                     <td>
                         @{
