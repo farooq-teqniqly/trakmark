@@ -13,6 +13,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
 - Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.
 - No defensive null-checks on DI-injected dependencies — trust the container.
+- Remove any DI-injected dependency that is not used in the file it is injected into.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
 - No comments that restate what the code already says.
 
