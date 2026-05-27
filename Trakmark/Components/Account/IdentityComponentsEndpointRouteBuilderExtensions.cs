@@ -62,11 +62,14 @@ internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
             async (
                 ClaimsPrincipal user,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
-                [FromForm] string returnUrl
+                [FromForm] string? returnUrl
             ) =>
             {
                 await signInManager.SignOutAsync();
-                return TypedResults.LocalRedirect($"~/{returnUrl}");
+                var safe = string.IsNullOrWhiteSpace(returnUrl)
+                    ? "~/"
+                    : $"~/{returnUrl.TrimStart('/', '~')}";
+                return TypedResults.LocalRedirect(safe);
             }
         );
 
