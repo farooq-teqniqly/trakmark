@@ -364,7 +364,7 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 ### Performance
 - [x] `MapStaticAssets()` used for asset fingerprinting
 - [x] No blocking calls in async paths
-- [ ] No `@key` on passkey list in `Passkeys.razor` (#)
+- [x] ~~No `@key` on passkey list in `Passkeys.razor`~~ ✅ `41f54a3`
 
 ### Code Quality
 - [x] ~~16 direct `Logger.LogXxx` calls violate `[LoggerMessage]` rule (#3, #15)~~ ✅ `446eb41`
@@ -386,7 +386,7 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 - [x] `EditForm` + `DataAnnotationsValidator` on all user-input forms
 - [x] `IDisposable` implemented on `LocationChanged`-subscribing components
 - [x] ~~`<ErrorBoundary>` absent from `MainLayout.razor` (#18)~~ ✅ `1ae50a6`
-- [ ] Missing `@key` on `Passkeys.razor` passkey list
+- [x] ~~Missing `@key` on `Passkeys.razor` passkey list~~ ✅ `41f54a3`
 - [x] No JS interop in `OnInitializedAsync`
 - [x] Auth via `<AuthorizeView>` / `[Authorize]`; no hand-rolled `IsAuthenticated` checks
 - [x] ~~Submit button not disabled during in-flight submission in `Register.razor` (#4)~~ ✅ moot — `Register.razor` removed
