@@ -37,6 +37,8 @@ public static class WebApplicationExtensions
 
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseAntiforgery();
 
             return app;

@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
             });
 
             auth.AddIdentityCookies();
+            services.AddAuthorization();
 
             // Set credentials via user secrets (dev) or environment variables (prod):
             //   dotnet user-secrets set "Authentication:Google:ClientId" "<id>"
