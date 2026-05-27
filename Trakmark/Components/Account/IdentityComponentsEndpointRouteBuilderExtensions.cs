@@ -159,7 +159,6 @@ internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
             async (
                 HttpContext context,
                 [FromServices] UserManager<ApplicationUser> userManager,
-                [FromServices] AuthenticationStateProvider authenticationStateProvider,
                 [FromServices] ILoggerFactory loggerFactory
             ) =>
             {
