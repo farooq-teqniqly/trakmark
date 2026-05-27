@@ -47,7 +47,8 @@
     {
         Input ??= new();
 
-        user = (await UserManager.GetUserAsync(HttpContext.User))!;
+        user = (await UserManager.GetUserAsync(HttpContext.User));
+
         if (user is null)
         {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
