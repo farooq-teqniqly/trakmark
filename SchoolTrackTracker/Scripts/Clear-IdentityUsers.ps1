@@ -40,11 +40,12 @@ $ErrorActionPreference = 'Stop'
 
 # ── Read connection string from appsettings.Development.json ─────────────────
 $settingsPath = "$PSScriptRoot\..\appsettings.Development.json"
-$settingsPath = (Resolve-Path $settingsPath -ErrorAction SilentlyContinue)?.Path
+$resolved     = Resolve-Path $settingsPath -ErrorAction SilentlyContinue
+$settingsPath = if ($resolved) { $resolved.Path } else { $null }
 
 if ($settingsPath) {
     $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
-    $rawCs    = $settings.ConnectionStrings?.DefaultConnection
+    $rawCs    = if ($settings.PSObject.Properties['ConnectionStrings'] -and $settings.ConnectionStrings.PSObject.Properties['DefaultConnection']) { $settings.ConnectionStrings.DefaultConnection } else { $null }
 
     if ($rawCs) {
         # Parse key=value pairs from the connection string
@@ -126,7 +127,7 @@ try {
     Write-Host "Transaction committed." -ForegroundColor Green
 }
 catch {
-    Write-Host "FAILED — transaction rolled back." -ForegroundColor Red
+    Write-Host "FAILED - transaction rolled back." -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1
 }
