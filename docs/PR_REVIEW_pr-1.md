@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `bb6b449` on branch `starter`
+**Reviewed commit:** `9514a50` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -12,6 +12,7 @@
 - 2026-05-27 `4850c1c` — fix #2: patch open-redirect via `//` scheme-relative bypass
 - 2026-05-27 `446eb41` — fix #3/#15: replace all 16 direct `LogXxx` calls with `[LoggerMessage]` source generation
 - 2026-05-27 `bb6b449` — fix #4 + close #5 by-design: remove all password pages/flows; Google-only confirmed
+- 2026-05-27 `9514a50` — fix #10, #11: correct SQLite→SQL Server, add yellow theme; document bypassTwoFactor intent
 
 ---
 
@@ -28,8 +29,8 @@
 | 7 | **Medium** | SECURITY | Email address not URL-encoded before injecting into passkey query string | `Trakmark/Components/Account/Shared/PasskeySubmit.razor.js:36` | Copilot, Claude |
 | 8 | **Medium** | BUG | `$conn.Open()` outside `try` block in verify section — connection failures bypass error handler | `Trakmark/Scripts/Clear-IdentityUsers.ps1:139` | Copilot, Claude |
 | 9 | **Medium** | CONVENTION | `DOTNET_ENVIRONMENT=Development` missing from `launchSettings.json` (only `ASPNETCORE_ENVIRONMENT` set) | `Trakmark/Properties/launchSettings.json:10,21` | Copilot, Qodo, Claude |
-| 10 | **Medium** | DOCS | `AGENTS.md` states database is SQLite; actual implementation uses SQL Server | `Trakmark/AGENTS.md:9` | Copilot, Claude |
-| 11 | **Medium** | DOCS | `AGENTS.md` theme list omits `yellow`; `App.razor` sets `data-cf-theme="yellow"` | `Trakmark/AGENTS.md:69` | Copilot, Claude |
+| 10 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` states database is SQLite; actual implementation uses SQL Server~~ | ~~`Trakmark/AGENTS.md:9`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
+| 11 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` theme list omits `yellow`; `App.razor` sets `data-cf-theme="yellow"`~~ | ~~`Trakmark/AGENTS.md:69`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
 | 12 | **Medium** | BUG | Duplicate `<link rel="icon">` tag renders favicon twice | `Trakmark/Components/App.razor:25,33` | Copilot, Claude |
 | 13 | **Medium** | BUG | CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule | `Trakmark/Components/Layout/ReconnectModal.razor.css:34-39` | Copilot, Claude |
 | 14 | **Medium** | CONVENTION | `Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output | `Trakmark/Trakmark.csproj:19` | Copilot, Claude |
