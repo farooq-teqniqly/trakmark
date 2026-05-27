@@ -5,10 +5,12 @@ using Trakmark.Data;
 
 namespace Trakmark.Extensions;
 
+/// <summary>Extension methods for <see cref="IServiceCollection"/> that register application-level services.</summary>
 public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
+        /// <summary>Registers authentication with Identity cookies and optionally Google OAuth when credentials are configured.</summary>
         public IServiceCollection AddAppAuthentication(IConfiguration config)
         {
             var auth = services.AddAuthentication(options =>
@@ -36,6 +38,7 @@ public static class ServiceCollectionExtensions
             return services;
         }
 
+        /// <summary>Registers the EF Core <see cref="ApplicationDbContext"/> backed by SQL Server, with detailed errors enabled in development.</summary>
         public IServiceCollection AddAppDatabase(IConfiguration config,
             IWebHostEnvironment env)
         {
@@ -60,6 +63,7 @@ public static class ServiceCollectionExtensions
             return services;
         }
 
+        /// <summary>Registers ASP.NET Core Identity with roles, EF Core stores, sign-in manager, and a no-op email sender.</summary>
         public IServiceCollection AddAppIdentity()
         {
             services

@@ -2,5 +2,5 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Trakmark.Data;
 
-// Add profile data for application users by adding properties to the ApplicationUser class
+/// <summary>Application-specific Identity user. Add profile properties here to extend the default Identity schema.</summary>
 public class ApplicationUser : IdentityUser { }

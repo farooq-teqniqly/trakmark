@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Trakmark.Extensions;
 
+/// <summary>Extension methods for <see cref="WebApplication"/> used during application startup.</summary>
 public static class WebApplicationExtensions
 {
     extension(WebApplication app)
     {
+        /// <summary>Seeds the <c>Admin</c> and <c>User</c> Identity roles if they do not already exist.</summary>
         public async Task SeedRolesAsync()
         {
             using var scope = app.Services.CreateScope();
@@ -20,6 +22,7 @@ public static class WebApplicationExtensions
             }
         }
 
+        /// <summary>Registers standard middleware: migrations endpoint or exception handler, HSTS, status-code pages, HTTPS redirect, and antiforgery.</summary>
         public WebApplication UseAppMiddleware()
         {
             if (app.Environment.IsDevelopment())
