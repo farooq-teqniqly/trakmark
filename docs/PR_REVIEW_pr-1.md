@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `c852e5b` on branch `starter`
+**Reviewed commit:** `a9c408a` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -20,6 +20,7 @@
 - 2026-05-27 `2a7d9dd` — fix #12: remove duplicate favicon `<link>` from App.razor
 - 2026-05-27 `75975a5` — fix #14: add `PrivateAssets="all"` to EF Core Tools package reference
 - 2026-05-27 `c852e5b` — fix #17: remove stale scaffold nav links (counter, weather)
+- 2026-05-27 `a9c408a` — fix #16: remove appsettings fallback; all connection params now mandatory
 
 ---
 
@@ -42,7 +43,7 @@
 | 13 | **Medium** | BUG | CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule | `Trakmark/Components/Layout/ReconnectModal.razor.css:34-39` | Copilot, Claude |
 | 14 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output~~ | ~~`Trakmark/Trakmark.csproj:19`~~ | Copilot, Claude | **✅ Resolved in `75975a5`** |
 | 15 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`downloadLogger.LogInformation(...)` direct call at endpoint registration site~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174`~~ | Qodo, Claude | **✅ Resolved in `446eb41`** |
-| 16 | **Medium** | SCRIPT | `Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule) | `Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12` | Copilot, Claude |
+| 16 | ~~**Medium**~~ | ~~SCRIPT~~ | ~~`Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule)~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12`~~ | Copilot, Claude | **✅ Resolved in `a9c408a`** |
 | 17 | ~~**Low**~~ | ~~BLAZOR~~ | ~~`NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages~~ | ~~`Trakmark/Components/Layout/NavMenu.razor:22-28`~~ | Claude | **✅ Resolved in `c852e5b`** |
 | 18 | **Low** | BLAZOR | No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout | `Trakmark/Components/Layout/MainLayout.razor:6` | Claude |
 | 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude |
