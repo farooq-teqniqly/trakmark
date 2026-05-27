@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `446eb41` on branch `starter`
+**Reviewed commit:** `bb6b449` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -11,8 +11,7 @@
 - 2026-05-27 `8885d0d` — fix #1: add `UseAuthentication`, `UseAuthorization`, `AddAuthorization`
 - 2026-05-27 `4850c1c` — fix #2: patch open-redirect via `//` scheme-relative bypass
 - 2026-05-27 `446eb41` — fix #3/#15: replace all 16 direct `LogXxx` calls with `[LoggerMessage]` source generation
-- 2026-05-27 (pending) — fix #4: remove all password pages/flows; Google-only auth confirmed
-- 2026-05-27 (pending) — close #5 as by-design: `bypassTwoFactor: true` intentional for Google-only auth
+- 2026-05-27 `bb6b449` — fix #4 + close #5 by-design: remove all password pages/flows; Google-only confirmed
 
 ---
 
