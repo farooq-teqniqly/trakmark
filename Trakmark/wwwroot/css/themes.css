@@ -12,7 +12,7 @@
     --cf-theme-400: var(--cf-code-magic-400);
     /* selected UI */
     --cf-theme-500: var(--cf-code-magic-500);
-    /* subtle borders and spearators */
+    /* subtle borders and separators */
     --cf-theme-600: var(--cf-code-magic-600);
     /* element border / focus rings */
     --cf-theme-700: var(--cf-code-magic-700);
@@ -24,7 +24,7 @@
     --cf-theme-900: var(--cf-code-magic-900);
     /* #region code-magic */
     --cf-code-magic-core: #f2c864; /* yellow accent */
-    --cf-code-magic-100: hsl(192, 77%, 79%); /* turqoise */
+    --cf-code-magic-100: hsl(192, 77%, 79%); /* turquoise */
     --cf-code-magic-150: hsl(192, 77%, 74%);
     --cf-code-magic-200: #87bbd7;
     --cf-code-magic-300: hsl(192, 77%, 69%);
