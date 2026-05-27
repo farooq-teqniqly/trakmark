@@ -7,72 +7,35 @@
     Deletes rows from all user-related Identity tables inside a single
     SQL Server transaction. Rolls back on any error.
 
-    Connection string is read from appsettings.Development.json by default.
-    Override individual parts with parameters.
+    All four connection parameters are required. Connection strings are
+    stored in user secrets and are not read from any settings file.
 
     Requires PowerShell 5.1+ (uses System.Data.SqlClient, no extra tools needed).
 
 .PARAMETER Server
-    SQL Server host and port. Default: read from appsettings.Development.json.
+    SQL Server host and port, e.g. "localhost,1433".
 
 .PARAMETER Database
-    Database name. Default: read from appsettings.Development.json.
+    Database name.
 
 .PARAMETER Username
-    SQL login username. Default: read from appsettings.Development.json.
+    SQL login username.
 
 .PARAMETER Password
-    SQL login password. Default: read from appsettings.Development.json.
+    SQL login password.
 
 .EXAMPLE
-    .\Clear-IdentityUsers.ps1
-    .\Clear-IdentityUsers.ps1 -Server "myserver,1433" -Password "MyPass1!"
+    .\Clear-IdentityUsers.ps1 -Server "localhost,1433" -Database "TrakmarkDb" -Username "sa" -Password "MyPass1!"
 #>
 param(
-    [string]$Server,
-    [string]$Database,
-    [string]$Username,
-    [string]$Password
+    [Parameter(Mandatory)][string]$Server,
+    [Parameter(Mandatory)][string]$Database,
+    [Parameter(Mandatory)][string]$Username,
+    [Parameter(Mandatory)][string]$Password
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-
-# ── Read connection string from appsettings.Development.json ─────────────────
-$settingsPath = "$PSScriptRoot\..\appsettings.Development.json"
-$resolved     = Resolve-Path $settingsPath -ErrorAction SilentlyContinue
-$settingsPath = if ($resolved) { $resolved.Path } else { $null }
-
-if ($settingsPath) {
-    $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
-    $rawCs    = if ($settings.PSObject.Properties['ConnectionStrings'] -and $settings.ConnectionStrings.PSObject.Properties['DefaultConnection']) { $settings.ConnectionStrings.DefaultConnection } else { $null }
-
-    if ($rawCs) {
-        # Parse key=value pairs from the connection string
-        $csParts = @{}
-        $rawCs -split ';' | Where-Object { $_ -match '=' } | ForEach-Object {
-            $k, $v = $_ -split '=', 2
-            $csParts[$k.Trim().ToLower()] = $v.Trim()
-        }
-
-        if (-not $Server)   { $Server   = $csParts['server'] }
-        if (-not $Database) { $Database = $csParts['database'] }
-        if (-not $Username) { $Username = $csParts['user id'] }
-        if (-not $Password) { $Password = $csParts['password'] }
-    }
-}
-
-# ── Validate ─────────────────────────────────────────────────────────────────
-$missing = @()
-if (-not $Server)   { $missing += 'Server' }
-if (-not $Database) { $missing += 'Database' }
-if (-not $Username) { $missing += 'Username' }
-if (-not $Password) { $missing += 'Password' }
-
-if ($missing.Count -gt 0) {
-    Write-Error "Missing connection parameters: $($missing -join ', '). Provide via params or appsettings.Development.json."
-    exit 1
-}
 
 # ── Confirm ───────────────────────────────────────────────────────────────────
 Write-Host ""
