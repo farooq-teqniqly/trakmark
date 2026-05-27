@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `8fd438b` on branch `starter`
+**Reviewed commit:** `1ae50a6` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -22,6 +22,7 @@
 - 2026-05-27 `c852e5b` — fix #17: remove stale scaffold nav links (counter, weather)
 - 2026-05-27 `a9c408a` — fix #16: remove appsettings fallback; all connection params now mandatory
 - 2026-05-27 `8fd438b` — fix #13: flatten CSS nesting in ReconnectModal scoped stylesheet
+- 2026-05-27 `1ae50a6` — fix #18: wrap @Body in ErrorBoundary in MainLayout
 
 ---
 
@@ -46,7 +47,7 @@
 | 15 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`downloadLogger.LogInformation(...)` direct call at endpoint registration site~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174`~~ | Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 16 | ~~**Medium**~~ | ~~SCRIPT~~ | ~~`Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule)~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12`~~ | Copilot, Claude | **✅ Resolved in `a9c408a`** |
 | 17 | ~~**Low**~~ | ~~BLAZOR~~ | ~~`NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages~~ | ~~`Trakmark/Components/Layout/NavMenu.razor:22-28`~~ | Claude | **✅ Resolved in `c852e5b`** |
-| 18 | **Low** | BLAZOR | No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout | `Trakmark/Components/Layout/MainLayout.razor:6` | Claude |
+| 18 | ~~**Low**~~ | ~~BLAZOR~~ | ~~No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout~~ | ~~`Trakmark/Components/Layout/MainLayout.razor:6`~~ | Claude | **✅ Resolved in `1ae50a6`** |
 | 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude |
 | 20 | **Info** | CONVENTION | XML `<summary>` docs absent on the `InputModel` nested classes inside several Manage pages | Multiple `*.razor` `@code` blocks | Claude |
 
