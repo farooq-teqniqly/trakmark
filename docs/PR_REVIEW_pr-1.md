@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `a9c408a` on branch `starter`
+**Reviewed commit:** `8fd438b` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -21,6 +21,7 @@
 - 2026-05-27 `75975a5` — fix #14: add `PrivateAssets="all"` to EF Core Tools package reference
 - 2026-05-27 `c852e5b` — fix #17: remove stale scaffold nav links (counter, weather)
 - 2026-05-27 `a9c408a` — fix #16: remove appsettings fallback; all connection params now mandatory
+- 2026-05-27 `8fd438b` — fix #13: flatten CSS nesting in ReconnectModal scoped stylesheet
 
 ---
 
@@ -40,7 +41,7 @@
 | 10 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` states database is SQLite; actual implementation uses SQL Server~~ | ~~`Trakmark/AGENTS.md:9`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
 | 11 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` theme list omits `yellow`; `App.razor` sets `data-cf-theme="yellow"`~~ | ~~`Trakmark/AGENTS.md:69`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
 | 12 | ~~**Medium**~~ | ~~BUG~~ | ~~Duplicate `<link rel="icon">` tag renders favicon twice~~ | ~~`Trakmark/Components/App.razor:25,33`~~ | Copilot, Claude | **✅ Resolved in `2a7d9dd`** |
-| 13 | **Medium** | BUG | CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule | `Trakmark/Components/Layout/ReconnectModal.razor.css:34-39` | Copilot, Claude |
+| 13 | ~~**Medium**~~ | ~~BUG~~ | ~~CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule~~ | ~~`Trakmark/Components/Layout/ReconnectModal.razor.css:34-39`~~ | Copilot, Claude | **✅ Resolved in `8fd438b`** |
 | 14 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output~~ | ~~`Trakmark/Trakmark.csproj:19`~~ | Copilot, Claude | **✅ Resolved in `75975a5`** |
 | 15 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`downloadLogger.LogInformation(...)` direct call at endpoint registration site~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174`~~ | Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 16 | ~~**Medium**~~ | ~~SCRIPT~~ | ~~`Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule)~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12`~~ | Copilot, Claude | **✅ Resolved in `a9c408a`** |
