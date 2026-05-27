@@ -23,6 +23,7 @@ public static class TelemetryExtensions
                 tracing
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter(o => o.Endpoint = new Uri(otlpEndpoint))
             )
             .WithMetrics(metrics =>
