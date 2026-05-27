@@ -11,6 +11,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types, constructors, methods, and non-trivial fields.
 - Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).
 - Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
+- Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.
 - No defensive null-checks on DI-injected dependencies — trust the container.
 - No comments that restate what the code already says.
 
