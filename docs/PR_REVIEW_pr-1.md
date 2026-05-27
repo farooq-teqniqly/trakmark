@@ -2,8 +2,15 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `4692f90` on branch `starter`
+**Reviewed commit:** `446eb41` on branch `starter`
 **Review date:** 2026-05-27
+
+## Changelog
+
+- 2026-05-27 `4692f90` — initial review
+- 2026-05-27 `8885d0d` — fix #1: add `UseAuthentication`, `UseAuthorization`, `AddAuthorization`
+- 2026-05-27 `4850c1c` — fix #2: patch open-redirect via `//` scheme-relative bypass
+- 2026-05-27 `446eb41` — fix #3/#15: replace all 16 direct `LogXxx` calls with `[LoggerMessage]` source generation
 
 ---
 
@@ -11,9 +18,9 @@
 
 | # | Severity | Tag | Topic | Location | Source |
 |---|----------|-----|-------|----------|--------|
-| 1 | **Critical** | BUG | `UseAuthentication`/`UseAuthorization` middleware absent | `Trakmark/Program.cs` | Qodo, Claude |
-| 2 | **Critical** | SECURITY | Open-redirect via scheme-relative URLs in `RedirectTo` | `Trakmark/Components/Account/IdentityRedirectManager.cs:30` | Qodo, Claude |
-| 3 | **High** | CONVENTION | 16 direct `Logger.LogXxx(...)` calls violate `[LoggerMessage]` requirement (CA1873) | Multiple files (see §7) | Copilot, Qodo, Claude |
+| 1 | ~~**Critical**~~ | ~~BUG~~ | ~~`UseAuthentication`/`UseAuthorization` middleware absent~~ | ~~`Trakmark/Program.cs`~~ | Qodo, Claude | **✅ Resolved in `8885d0d`** |
+| 2 | ~~**Critical**~~ | ~~SECURITY~~ | ~~Open-redirect via scheme-relative URLs in `RedirectTo`~~ | ~~`Trakmark/Components/Account/IdentityRedirectManager.cs:30`~~ | Qodo, Claude | **✅ Resolved in `4850c1c`** |
+| 3 | ~~**High**~~ | ~~CONVENTION~~ | ~~16 direct `Logger.LogXxx(...)` calls violate `[LoggerMessage]` requirement (CA1873)~~ | ~~Multiple files (see §7)~~ | Copilot, Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 4 | **High** | BUG | Auth surface inconsistency: `Register.razor` creates password accounts but no password sign-in flow exists | `Trakmark/Components/Account/Pages/Register.razor:46` | Copilot, Claude |
 | 5 | **High** | BUG | `ExternalLoginSignInAsync` called with `bypassTwoFactor: true` — 2FA is silently skipped for all OAuth logins | `Trakmark/Components/Account/Pages/ExternalLogin.razor:116` | Claude |
 | 6 | **Medium** | BUG | String interpolation missing in error message — renders literal `{userId}` | `Trakmark/Components/Account/Pages/ConfirmEmailChange.razor:45` | Copilot, Claude |
@@ -25,7 +32,7 @@
 | 12 | **Medium** | BUG | Duplicate `<link rel="icon">` tag renders favicon twice | `Trakmark/Components/App.razor:25,33` | Copilot, Claude |
 | 13 | **Medium** | BUG | CSS nesting `&[open]` inside `.razor.css` is invalid in scoped CSS context — browser parsing will break the `[open]` animation rule | `Trakmark/Components/Layout/ReconnectModal.razor.css:34-39` | Copilot, Claude |
 | 14 | **Medium** | CONVENTION | `Microsoft.EntityFrameworkCore.Tools` lacks `PrivateAssets="all"` — flows into publish output | `Trakmark/Trakmark.csproj:19` | Copilot, Claude |
-| 15 | **Medium** | CONVENTION | `downloadLogger.LogInformation(...)` direct call at endpoint registration site | `Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174` | Qodo, Claude |
+| 15 | ~~**Medium**~~ | ~~CONVENTION~~ | ~~`downloadLogger.LogInformation(...)` direct call at endpoint registration site~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:174`~~ | Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 16 | **Medium** | SCRIPT | `Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule) | `Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12` | Copilot, Claude |
 | 17 | **Low** | BLAZOR | `NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages | `Trakmark/Components/Layout/NavMenu.razor:22-28` | Claude |
 | 18 | **Low** | BLAZOR | No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout | `Trakmark/Components/Layout/MainLayout.razor:6` | Claude |
@@ -45,15 +52,15 @@
 | **Copilot** | Script reads connection string from `appsettings.Development.json` (user-secrets conflict) | Open — finding #16 |
 | **Copilot** | `AGENTS.md` says SQLite, implementation is SQL Server | Open — finding #10 |
 | **Copilot** | `AGENTS.md` theme list missing `yellow` | Open — finding #11 |
-| **Copilot** | Direct `LogInformation`/`LogWarning` calls violate `[LoggerMessage]` rule | Open — finding #3 |
+| **Copilot** | Direct `LogInformation`/`LogWarning` calls violate `[LoggerMessage]` rule | ✅ Resolved — finding #3 (`446eb41`) |
 | **Copilot** | `launchSettings.json` uses `ASPNETCORE_ENVIRONMENT` not `DOTNET_ENVIRONMENT` | Open — finding #9 |
 | **Copilot** | `Microsoft.EntityFrameworkCore.Tools` missing `PrivateAssets="all"` | Open — finding #14 |
 | **Copilot** | `$conn.Open()` outside try block in verify section | Open — finding #8 |
 | **Copilot** | `Register.razor` allows password accounts with no password sign-in flow | Open — finding #4 |
-| **Qodo** | `downloadLogger.LogInformation` direct call | Open — finding #15 (subset of #3) |
+| **Qodo** | `downloadLogger.LogInformation` direct call | ✅ Resolved — finding #15 (`446eb41`) |
 | **Qodo** | `DOTNET_ENVIRONMENT` missing from `launchSettings.json` | Open — finding #9 |
-| **Qodo** | `UseAuthentication`/`UseAuthorization` middleware absent | Open — finding #1 |
-| **Qodo** | Open-redirect via scheme-relative URL in `IdentityRedirectManager` | Open — finding #2 |
+| **Qodo** | `UseAuthentication`/`UseAuthorization` middleware absent | ✅ Resolved — finding #1 (`8885d0d`) |
+| **Qodo** | Open-redirect via scheme-relative URL in `IdentityRedirectManager` | ✅ Resolved — finding #2 (`4850c1c`) |
 
 ---
 
@@ -79,9 +86,9 @@ app pipeline (WebApplicationExtensions.UseAppMiddleware)
   ├─ UseMigrationsEndPoint() | UseExceptionHandler()
   ├─ UseStatusCodePagesWithReExecute("/not-found")
   ├─ UseHttpsRedirection()
+  ├─ UseAuthentication()   ✅ added in 8885d0d
+  ├─ UseAuthorization()    ✅ added in 8885d0d
   ├─ UseAntiforgery()
-  │   <<< UseAuthentication() MISSING >>>
-  │   <<< UseAuthorization() MISSING >>>
   ├─ MapStaticAssets()
   ├─ MapRazorComponents<App>().AddInteractiveServerRenderMode()
   └─ MapAdditionalIdentityEndpoints()
@@ -329,7 +336,7 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 
 ### Functionality
 - [x] Core Blazor routing and layout work as intended
-- [ ] Auth middleware not wired up — login/auth enforcement broken at runtime (#1)
+- [x] ~~Auth middleware not wired up — login/auth enforcement broken at runtime (#1)~~ ✅ `8885d0d`
 - [ ] Password registration with no password login (#4)
 - [ ] `bypassTwoFactor: true` silently disables 2FA for OAuth (#5)
 - [ ] Missing string interpolation in `ConfirmEmailChange` (#6)
@@ -347,7 +354,7 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 - [ ] No `@key` on passkey list in `Passkeys.razor` (#)
 
 ### Code Quality
-- [ ] 16 direct `Logger.LogXxx` calls violate `[LoggerMessage]` rule (#3, #15)
+- [x] ~~16 direct `Logger.LogXxx` calls violate `[LoggerMessage]` rule (#3, #15)~~ ✅ `446eb41`
 - [ ] `DOTNET_ENVIRONMENT` missing from `launchSettings.json` (#9)
 - [ ] `EFCore.Tools` missing `PrivateAssets="all"` (#14)
 - [x] XML docs present on all public/internal types
