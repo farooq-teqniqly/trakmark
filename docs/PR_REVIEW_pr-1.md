@@ -49,7 +49,7 @@
 | 16 | ~~**Medium**~~ | ~~SCRIPT~~ | ~~`Clear-IdentityUsers.ps1` documents reading from `appsettings.Development.json`; that file contains no `ConnectionStrings` section (violates user-secrets rule)~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:10-12`~~ | Copilot, Claude | **✅ Resolved in `a9c408a`** |
 | 17 | ~~**Low**~~ | ~~BLAZOR~~ | ~~`NavMenu.razor` contains stale scaffold links (`counter`, `weather`) that point to non-existent pages~~ | ~~`Trakmark/Components/Layout/NavMenu.razor:22-28`~~ | Claude | **✅ Resolved in `c852e5b`** |
 | 18 | ~~**Low**~~ | ~~BLAZOR~~ | ~~No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout~~ | ~~`Trakmark/Components/Layout/MainLayout.razor:6`~~ | Claude | **✅ Resolved in `1ae50a6`** |
-| 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude |
+| 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude | **⏸ Deferred — intentional** |
 | 20 | ~~**Info**~~ | ~~CONVENTION~~ | ~~XML `<summary>` docs absent on the `InputModel` nested classes inside several Manage pages~~ | ~~Multiple `*.razor` `@code` blocks~~ | Claude | **✅ Resolved in `a9b4815`** |
 
 ---
