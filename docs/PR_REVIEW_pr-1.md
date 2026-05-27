@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `a9b4815` on branch `starter`
+**Reviewed commit:** `29fd4bb` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -24,6 +24,7 @@
 - 2026-05-27 `8fd438b` — fix #13: flatten CSS nesting in ReconnectModal scoped stylesheet
 - 2026-05-27 `1ae50a6` — fix #18: wrap @Body in ErrorBoundary in MainLayout
 - 2026-05-27 `a9b4815` — fix #20: add XML summary docs to all InputModel nested classes
+- 2026-05-27 `29fd4bb` — fix #21: sanitize `returnUrl` in logout endpoint to prevent open-redirect / LocalRedirect throw
 
 ---
 
@@ -51,6 +52,7 @@
 | 18 | ~~**Low**~~ | ~~BLAZOR~~ | ~~No `<ErrorBoundary>` wrapping `@Body` in `MainLayout.razor` — unhandled component exceptions will crash the full-page layout~~ | ~~`Trakmark/Components/Layout/MainLayout.razor:6`~~ | Claude | **✅ Resolved in `1ae50a6`** |
 | 19 | **Low** | TESTING | No unit or component tests (bUnit) in the PR | N/A | Claude | **⏸ Deferred — intentional** |
 | 20 | ~~**Info**~~ | ~~CONVENTION~~ | ~~XML `<summary>` docs absent on the `InputModel` nested classes inside several Manage pages~~ | ~~Multiple `*.razor` `@code` blocks~~ | Claude | **✅ Resolved in `a9b4815`** |
+| 21 | ~~**Critical**~~ | ~~SECURITY~~ | ~~`/Account/Logout` passes unvalidated `returnUrl` to `LocalRedirect` — throws on non-local URLs; open-redirect via crafted form post~~ | ~~`Trakmark/Components/Account/IdentityComponentsEndpointRouteBuilderExtensions.cs:69`~~ | Human | **✅ Resolved in `29fd4bb`** |
 
 ---
 
