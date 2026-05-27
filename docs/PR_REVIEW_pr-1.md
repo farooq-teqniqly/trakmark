@@ -352,9 +352,9 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 - [x] ~~Auth middleware not wired up — login/auth enforcement broken at runtime (#1)~~ ✅ `8885d0d`
 - [x] ~~Password registration with no password login (#4)~~ ✅ password flow removed; Google-only
 - [x] ~~`bypassTwoFactor: true` silently disables 2FA for OAuth (#5)~~ ✅ by-design
-- [ ] Missing string interpolation in `ConfirmEmailChange` (#6)
-- [ ] Duplicate favicon link (#12)
-- [ ] Stale nav links (`counter`, `weather`) (#17)
+- [x] ~~Missing string interpolation in `ConfirmEmailChange` (#6)~~ ✅ `63f3f62`
+- [x] ~~Duplicate favicon link (#12)~~ ✅ `2a7d9dd`
+- [x] ~~Stale nav links (`counter`, `weather`) (#17)~~ ✅ `c852e5b`
 
 ### Thread Safety
 - [x] `IdentityRevalidatingAuthenticationStateProvider` uses `IServiceScopeFactory` correctly
@@ -368,8 +368,8 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 
 ### Code Quality
 - [x] ~~16 direct `Logger.LogXxx` calls violate `[LoggerMessage]` rule (#3, #15)~~ ✅ `446eb41`
-- [ ] `DOTNET_ENVIRONMENT` missing from `launchSettings.json` (#9)
-- [ ] `EFCore.Tools` missing `PrivateAssets="all"` (#14)
+- [x] ~~`DOTNET_ENVIRONMENT` missing from `launchSettings.json` (#9)~~ ✅ `0bf3c06`
+- [x] ~~`EFCore.Tools` missing `PrivateAssets="all"` (#14)~~ ✅ `75975a5`
 - [x] XML docs present on all public/internal types
 - [x] Cyclomatic complexity appears within the ≤15 limit throughout
 - [x] No defensive null-checks on DI-injected dependencies
@@ -377,7 +377,7 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 - [x] U.S. English used throughout
 
 ### Simplification and Refactoring
-- [ ] `CreateUser()` and `GetEmailStore()` are duplicated verbatim between `Register.razor` and `ExternalLogin.razor` — extract to a shared static helper or service
+- [x] ~~`CreateUser()` and `GetEmailStore()` duplicated between `Register.razor` and `ExternalLogin.razor`~~ ✅ moot — `Register.razor` removed
 
 ### Blazor / Component Quality
 - [x] Render mode correct — Account pages are static SSR, interactive pages use `@rendermode InteractiveServer`
@@ -385,16 +385,16 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 - [x] `[SupplyParameterFromForm]` used correctly for SSR form models
 - [x] `EditForm` + `DataAnnotationsValidator` on all user-input forms
 - [x] `IDisposable` implemented on `LocationChanged`-subscribing components
-- [ ] `<ErrorBoundary>` absent from `MainLayout.razor` (#18)
+- [x] ~~`<ErrorBoundary>` absent from `MainLayout.razor` (#18)~~ ✅ `1ae50a6`
 - [ ] Missing `@key` on `Passkeys.razor` passkey list
 - [x] No JS interop in `OnInitializedAsync`
 - [x] Auth via `<AuthorizeView>` / `[Authorize]`; no hand-rolled `IsAuthenticated` checks
-- [ ] Submit button not disabled during in-flight submission in `Register.razor` (#4)
+- [x] ~~Submit button not disabled during in-flight submission in `Register.razor` (#4)~~ ✅ moot — `Register.razor` removed
 
 ### Testing
-- [ ] No unit tests
-- [ ] No bUnit component tests
-- [ ] No integration tests
+- [ ] No unit tests ⏸ deferred (#19)
+- [ ] No bUnit component tests ⏸ deferred (#19)
+- [ ] No integration tests ⏸ deferred (#19)
 
 ---
 
@@ -404,9 +404,9 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 
 2. ~~**Finding #4:** Is password-based registration intentionally kept as a fallback, or is the app Google-only?~~ **Answered — Google-only. Password pages removed.**
 
-3. The `downloadLogger` in `IdentityComponentsEndpointRouteBuilderExtensions.cs` is created outside any request scope (line 154) via `ILoggerFactory`. Is there a reason this was not injected via `[FromServices] ILogger<IdentityComponentsEndpointRouteBuilderExtensions>` directly in the endpoint lambda?
+3. ~~The `downloadLogger` in `IdentityComponentsEndpointRouteBuilderExtensions.cs` is created outside any request scope (line 154) via `ILoggerFactory`. Is there a reason this was not injected via `[FromServices] ILogger<IdentityComponentsEndpointRouteBuilderExtensions>` directly in the endpoint lambda?~~ **Answered — no reason; refactored to `[FromServices]` injection, `ILoggerFactory` lines removed.**
 
-4. The `NavMenu.razor` (sidebar) and `TopNavMenu.razor` (top Bootstrap navbar) both subscribe to `LocationChanged` and both call `StateHasChanged()`. Is `NavMenu.razor` still used anywhere? `MainLayout.razor` only renders `<TopNavMenu />`, making `NavMenu.razor` unreferenced dead code.
+4. ~~The `NavMenu.razor` (sidebar) and `TopNavMenu.razor` (top Bootstrap navbar) both subscribe to `LocationChanged` and both call `StateHasChanged()`. Is `NavMenu.razor` still used anywhere? `MainLayout.razor` only renders `<TopNavMenu />`, making `NavMenu.razor` unreferenced dead code.~~ **Answered — confirmed dead code; `NavMenu.razor` deleted.**
 
 ---
 

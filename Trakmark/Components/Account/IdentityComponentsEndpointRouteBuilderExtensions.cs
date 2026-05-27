@@ -151,17 +151,16 @@ internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
             }
         );
 
-        var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
-        var downloadLogger = loggerFactory.CreateLogger("DownloadPersonalData");
-
         manageGroup.MapPost(
             "/DownloadPersonalData",
             async (
                 HttpContext context,
                 [FromServices] UserManager<ApplicationUser> userManager,
-                [FromServices] AuthenticationStateProvider authenticationStateProvider
+                [FromServices] AuthenticationStateProvider authenticationStateProvider,
+                [FromServices] ILoggerFactory loggerFactory
             ) =>
             {
+                var downloadLogger = loggerFactory.CreateLogger("DownloadPersonalData");
                 var user = await userManager.GetUserAsync(context.User);
                 if (user is null)
                 {
