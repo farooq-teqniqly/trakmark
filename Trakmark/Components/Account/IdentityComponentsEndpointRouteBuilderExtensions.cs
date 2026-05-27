@@ -174,7 +174,6 @@ internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
                 var userId = await userManager.GetUserIdAsync(user);
                 LogPersonalDataDownloaded(downloadLogger, userId);
 
-                // Only include personal data for download
                 var personalData = new Dictionary<string, string>();
                 var personalDataProps = typeof(ApplicationUser)
                     .GetProperties()
