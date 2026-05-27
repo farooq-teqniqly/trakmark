@@ -19,7 +19,11 @@ public static class TelemetryExtensions
         IConfiguration config
     )
     {
-        var otlpEndpoint = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
+        var otlpEndpointRaw = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
+
+        if (!Uri.TryCreate(otlpEndpointRaw, UriKind.Absolute, out var otlpEndpoint))
+            throw new InvalidOperationException(
+                $"Invalid OpenTelemetry:Endpoint '{otlpEndpointRaw}'. Must be an absolute URI (e.g. http://localhost:4317).");
 
         services
             .AddOpenTelemetry()
@@ -29,20 +33,20 @@ public static class TelemetryExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddEntityFrameworkCoreInstrumentation()
-                    .AddOtlpExporter(o => o.Endpoint = new Uri(otlpEndpoint))
+                    .AddOtlpExporter(o => o.Endpoint = otlpEndpoint)
             )
             .WithMetrics(metrics =>
                 metrics
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddOtlpExporter(o => o.Endpoint = new Uri(otlpEndpoint))
+                    .AddOtlpExporter(o => o.Endpoint = otlpEndpoint)
             );
 
         services.AddLogging(logging =>
             logging.AddOpenTelemetry(o =>
             {
                 o.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(ServiceName));
-                o.AddOtlpExporter(e => e.Endpoint = new Uri(otlpEndpoint));
+                o.AddOtlpExporter(e => e.Endpoint = otlpEndpoint);
             })
         );
 
