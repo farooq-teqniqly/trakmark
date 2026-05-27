@@ -6,7 +6,7 @@
 | **Interactivity Scope** | Per-page |
 | **Authentication** | Google OAuth only (ASP.NET Core Identity + External Login) |
 | **Roles** | `Admin`, `User` (default) — seeded at startup |
-| **Database** | SQLite via EF Core |
+| **Database** | SQL Server via EF Core |
 | **Theme** | CSS custom properties (`--cf-theme-*`) in `wwwroot/css/themes.css` |
 
 ## Rendering configuration
@@ -54,11 +54,14 @@ Trakmark/
 - Static pages can use standard HTML forms with `[SupplyParameterFromForm]`.
 
 ## Authentication & roles
-- Google OAuth only. Configure credentials via user secrets (dev) or environment variables (prod):
+- Google OAuth only — no local password accounts. Configure credentials via user secrets (dev) or environment variables (prod):
   ```
   dotnet user-secrets set "Authentication:Google:ClientId" "<id>"
   dotnet user-secrets set "Authentication:Google:ClientSecret" "<secret>"
   ```
+- `ExternalLoginSignInAsync` is called with `bypassTwoFactor: true`. This is intentional: Google is the sole
+  identity provider and is trusted to enforce its own MFA on the Google account. No app-level TOTP second
+  factor is required for OAuth sign-ins.
 - `Admin` and `User` roles seeded at startup in `Program.cs`.
 - New users get the `User` role automatically on first Google login (in `ExternalLogin.razor`).
 - Admin role assignment: add pages/logic to call `UserManager.AddToRoleAsync(user, "Admin")`.
@@ -66,7 +69,7 @@ Trakmark/
 ## Theming
 - Default theme: blue (`--cf-blue-*` variables).
 - Change theme by setting `data-cf-theme="<name>"` on a parent element (or `<body>`).
-- Available themes defined in `wwwroot/css/themes.css`: `blue`, `indigo`, `purple`, `green`, `teal`, `gray`.
+- Available themes defined in `wwwroot/css/themes.css`: `blue`, `indigo`, `purple`, `green`, `teal`, `gray`, `yellow`.
 - Navbar and footer use `var(--cf-theme-850)` background automatically.
 
 ## Data access
