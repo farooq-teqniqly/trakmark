@@ -136,8 +136,8 @@ finally {
 }
 
 # ── Verify ────────────────────────────────────────────────────────────────────
-$conn.Open()
 try {
+    $conn.Open()
     $results = @()
     foreach ($table in $tables) {
         $cmd = $conn.CreateCommand()
