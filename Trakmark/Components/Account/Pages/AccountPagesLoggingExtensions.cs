@@ -27,6 +27,4 @@ internal static partial class AccountPagesLoggingExtensions
     [LoggerMessage(Level = LogLevel.Warning, Message = "Invalid recovery code entered for user with ID '{UserId}'.")]
     internal static partial void LogInvalidRecoveryCode(this ILogger logger, string userId);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "User created a new account with password.")]
-    internal static partial void LogUserCreatedWithPassword(this ILogger logger);
 }

@@ -11,6 +11,8 @@
 - 2026-05-27 `8885d0d` — fix #1: add `UseAuthentication`, `UseAuthorization`, `AddAuthorization`
 - 2026-05-27 `4850c1c` — fix #2: patch open-redirect via `//` scheme-relative bypass
 - 2026-05-27 `446eb41` — fix #3/#15: replace all 16 direct `LogXxx` calls with `[LoggerMessage]` source generation
+- 2026-05-27 (pending) — fix #4: remove all password pages/flows; Google-only auth confirmed
+- 2026-05-27 (pending) — close #5 as by-design: `bypassTwoFactor: true` intentional for Google-only auth
 
 ---
 
@@ -21,8 +23,8 @@
 | 1 | ~~**Critical**~~ | ~~BUG~~ | ~~`UseAuthentication`/`UseAuthorization` middleware absent~~ | ~~`Trakmark/Program.cs`~~ | Qodo, Claude | **✅ Resolved in `8885d0d`** |
 | 2 | ~~**Critical**~~ | ~~SECURITY~~ | ~~Open-redirect via scheme-relative URLs in `RedirectTo`~~ | ~~`Trakmark/Components/Account/IdentityRedirectManager.cs:30`~~ | Qodo, Claude | **✅ Resolved in `4850c1c`** |
 | 3 | ~~**High**~~ | ~~CONVENTION~~ | ~~16 direct `Logger.LogXxx(...)` calls violate `[LoggerMessage]` requirement (CA1873)~~ | ~~Multiple files (see §7)~~ | Copilot, Qodo, Claude | **✅ Resolved in `446eb41`** |
-| 4 | **High** | BUG | Auth surface inconsistency: `Register.razor` creates password accounts but no password sign-in flow exists | `Trakmark/Components/Account/Pages/Register.razor:46` | Copilot, Claude |
-| 5 | **High** | BUG | `ExternalLoginSignInAsync` called with `bypassTwoFactor: true` — 2FA is silently skipped for all OAuth logins | `Trakmark/Components/Account/Pages/ExternalLogin.razor:116` | Claude |
+| 4 | ~~**High**~~ | ~~BUG~~ | ~~Auth surface inconsistency: `Register.razor` creates password accounts but no password sign-in flow exists~~ | ~~`Trakmark/Components/Account/Pages/Register.razor:46`~~ | Copilot, Claude | **✅ Resolved — Google-only; all password pages removed** |
+| 5 | ~~**High**~~ | ~~BUG~~ | ~~`ExternalLoginSignInAsync` called with `bypassTwoFactor: true` — 2FA is silently skipped for all OAuth logins~~ | ~~`Trakmark/Components/Account/Pages/ExternalLogin.razor:116`~~ | Claude | **✅ By-design — Google OAuth is the sole auth provider; Google-side 2FA is sufficient** |
 | 6 | **Medium** | BUG | String interpolation missing in error message — renders literal `{userId}` | `Trakmark/Components/Account/Pages/ConfirmEmailChange.razor:45` | Copilot, Claude |
 | 7 | **Medium** | SECURITY | Email address not URL-encoded before injecting into passkey query string | `Trakmark/Components/Account/Shared/PasskeySubmit.razor.js:36` | Copilot, Claude |
 | 8 | **Medium** | BUG | `$conn.Open()` outside `try` block in verify section — connection failures bypass error handler | `Trakmark/Scripts/Clear-IdentityUsers.ps1:139` | Copilot, Claude |
@@ -337,8 +339,8 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 ### Functionality
 - [x] Core Blazor routing and layout work as intended
 - [x] ~~Auth middleware not wired up — login/auth enforcement broken at runtime (#1)~~ ✅ `8885d0d`
-- [ ] Password registration with no password login (#4)
-- [ ] `bypassTwoFactor: true` silently disables 2FA for OAuth (#5)
+- [x] ~~Password registration with no password login (#4)~~ ✅ password flow removed; Google-only
+- [x] ~~`bypassTwoFactor: true` silently disables 2FA for OAuth (#5)~~ ✅ by-design
 - [ ] Missing string interpolation in `ConfirmEmailChange` (#6)
 - [ ] Duplicate favicon link (#12)
 - [ ] Stale nav links (`counter`, `weather`) (#17)
@@ -387,9 +389,9 @@ Per Blazor best practices, list items over mutable collections must use `@key`. 
 
 ## Questions for Author
 
-1. **Finding #5:** Is the intent to treat Google OAuth as a sufficient second factor, making `bypassTwoFactor: true` intentional? If so, add a note in `AGENTS.md` under Authentication.
+1. ~~**Finding #5:** Is the intent to treat Google OAuth as a sufficient second factor, making `bypassTwoFactor: true` intentional?~~ **Answered — yes, by-design. `AGENTS.md` should document this.**
 
-2. **Finding #4:** Is password-based registration intentionally kept as a fallback, or is the app Google-only? If Google-only, `Register.razor` and its nav link should be removed to avoid stranded accounts.
+2. ~~**Finding #4:** Is password-based registration intentionally kept as a fallback, or is the app Google-only?~~ **Answered — Google-only. Password pages removed.**
 
 3. The `downloadLogger` in `IdentityComponentsEndpointRouteBuilderExtensions.cs` is created outside any request scope (line 154) via `ILoggerFactory`. Is there a reason this was not injected via `[FromServices] ILogger<IdentityComponentsEndpointRouteBuilderExtensions>` directly in the endpoint lambda?
 

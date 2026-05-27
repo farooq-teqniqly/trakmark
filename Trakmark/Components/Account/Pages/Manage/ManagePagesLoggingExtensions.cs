@@ -6,10 +6,7 @@ internal static partial class ManagePagesLoggingExtensions
     [LoggerMessage(Level = LogLevel.Information, Message = "User with ID '{UserId}' has disabled 2fa.")]
     internal static partial void LogDisabled2fa(this ILogger logger, string userId);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "User changed their password successfully.")]
-    internal static partial void LogPasswordChangedSuccessfully(this ILogger logger);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "User with ID '{UserId}' has enabled 2FA with an authenticator app.")]
+[LoggerMessage(Level = LogLevel.Information, Message = "User with ID '{UserId}' has enabled 2FA with an authenticator app.")]
     internal static partial void LogEnabled2fa(this ILogger logger, string userId);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "User with ID '{UserId}' deleted themselves.")]
