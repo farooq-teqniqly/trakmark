@@ -2,7 +2,7 @@
 
 **Branch:** `starter` → `main`
 **Scope:** 7,535 additions / 0 deletions across 96 files (full initial application stack)
-**Reviewed commit:** `9514a50` on branch `starter`
+**Reviewed commit:** `11c2ffd` on branch `starter`
 **Review date:** 2026-05-27
 
 ## Changelog
@@ -13,6 +13,9 @@
 - 2026-05-27 `446eb41` — fix #3/#15: replace all 16 direct `LogXxx` calls with `[LoggerMessage]` source generation
 - 2026-05-27 `bb6b449` — fix #4 + close #5 by-design: remove all password pages/flows; Google-only confirmed
 - 2026-05-27 `9514a50` — fix #10, #11: correct SQLite→SQL Server, add yellow theme; document bypassTwoFactor intent
+- 2026-05-27 `63f3f62` — fix #6: add missing `$` interpolation in ConfirmEmailChange error message
+- 2026-05-27 `5755e6d` — fix #7: URL-encode email in passkey request query string
+- 2026-05-27 `11c2ffd` — fix #8: move `$conn.Open()` inside `try` in Clear-IdentityUsers verify section
 
 ---
 
@@ -25,9 +28,9 @@
 | 3 | ~~**High**~~ | ~~CONVENTION~~ | ~~16 direct `Logger.LogXxx(...)` calls violate `[LoggerMessage]` requirement (CA1873)~~ | ~~Multiple files (see §7)~~ | Copilot, Qodo, Claude | **✅ Resolved in `446eb41`** |
 | 4 | ~~**High**~~ | ~~BUG~~ | ~~Auth surface inconsistency: `Register.razor` creates password accounts but no password sign-in flow exists~~ | ~~`Trakmark/Components/Account/Pages/Register.razor:46`~~ | Copilot, Claude | **✅ Resolved — Google-only; all password pages removed** |
 | 5 | ~~**High**~~ | ~~BUG~~ | ~~`ExternalLoginSignInAsync` called with `bypassTwoFactor: true` — 2FA is silently skipped for all OAuth logins~~ | ~~`Trakmark/Components/Account/Pages/ExternalLogin.razor:116`~~ | Claude | **✅ By-design — Google OAuth is the sole auth provider; Google-side 2FA is sufficient** |
-| 6 | **Medium** | BUG | String interpolation missing in error message — renders literal `{userId}` | `Trakmark/Components/Account/Pages/ConfirmEmailChange.razor:45` | Copilot, Claude |
-| 7 | **Medium** | SECURITY | Email address not URL-encoded before injecting into passkey query string | `Trakmark/Components/Account/Shared/PasskeySubmit.razor.js:36` | Copilot, Claude |
-| 8 | **Medium** | BUG | `$conn.Open()` outside `try` block in verify section — connection failures bypass error handler | `Trakmark/Scripts/Clear-IdentityUsers.ps1:139` | Copilot, Claude |
+| 6 | ~~**Medium**~~ | ~~BUG~~ | ~~String interpolation missing in error message — renders literal `{userId}`~~ | ~~`Trakmark/Components/Account/Pages/ConfirmEmailChange.razor:45`~~ | Copilot, Claude | **✅ Resolved in `63f3f62`** |
+| 7 | ~~**Medium**~~ | ~~SECURITY~~ | ~~Email address not URL-encoded before injecting into passkey query string~~ | ~~`Trakmark/Components/Account/Shared/PasskeySubmit.razor.js:36`~~ | Copilot, Claude | **✅ Resolved in `5755e6d`** |
+| 8 | ~~**Medium**~~ | ~~BUG~~ | ~~`$conn.Open()` outside `try` block in verify section — connection failures bypass error handler~~ | ~~`Trakmark/Scripts/Clear-IdentityUsers.ps1:139`~~ | Copilot, Claude | **✅ Resolved in `11c2ffd`** |
 | 9 | **Medium** | CONVENTION | `DOTNET_ENVIRONMENT=Development` missing from `launchSettings.json` (only `ASPNETCORE_ENVIRONMENT` set) | `Trakmark/Properties/launchSettings.json:10,21` | Copilot, Qodo, Claude |
 | 10 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` states database is SQLite; actual implementation uses SQL Server~~ | ~~`Trakmark/AGENTS.md:9`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
 | 11 | ~~**Medium**~~ | ~~DOCS~~ | ~~`AGENTS.md` theme list omits `yellow`; `App.razor` sets `data-cf-theme="yellow"`~~ | ~~`Trakmark/AGENTS.md:69`~~ | Copilot, Claude | **✅ Resolved in `9514a50`** |
