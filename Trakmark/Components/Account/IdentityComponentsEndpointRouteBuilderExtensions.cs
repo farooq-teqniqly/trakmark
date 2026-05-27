@@ -11,7 +11,7 @@ using Trakmark.Components.Account.Pages;
 using Trakmark.Components.Account.Pages.Manage;
 using Trakmark.Data;
 
-namespace Microsoft.AspNetCore.Routing;
+namespace Trakmark.Components.Account;
 
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
