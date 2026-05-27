@@ -86,6 +86,7 @@
         RedirectManager.RedirectToWithStatus("Account/Manage/Passkeys", "Passkey updated successfully.", HttpContext);
     }
 
+    /// <summary>Form model for renaming a registered passkey.</summary>
     private sealed class InputModel
     {
         [Required]

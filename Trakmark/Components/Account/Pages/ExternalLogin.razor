@@ -194,6 +194,7 @@
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
 
+    /// <summary>Form model for associating an external login with a local email address.</summary>
     private sealed class InputModel
     {
         [Required]
