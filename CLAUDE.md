@@ -16,7 +16,8 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 
 ## Configuration
 
-- Secrets (API keys) go in **user secrets**, never in `appsettings.json`.
+- Secrets (API keys) and **connection strings** go in **user secrets**, never in `appsettings.json`.
+- Docker Compose **passwords** go in a **`.env` file**, never hardcoded in `docker-compose.yml`.
 - Endpoint overrides go in `appsettings.json` with sensible defaults in code.
 - `Properties/launchSettings.json` sets `DOTNET_ENVIRONMENT=Development`.
 

@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlite(connectionString);
+                options.UseSqlServer(connectionString);
                 if (env.IsDevelopment())
                 {
                     options.EnableSensitiveDataLogging().EnableDetailedErrors();

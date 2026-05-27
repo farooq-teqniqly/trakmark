@@ -296,6 +296,9 @@ ServiceFabricBackup/
 *.ldf
 *.ndf
 
+# Docker SQL Server data volume
+SchoolTrackTracker/Data/sqlserver/
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout
