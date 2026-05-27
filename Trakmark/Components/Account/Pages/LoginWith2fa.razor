@@ -74,17 +74,17 @@
 
         if (result.Succeeded)
         {
-            Logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", userId);
+            Logger.LogUserLoggedInWith2fa(userId);
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.IsLockedOut)
         {
-            Logger.LogWarning("User with ID '{UserId}' account locked out.", userId);
+            Logger.LogUserLockedOut2fa(userId);
             RedirectManager.RedirectTo("Account/Lockout");
         }
         else
         {
-            Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", userId);
+            Logger.LogInvalidAuthenticatorCode(userId);
             message = "Error: Invalid authenticator code.";
         }
     }

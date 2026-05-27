@@ -14,7 +14,7 @@ using Trakmark.Data;
 namespace Trakmark.Components.Account;
 
 /// <summary>Registers additional Identity API endpoints required by the Razor component account pages.</summary>
-internal static class IdentityComponentsEndpointRouteBuilderExtensions
+internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
 {
     /// <summary>
     /// Maps the <c>/Account</c> endpoint group, including external login, logout, passkey creation/request,
@@ -171,10 +171,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 }
 
                 var userId = await userManager.GetUserIdAsync(user);
-                downloadLogger.LogInformation(
-                    "User with ID '{UserId}' asked for their personal data.",
-                    userId
-                );
+                LogPersonalDataDownloaded(downloadLogger, userId);
 
                 // Only include personal data for download
                 var personalData = new Dictionary<string, string>();
