@@ -51,10 +51,10 @@
     private ExternalLoginInfo? externalLoginInfo;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = null!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = default!;
+    private InputModel Input { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     private string? RemoteError { get; set; }

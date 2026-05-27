@@ -43,7 +43,7 @@ else
     private IEnumerable<string>? recoveryCodes;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

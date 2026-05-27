@@ -71,7 +71,7 @@
     private bool showRemoveButton;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = null!;
 
     [SupplyParameterFromForm]
     private string? LoginProvider { get; set; }

@@ -66,7 +66,7 @@ else
     private IList<UserPasskeyInfo>? currentPasskeys;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = null!;
 
     [SupplyParameterFromForm]
     private string? Action { get; set; }
@@ -75,7 +75,7 @@ else
     private string? CredentialId { get; set; }
 
     [SupplyParameterFromForm(FormName = "add-passkey")]
-    private PasskeyInputModel Input { get; set; } = default!;
+    private PasskeyInputModel Input { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

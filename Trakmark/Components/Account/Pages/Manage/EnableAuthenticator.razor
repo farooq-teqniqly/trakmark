@@ -75,10 +75,10 @@ else
     private IEnumerable<string>? recoveryCodes;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = null!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = default!;
+    private InputModel Input { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

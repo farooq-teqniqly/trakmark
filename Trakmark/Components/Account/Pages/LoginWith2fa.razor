@@ -46,10 +46,10 @@
 
 @code {
     private string? message;
-    private ApplicationUser user = default!;
+    private ApplicationUser user = null!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = default!;
+    private InputModel Input { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
