@@ -67,9 +67,9 @@ Trakmark/
 - Admin role assignment: add pages/logic to call `UserManager.AddToRoleAsync(user, "Admin")`.
 
 ## Theming
-- Default theme: blue (`--cf-blue-*` variables).
+- Default theme: yellow (`data-cf-theme="yellow"` on `<body>`).
 - Change theme by setting `data-cf-theme="<name>"` on a parent element (or `<body>`).
-- Available themes defined in `wwwroot/css/themes.css`: `blue`, `indigo`, `purple`, `green`, `teal`, `gray`, `yellow`.
+- Available themes defined in `wwwroot/css/themes.css`: `blue`, `indigo`, `purple`, `green`, `teal`, `gray`, `yellow`, `code-magic`, `pink`, `red`, `orange`, `cyan`.
 - Navbar and footer use `var(--cf-theme-850)` background automatically.
 
 ## Data access
