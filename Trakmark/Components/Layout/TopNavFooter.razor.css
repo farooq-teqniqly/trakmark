@@ -1,0 +1,11 @@
+.footerStyle {
+    background-color: var(--cf-theme-850);
+}
+
+.footerStyle a {
+    color: var(--cf-theme-200);
+}
+
+.footerStyle a:hover {
+    color: var(--cf-theme-core);
+}

@@ -1,0 +1,38 @@
+# CLAUDE.md — dotnet-otel
+
+## Language and spelling
+
+Use U.S. English in all prose, comments, commit messages, and docs.
+
+## Code conventions
+
+- Target **net10.0**; use latest C# language features where they improve clarity.
+- `Nullable` and `ImplicitUsings` enabled on all projects.
+- No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types, constructors, methods, and non-trivial fields. Exceptions: `[LoggerMessage]` methods in logging classes (`*.Logging.cs`) — the message template is self-documenting; EF Core migration files (`Migrations/`) — auto-generated, do not edit.
+- Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).
+- Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
+- Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.
+- No defensive null-checks on DI-injected dependencies — trust the container.
+- Remove any DI-injected dependency that is not used in the file it is injected into.
+- Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
+- No comments that restate what the code already says.
+
+## Configuration
+
+- Secrets (API keys) and **connection strings** go in **user secrets**, never in `appsettings.json`.
+- Docker Compose **passwords** go in a **`.env` file**, never hardcoded in `docker-compose.yml`.
+- Endpoint overrides go in `appsettings.json` with sensible defaults in code.
+- `Properties/launchSettings.json` sets `DOTNET_ENVIRONMENT=Development`.
+
+## Git commits
+
+- Subject line: ≤ 50 characters, imperative mood, no period.
+- Body (optional): wrap at 72 characters, explain _why_ not _what_.
+- Total commit message: **under 50 words**.
+- Always add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` when AI-assisted.
+
+## Pull request descriptions
+
+- **Under 200 words.**
+- Include: what changed, why, and a short test/verification note.
+- No filler phrases ("this PR...", "in this change...").

@@ -1,0 +1,83 @@
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+<nav class="navbar navbar-expand-lg navStyle" data-bs-theme="dark">
+    <div class="container-xxl">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-stopwatch me-2"></i>Trakmark
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                        <i class="bi bi-house"></i>
+                        <span class="ms-1">Home</span>
+                    </NavLink>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Account/Manage">
+                                <i class="bi bi-person-circle"></i>
+                                <span class="ms-1">@context.User.Identity?.Name</span>
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <form action="Account/Logout" method="post" class="d-inline">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span class="ms-1">Logout</span>
+                                </button>
+                            </form>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Account/Login">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span class="ms-1">Login</span>
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
