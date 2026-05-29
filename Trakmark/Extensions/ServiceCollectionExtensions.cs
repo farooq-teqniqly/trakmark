@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Trakmark.Components.Account;
 using Trakmark.Data;
 
 namespace Trakmark.Extensions;
@@ -64,7 +63,7 @@ public static class ServiceCollectionExtensions
             return services;
         }
 
-        /// <summary>Registers ASP.NET Core Identity with roles, EF Core stores, sign-in manager, and a no-op email sender.</summary>
+        /// <summary>Registers ASP.NET Core Identity with roles, EF Core stores, and sign-in manager.</summary>
         public IServiceCollection AddAppIdentity()
         {
             services
@@ -77,8 +76,6 @@ public static class ServiceCollectionExtensions
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
-
-            services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
             return services;
         }
