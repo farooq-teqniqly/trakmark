@@ -32,4 +32,6 @@ If Google omits the email claim (rare but possible), redirect to `Account/Login`
 
 ## Migration Plan
 
-Single file change, no data migration. Deploy is safe to roll forward or back — no schema or API changes.
+No data migration. Deploy is safe to roll forward or back — no schema changes.
+
+Files changed: `ExternalLogin.razor` (logic rewrite), plus removal of 18 razor pages, 5 C# files, 3 API endpoints, and supporting registrations for unused Identity scaffold (2FA, passkeys, email-change, external login management).
