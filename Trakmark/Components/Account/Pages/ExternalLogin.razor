@@ -12,7 +12,7 @@
 
 <PageTitle>Register</PageTitle>
 
-<StatusMessage Message="@message" />
+<StatusMessage />
 <h1>Register</h1>
 <h2>Associate your @ProviderDisplayName account.</h2>
 <hr />
@@ -25,7 +25,6 @@
 @code {
     public const string LoginCallbackAction = "LoginCallback";
 
-    private string? message;
     private ExternalLoginInfo? externalLoginInfo;
 
     [CascadingParameter]
@@ -33,6 +32,9 @@
 
     [SupplyParameterFromQuery]
     private string? RemoteError { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
 
     [SupplyParameterFromQuery]
     private string? Action { get; set; }
@@ -87,7 +89,7 @@
         if (result.Succeeded)
         {
             Logger.LogExternalLoginSuccess(externalLoginInfo.Principal.Identity?.Name, externalLoginInfo.LoginProvider);
-            RedirectManager.RedirectTo("/");
+            RedirectManager.RedirectTo(ReturnUrl);
             return;
         }
         else if (result.IsLockedOut)
@@ -118,22 +120,30 @@
         var result = await UserManager.CreateAsync(user);
         if (!result.Succeeded)
         {
-            message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+            RedirectManager.RedirectToWithStatus("Account/Login",
+                $"Error creating account: {string.Join(", ", result.Errors.Select(e => e.Description))}", HttpContext);
             return;
         }
 
         result = await UserManager.AddLoginAsync(user, info);
         if (!result.Succeeded)
         {
-            message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+            RedirectManager.RedirectToWithStatus("Account/Login",
+                $"Error linking Google account: {string.Join(", ", result.Errors.Select(e => e.Description))}", HttpContext);
             return;
         }
 
         Logger.LogUserCreatedWithExternalProvider(info.LoginProvider);
 
-        await UserManager.AddToRoleAsync(user, "User");
+        var roleResult = await UserManager.AddToRoleAsync(user, "User");
+        if (!roleResult.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Failed to assign default role to user '{email}': {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+        }
+
         await SignInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-        RedirectManager.RedirectTo("/");
+        RedirectManager.RedirectTo(ReturnUrl);
     }
 
     private ApplicationUser CreateUser()

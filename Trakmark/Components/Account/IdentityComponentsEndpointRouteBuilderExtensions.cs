@@ -12,10 +12,7 @@ namespace Trakmark.Components.Account;
 /// <summary>Registers additional Identity API endpoints required by the Razor component account pages.</summary>
 internal static partial class IdentityComponentsEndpointRouteBuilderExtensions
 {
-    /// <summary>
-    /// Maps the <c>/Account</c> endpoint group, including external login, logout, passkey creation/request,
-    /// manage external login linking, and personal data download endpoints.
-    /// </summary>
+    /// <summary>Maps the <c>/Account</c> endpoint group: external login, logout, and personal data download.</summary>
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(
         this IEndpointRouteBuilder endpoints
     )
