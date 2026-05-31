@@ -33,7 +33,7 @@ Trakmark needs a rich domain model before features accrete around an anemic one.
 
 ## Impact
 
-- New domain layer (`Trakmark/Domain/`), persistence-ignorant; no EF Core mapping or migrations in this change.
+- New domain project (`Trakmark.Domain`), persistence-ignorant class library; no EF Core mapping or migrations in this change. Unit tests live in `Trakmark.Domain.Tests`.
 - Strongly-typed IDs: `RegisteredUserId`, `StudentId`, `MeetId`, `SchoolId`, `TeamId`, `UserAccountId`.
 - Bridges to existing ASP.NET Identity (`ApplicationUser`) only through `UserAccountId`; no change to auth flow.
 - Supersedes `docs/narratives/domain-model-design.md`, which was exploratory scaffolding and can be removed once this change is the source of truth.

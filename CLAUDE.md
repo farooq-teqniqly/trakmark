@@ -4,11 +4,23 @@
 
 Use U.S. English in all prose, comments, commit messages, and docs.
 
+## Project structure and naming
+
+- One project per layer/concern; name with the `Trakmark.<Area>` prefix (e.g. `Trakmark.Domain`). The web app project is `Trakmark`.
+- Each project's unit tests live in a sibling project named `<Project>.Tests` (e.g. `Trakmark.Domain.Tests`).
+- Test projects use **xUnit** and reference the project under test.
+- Use **NSubstitute** for mocking in tests.
+- Each test has `// Arrange`, `// Act`, `// Assert` comments.
+- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s.
+- Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
+- Register every new project in `Trakmark.slnx`.
+
 ## Code conventions
 
 - Target **net10.0**; use latest C# language features where they improve clarity.
+- Types are **`sealed` by default**; unseal only when inheritance is intended and designed for.
 - `Nullable` and `ImplicitUsings` enabled on all projects.
-- No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types, constructors, methods, and non-trivial fields. Exceptions: `[LoggerMessage]` methods in logging classes (`*.Logging.cs`) — the message template is self-documenting; EF Core migration files (`Migrations/`) — auto-generated, do not edit.
+- No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types and members (constructors, methods, properties, and non-trivial fields). Exceptions: `[LoggerMessage]` methods in logging classes (`*.Logging.cs`) — the message template is self-documenting; EF Core migration files (`Migrations/`) — auto-generated, do not edit.
 - Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).
 - Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
 - Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.

@@ -1,6 +1,7 @@
 ## 1. Strongly-typed IDs and shared primitives
 
-- [ ] 1.1 Create `Trakmark/Domain/` folder and add `RegisteredUserId`, `StudentId`, `MeetId`, `SchoolId`, `TeamId`, `UserAccountId` as `readonly record struct`s with `Empty` and `NewId()`
+- [ ] 1.0 Create `Trakmark.Domain` class library (net10.0) and `Trakmark.Domain.Tests` xUnit project; reference Domain from Tests; add both to `Trakmark.slnx`
+- [ ] 1.1 Add `RegisteredUserId`, `StudentId`, `MeetId`, `SchoolId`, `TeamId`, `UserAccountId` as `readonly record struct`s with `Empty` and `NewId()`
 - [ ] 1.1a Add a Crockford base32 generator (uppercase, excluding `0/O/1/I/L`) and the per-type prefix format (`STU-`/`MEET-`/`SCH-`/`TEAM-`/`USR-` + six chars); implement `NewId()`, `ToString`, `Parse`/`TryParse` so ill-formed values cannot be constructed; keep `UserAccountId` exempt (wraps the raw Identity key)
 - [ ] 1.2 Add `PersonName`, `SchoolName`, `MeetName`, `TeamName` value objects with non-empty/trim validation
 - [ ] 1.3 Add `SchoolYear` (orderable academic year), `GradeLevel` (closed set), `CompetitionLevel` (HS/MS/Elementary closed set), and `Sport` (Track & Field / Cross-Country closed set)
