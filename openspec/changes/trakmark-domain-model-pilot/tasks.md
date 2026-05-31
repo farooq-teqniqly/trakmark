@@ -70,4 +70,4 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 9. Cleanup
 
-- [ ] 9.1 Delete `docs/narratives/domain-model-design.md` once this change is the source of truth
+- [x] 9.1 Delete `docs/narratives/domain-model-design.md` once this change is the source of truth

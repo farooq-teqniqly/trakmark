@@ -2,7 +2,7 @@
 
 Trakmark is a .NET 10 Blazor Web App with ASP.NET Core Identity already in place (`ApplicationUser`, `ApplicationDbContext`). This change introduces a persistence-ignorant domain model for tracking a student athlete's track-and-field and cross-country results. It is a deliberately narrow vertical slice — one registered user, one student, hand-entered meets — chosen to validate the model shape before importers and multi-user concerns arrive.
 
-The model was explored in `docs/narratives/domain-model-design.md` (scaffolding, to be removed). This document records the decisions that survived that exploration.
+This document is the source of truth for the model's design decisions.
 
 ## Goals / Non-Goals
 
