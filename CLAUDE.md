@@ -14,6 +14,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
 - For integration and end-to-end tests, prefer the real database via **Testcontainers** over in-memory fakes.
+- Practice **TDD**: when a spec defines behavior (e.g. OpenSpec `#### Scenario:` blocks), write the failing tests from those scenarios first, then implement to green. Each scenario maps to a test case.
 - Register every new project in `Trakmark.slnx`.
 
 ## Code conventions
