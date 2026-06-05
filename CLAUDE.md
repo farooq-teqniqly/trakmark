@@ -21,12 +21,14 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 
 - Target **net10.0**; use latest C# language features where they improve clarity.
 - Types are **`sealed` by default**; unseal only when inheritance is intended and designed for.
-- Use `sealed record` (or `readonly record struct`) only when the type is a pure data carrier with no validation logic and no custom equality semantics. Domain value objects that enforce invariants in their constructor must be `sealed class`, not `record`, and must implement `IEquatable<T>` with a matching `Equals`/`GetHashCode` override.
+- Use `sealed record` (or `readonly record struct`) only when the type is a pure data carrier with no validation logic and no custom equality semantics. Domain value objects that enforce invariants in their constructor must be `sealed class`, not `record`, and must implement `IEquatable<T>` with a matching `Equals`/`GetHashCode` override **and** `==`/`!=` operator overloads.
 - `Nullable` and `ImplicitUsings` enabled on all projects.
 - No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types and members (constructors, methods, properties, non-trivial fields, and `const`s). Exceptions: `[LoggerMessage]` methods in logging classes (`*.Logging.cs`) — the message template is self-documenting; EF Core migration files (`Migrations/`) — auto-generated, do not edit.
 - Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).
 - Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
 - Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.
+- Validate all public constructor and method parameters that accept reference types: use `ArgumentNullException.ThrowIfNull(param)` as the first line. Exception: DI-injected dependencies (trust the container).
+- When `Equals` uses a specific `StringComparison`, `GetHashCode` must use the same comparer (e.g. `Value.GetHashCode(StringComparison.Ordinal)`). Mismatched comparers silently break dictionary lookups.
 - No defensive null-checks on DI-injected dependencies — trust the container.
 - Remove any DI-injected dependency that is not used in the file it is injected into.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.

@@ -48,6 +48,8 @@ Before staging files, run through this list:
 
 - **Value object type choice**: every domain value object that validates its constructor argument must be a `sealed class` implementing `IEquatable<T>` with `Equals`/`GetHashCode` overrides **and** `==`/`!=` operator overloads — not a `record`. Use `record`/`readonly record struct` only for pure data carriers with no validation logic.
 - **[Fact] vs [Theory] redundancy**: if a `[Theory]` already covers a case via `[InlineData]`, delete any `[Fact]` that tests the same scenario. Redundant facts diverge over time.
+- **Null guards**: every public constructor and method that accepts a reference-type parameter must call `ArgumentNullException.ThrowIfNull(param)` as its first line. Exception: DI-injected dependencies.
+- **Equals/GetHashCode comparer parity**: if `Equals` uses `StringComparison.Ordinal` (or any explicit comparer), `GetHashCode` must use the same — e.g. `Value.GetHashCode(StringComparison.Ordinal)`. Mismatches silently break dictionary lookups.
 
 ## Before finishing
 
