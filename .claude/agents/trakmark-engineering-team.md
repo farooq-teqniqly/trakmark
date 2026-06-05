@@ -129,9 +129,24 @@ When a reviewer completes:
 4. Repeat up to **3 review rounds total**. After round 3, carry forward any
    remaining Low/Info findings — do not block merge for them.
 
-## Step 4 — Merge
+## Step 4 — Pre-merge: consolidate tasks.md
 
-Once all sections pass review:
+Before merging any branch, collect all checked-off tasks across every worktree
+and apply them once to the target branch's `tasks.md`:
+
+1. For each worktree, read its `tasks.md` and note every line changed from
+   `- [ ]` to `- [x]`.
+2. Apply the union of all completions to the target branch's `tasks.md` on the
+   main repo (not in any worktree).
+3. Commit: `docs: check off sections <N>-<M> tasks prior to merge`
+
+During each subsequent merge, when `tasks.md` conflicts, always resolve with
+`git checkout --ours tasks.md` — the target branch already has the correct
+final state.
+
+## Step 5 — Merge
+
+Once all sections pass review and tasks.md is pre-consolidated:
 
 1. Determine merge order: most independent sections first; sections that define
    types others depend on before sections that consume them.
@@ -139,15 +154,19 @@ Once all sections pass review:
    ```bash
    cd <repo-root>
    git merge --no-ff <worktree-branch> -m "Merge section <N>: <Title>"
+   # On tasks.md conflict:
+   git checkout --ours openspec/changes/<change>/tasks.md
+   git add openspec/changes/<change>/tasks.md
    ```
-3. On conflict: keep the authoritative version for shared types (prefer the
-   section that owns the type); take the version with more complete validation
-   (e.g. ArgumentNullException.ThrowIfNull present > absent) for value objects.
+3. On conflict in domain files: keep the authoritative version for shared types
+   (prefer the section that owns the type); take the version with more complete
+   validation (e.g. ArgumentNullException.ThrowIfNull present > absent) for
+   value objects.
 4. After each merge, run `dotnet test` on the main repo. Fix any post-merge
    API mismatches (stub APIs referencing wrong property/method names) immediately
    and commit the fix.
 
-## Step 5 — Cleanup
+## Step 6 — Cleanup
 
 After all merges are green:
 
@@ -158,7 +177,7 @@ git branch -d <worktree-branch>
 
 Do this for every section. Verify with `git worktree list` and `git branch -l`.
 
-## Step 6 — Retrospective
+## Step 7 — Retrospective
 
 Spawn a `retrospective` subagent (foreground, not background). Pass:
 - The change name

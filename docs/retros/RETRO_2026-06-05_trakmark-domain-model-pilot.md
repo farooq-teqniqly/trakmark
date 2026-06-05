@@ -16,12 +16,16 @@ merged into `domain-modelling`. 126 tests green post-merge.
 | Stale filename reference `openspec-developer.md` in retrospective.md (renamed to `developer.md` in commit `7ad662a`) | Corrected filename reference | `.claude/agents/retrospective.md` |
 | Post-merge: stale worktree directories and branches left on disk/branch list | Added post-merge cleanup rule: `git worktree remove --force` + `git branch -d` | `.claude/agents/developer.md` |
 
+| `tasks.md` conflicted on every merge because all worktrees checked off their own tasks independently | Pre-consolidate tasks.md on target branch before first merge; resolve subsequent conflicts with `--ours` | `.claude/agents/trakmark-engineering-team.md` |
+
 ## Carry-forward (not yet actionable)
 
 - `StringComparison.Ordinal` for user-typed name values (SchoolName etc.) — may need to switch to `OrdinalIgnoreCase` before search/persistence layer is added; no spec decision yet.
 - `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
 - `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
-- `tasks.md` diverges across parallel worktree branches and causes merge conflicts on every merge — consider moving task check-off to a separate per-section file to avoid conflicts.
+- `StringComparison.Ordinal` for user-typed name values (SchoolName etc.) — may need to switch to `OrdinalIgnoreCase` before search/persistence layer is added; no spec decision yet.
+- `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
+- `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
 
 ## Process additions
 
