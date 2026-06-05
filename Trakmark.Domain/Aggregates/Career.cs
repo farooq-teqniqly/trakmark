@@ -9,6 +9,9 @@ public sealed class Career
 {
     private readonly List<Enrollment> _enrollments = [];
 
+    private static readonly IComparer<Enrollment> BySchoolYear =
+        Comparer<Enrollment>.Create((a, b) => a.SchoolYear.CompareTo(b.SchoolYear));
+
     /// <summary>All enrollments in the career, ordered by school year ascending.</summary>
     public IReadOnlyList<Enrollment> Enrollments => _enrollments.AsReadOnly();
 
@@ -19,12 +22,6 @@ public sealed class Career
     public Enrollment? Current => _enrollments.Count > 0
         ? _enrollments[^1]
         : null;
-
-    /// <summary>
-    /// The current enrollment (latest school year), or <see langword="null"/> when the
-    /// career is empty.
-    /// </summary>
-    public Enrollment? CurrentSeason => Current;
 
     /// <summary>
     /// All enrollments except the current (latest) one, ordered by school year ascending.
@@ -45,8 +42,13 @@ public sealed class Career
             return false;
         }
 
-        _enrollments.Add(enrollment);
-        _enrollments.Sort((a, b) => a.SchoolYear.CompareTo(b.SchoolYear));
+        var index = _enrollments.BinarySearch(enrollment, BySchoolYear);
+        if (index < 0)
+        {
+            index = ~index;
+        }
+
+        _enrollments.Insert(index, enrollment);
         return true;
     }
 }

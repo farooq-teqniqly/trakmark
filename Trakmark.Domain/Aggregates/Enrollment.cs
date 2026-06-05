@@ -46,4 +46,10 @@ public sealed class Enrollment : IEquatable<Enrollment>
     /// <inheritdoc/>
     public override int GetHashCode() =>
         HashCode.Combine(SchoolId, SchoolYear, GradeLevel);
+
+    /// <summary>Returns <see langword="true"/> when both enrollments are equal.</summary>
+    public static bool operator ==(Enrollment? left, Enrollment? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the enrollments differ.</summary>
+    public static bool operator !=(Enrollment? left, Enrollment? right) => !(left == right);
 }

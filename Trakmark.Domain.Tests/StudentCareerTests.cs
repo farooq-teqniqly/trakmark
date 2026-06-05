@@ -82,28 +82,22 @@ public sealed class StudentCareerTests
 
         // Assert
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.FailureReason);
         Assert.Single(student.Career.Enrollments);
     }
 
     // ── Grade level is recorded independently ──────────────────────────────
 
+    /// <summary>Supplies all four grade levels as test cases.</summary>
+    public static TheoryData<GradeLevel> AllGradeLevels =>
+        new() { GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior };
+
     [Theory]
-    [InlineData("Freshman")]
-    [InlineData("Sophomore")]
-    [InlineData("Junior")]
-    [InlineData("Senior")]
-    public void AddEnrollment_StoresSuppliedGradeLevel(string gradeName)
+    [MemberData(nameof(AllGradeLevels))]
+    public void AddEnrollment_StoresSuppliedGradeLevel(GradeLevel grade)
     {
         // Arrange
         var student = new Student(NewStudentId(), AnyName());
-        var grade = gradeName switch
-        {
-            "Freshman" => GradeLevel.Freshman,
-            "Sophomore" => GradeLevel.Sophomore,
-            "Junior" => GradeLevel.Junior,
-            "Senior" => GradeLevel.Senior,
-            _ => throw new InvalidOperationException()
-        };
 
         // Act
         student.AddEnrollment(NewSchoolId(), new SchoolYear(2024), grade);
@@ -116,7 +110,7 @@ public sealed class StudentCareerTests
     // ── Season helpers ─────────────────────────────────────────────────────
 
     [Fact]
-    public void CurrentSeason_ReturnsCurrentEnrollment()
+    public void Current_ReturnsEnrollmentWithLatestSchoolYear()
     {
         // Arrange
         var student = new Student(NewStudentId(), AnyName());
@@ -125,7 +119,7 @@ public sealed class StudentCareerTests
         student.AddEnrollment(schoolId, new SchoolYear(2024), GradeLevel.Junior);
 
         // Act
-        var current = student.Career.CurrentSeason;
+        var current = student.Career.Current;
 
         // Assert
         Assert.NotNull(current);
@@ -191,6 +185,19 @@ public sealed class StudentCareerTests
         var grade = GradeLevel.Junior;
         var a = new Enrollment(schoolId, new SchoolYear(2023), grade);
         var b = new Enrollment(schoolId, new SchoolYear(2024), grade);
+
+        // Assert
+        Assert.NotEqual(a, b);
+    }
+
+    [Fact]
+    public void Enrollment_DifferentSchoolId_NotEqual()
+    {
+        // Arrange
+        var year = new SchoolYear(2024);
+        var grade = GradeLevel.Junior;
+        var a = new Enrollment(NewSchoolId(), year, grade);
+        var b = new Enrollment(NewSchoolId(), year, grade);
 
         // Assert
         Assert.NotEqual(a, b);
