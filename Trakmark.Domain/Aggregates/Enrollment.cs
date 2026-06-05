@@ -34,8 +34,8 @@ public sealed class Enrollment : IEquatable<Enrollment>
             return false;
         }
 
-        return SchoolId == other.SchoolId
-            && Year == other.Year
+        return SchoolId.Equals(other.SchoolId)
+            && Year.Equals(other.Year)
             && Grade.Equals(other.Grade);
     }
 

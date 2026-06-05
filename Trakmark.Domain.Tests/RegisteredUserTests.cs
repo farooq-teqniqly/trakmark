@@ -1,4 +1,4 @@
-﻿using Trakmark.Domain.Aggregates;
+using Trakmark.Domain.Aggregates;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
@@ -13,7 +13,7 @@ public sealed class RegisteredUserTests
     // ── Adding a student creates and follows it ───────────────────────────
 
     [Fact]
-    public void AddStudent_ValidName_CreatesStudentAndFollows()
+    public void AddStudent_ValidName_CreatesStudentAndFollowsWithEmptyCareer()
     {
         // Arrange
         var accountId = new UserAccountId("account-1");
@@ -26,20 +26,6 @@ public sealed class RegisteredUserTests
         // Assert
         Assert.NotNull(student);
         Assert.Contains(student.Id, user.Following);
-    }
-
-    [Fact]
-    public void AddStudent_ValidName_StudentHasEmptyCareer()
-    {
-        // Arrange
-        var accountId = new UserAccountId("account-1");
-        var user = RegisteredUser.Create(accountId);
-        var name = new PersonName("Bob Smith");
-
-        // Act
-        var student = user.AddStudent(name);
-
-        // Assert
         Assert.Empty(student.Career.Enrollments);
     }
 
@@ -75,8 +61,9 @@ public sealed class RegisteredUserTests
         user.Unfollow(studentId);
 
         // Assert
-        Assert.DoesNotContain(studentId, user.Following);
-        Assert.Equal(studentId, student.Id);
+        // Only the follow link is removed; the Student object itself is not part of
+        // this aggregate and cannot be verified here without a repository.
+        Assert.Empty(user.Following);
     }
 
     // ── Following is idempotent ───────────────────────────────────────────

@@ -7,10 +7,12 @@ public sealed class TeamName : IEquatable<TeamName>
     public string Value { get; }
 
     /// <summary>Initializes a <see cref="TeamName"/>, trimming whitespace.</summary>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is empty or whitespace.</exception>
     public TeamName(string value)
     {
-        var trimmed = value?.Trim() ?? string.Empty;
+        ArgumentNullException.ThrowIfNull(value);
+        var trimmed = value.Trim();
         if (trimmed.Length == 0)
         {
             throw new ArgumentException("Team name must not be empty or whitespace.", nameof(value));
@@ -30,4 +32,10 @@ public sealed class TeamName : IEquatable<TeamName>
 
     /// <inheritdoc/>
     public override string ToString() => Value;
+
+    /// <summary>Returns true when both instances are equal.</summary>
+    public static bool operator ==(TeamName? left, TeamName? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns true when both instances are not equal.</summary>
+    public static bool operator !=(TeamName? left, TeamName? right) => !(left == right);
 }

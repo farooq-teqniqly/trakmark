@@ -3,7 +3,7 @@
 namespace Trakmark.Domain.Aggregates;
 
 /// <summary>
-/// Records a student's academic career as a set of yearly enrollments.
+/// Manages a student's enrollment history as a set of yearly enrollments.
 /// One enrollment per <see cref="SchoolYear"/> is enforced; the enrollment
 /// with the latest year is the current enrollment.
 /// </summary>

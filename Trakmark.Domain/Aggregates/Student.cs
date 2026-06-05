@@ -30,6 +30,5 @@ public sealed class Student
         Id = StudentId.NewId();
         Name = name;
         Career = new Career();
-        AccountLink = null;
     }
 }
