@@ -22,13 +22,14 @@ public sealed class MeetName : IEquatable<MeetName>
     }
 
     /// <inheritdoc/>
-    public bool Equals(MeetName? other) => other is not null && Value == other.Value;
+    public bool Equals(MeetName? other) =>
+        other is not null && string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as MeetName);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => Value.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override string ToString() => Value;

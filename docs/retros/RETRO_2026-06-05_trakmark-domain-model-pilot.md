@@ -20,10 +20,10 @@ merged into `domain-modelling`. 126 tests green post-merge.
 
 ## Carry-forward (not yet actionable)
 
-- `StringComparison.Ordinal` for user-typed name values (SchoolName etc.) — may need to switch to `OrdinalIgnoreCase` before search/persistence layer is added; no spec decision yet.
+- ~~`StringComparison.Ordinal` for user-typed name values~~ — resolved: switched to `OrdinalIgnoreCase` (decision confirmed by owner).
 - `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
 - `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
-- `StringComparison.Ordinal` for user-typed name values (SchoolName etc.) — may need to switch to `OrdinalIgnoreCase` before search/persistence layer is added; no spec decision yet.
+- ~~`StringComparison.Ordinal` for user-typed name values~~ — resolved: switched to `OrdinalIgnoreCase` (decision confirmed by owner).
 - `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
 - `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
 
