@@ -12,7 +12,10 @@ public sealed record PersonName
     {
         var trimmed = value?.Trim() ?? string.Empty;
         if (trimmed.Length == 0)
+        {
             throw new ArgumentException("Person name must not be empty or whitespace.", nameof(value));
+        }
+
         Value = trimmed;
     }
 

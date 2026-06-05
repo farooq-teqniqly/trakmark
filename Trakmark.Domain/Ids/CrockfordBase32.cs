@@ -16,7 +16,10 @@ internal static class CrockfordBase32
     {
         var chars = new char[length];
         for (var i = 0; i < length; i++)
+        {
             chars[i] = Alphabet[Random.Next(Alphabet.Length)];
+        }
+
         return new string(chars);
     }
 
@@ -26,7 +29,9 @@ internal static class CrockfordBase32
         foreach (var c in body)
         {
             if (Alphabet.IndexOf(c) < 0)
+            {
                 return false;
+            }
         }
         return true;
     }

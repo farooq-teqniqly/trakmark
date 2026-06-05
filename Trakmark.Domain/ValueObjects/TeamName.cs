@@ -12,7 +12,10 @@ public sealed record TeamName
     {
         var trimmed = value?.Trim() ?? string.Empty;
         if (trimmed.Length == 0)
+        {
             throw new ArgumentException("Team name must not be empty or whitespace.", nameof(value));
+        }
+
         Value = trimmed;
     }
 

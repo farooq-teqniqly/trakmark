@@ -16,9 +16,15 @@ internal static class DomainId
     {
         var expectedLength = prefix.Length + BodyLength;
         if (value.Length != expectedLength)
+        {
             return false;
+        }
+
         if (!value.StartsWith(prefix, StringComparison.Ordinal))
+        {
             return false;
+        }
+
         return CrockfordBase32.IsValidBody(value.AsSpan(prefix.Length));
     }
 
