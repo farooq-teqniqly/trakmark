@@ -13,6 +13,9 @@ public sealed class Meet
 {
     private readonly List<Result> _results = [];
 
+    /// <summary>Tracks the number of results recorded per student for O(1) order calculation.</summary>
+    private readonly Dictionary<StudentId, int> _resultCountByStudent = [];
+
     /// <summary>The unique identifier for this meet.</summary>
     public MeetId Id { get; }
 
@@ -87,6 +90,7 @@ public sealed class Meet
         var effectiveTier = tier ?? Tier.Open;
         var order = NextOrderFor(studentId);
         _results.Add(new Result(studentId, @event, status, mark, place, effectiveTier, order));
+        _resultCountByStudent[studentId] = order;
     }
 
     private void EnforceSportMatch(Event @event)
@@ -169,7 +173,7 @@ public sealed class Meet
 
     private int NextOrderFor(StudentId studentId)
     {
-        var existingCount = _results.Count(r => r.StudentId == studentId);
+        _resultCountByStudent.TryGetValue(studentId, out var existingCount);
         return existingCount + 1;
     }
 }

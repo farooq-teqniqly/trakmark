@@ -85,42 +85,19 @@ public sealed class MeetResultTests
 
     // ── A finished result requires a mark and a place ─────────────────────────
 
-    [Fact]
-    public void RecordResult_Finished_WithMarkAndPlace_Succeeds()
+    [Theory]
+    [InlineData("no_mark")]
+    [InlineData("no_place")]
+    public void RecordResult_Finished_MissingRequiredField_Throws(string missingField)
     {
         // Arrange
         var meet = CreateTrackMeet();
-        var studentId = StudentId.NewId();
-
-        // Act
-        meet.RecordResult(studentId, TfRunEvent, ResultStatus.Finished, new TimeMark(11500), new Placement(1), null);
-
-        // Assert
-        Assert.Single(meet.Results);
-        Assert.NotNull(meet.Results.Single().Mark);
-        Assert.NotNull(meet.Results.Single().Place);
-    }
-
-    [Fact]
-    public void RecordResult_Finished_WithoutMark_Throws()
-    {
-        // Arrange
-        var meet = CreateTrackMeet();
+        Performance? mark = missingField == "no_mark" ? null : new TimeMark(11500);
+        Placement? place = missingField == "no_place" ? null : new Placement(1);
 
         // Act / Assert
         Assert.Throws<InvalidOperationException>(() =>
-            meet.RecordResult(StudentId.NewId(), TfRunEvent, ResultStatus.Finished, mark: null, new Placement(1), null));
-    }
-
-    [Fact]
-    public void RecordResult_Finished_WithoutPlace_Throws()
-    {
-        // Arrange
-        var meet = CreateTrackMeet();
-
-        // Act / Assert
-        Assert.Throws<InvalidOperationException>(() =>
-            meet.RecordResult(StudentId.NewId(), TfRunEvent, ResultStatus.Finished, new TimeMark(11500), place: null, null));
+            meet.RecordResult(StudentId.NewId(), TfRunEvent, ResultStatus.Finished, mark, place, null));
     }
 
     // ── A non-finished result carries neither mark nor place ──────────────────
@@ -300,8 +277,8 @@ public sealed class MeetResultTests
         Assert.Equal(4, meet.Results.Count);
         Assert.All(meet.Results, r =>
         {
-            Assert.IsType<TimeMark>(r.Mark);
-            Assert.Equal(185000, ((TimeMark)r.Mark!).Milliseconds);
+            var timeMark = Assert.IsType<TimeMark>(r.Mark);
+            Assert.Equal(185000, timeMark.Milliseconds);
         });
         var studentIds = meet.Results.Select(r => r.StudentId).ToHashSet();
         Assert.Equal(4, studentIds.Count);
