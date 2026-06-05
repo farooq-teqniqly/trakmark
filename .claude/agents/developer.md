@@ -64,14 +64,15 @@ Once all tasks in your section are green and checked off in `tasks.md`:
 ## Orchestrator: post-merge cleanup
 
 After merging a worktree branch into the target branch, remove the worktree
-immediately:
+and delete the branch immediately:
 
 ```bash
 git worktree remove <worktree-path> --force
+git branch -d <worktree-branch>
 ```
 
 Do this for every worktree once its branch is merged. Do not leave stale
-worktrees on disk after the merge is confirmed green.
+worktrees or branches after the merge is confirmed green.
 
 ## What you receive in the prompt
 
