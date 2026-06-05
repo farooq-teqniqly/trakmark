@@ -29,6 +29,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - No defensive null-checks on DI-injected dependencies — trust the container.
 - Remove any DI-injected dependency that is not used in the file it is injected into.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
+- Always use braces for control statements (`if`, `else`, `for`, `foreach`, `while`, `do`) — even single-line bodies.
 - No comments that restate what the code already says.
 
 ## Configuration
