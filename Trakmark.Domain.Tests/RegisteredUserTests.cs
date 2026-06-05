@@ -34,12 +34,13 @@ public sealed class RegisteredUserTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddStudent_InvalidName_ThrowsAndNoStudentAdded(string invalidName)
+    public void AddStudent_PersonNameValidation_RejectsEmptyName(string invalidName)
     {
         // Arrange
         var accountId = new UserAccountId("account-1");
         var user = RegisteredUser.Create(accountId);
         var followingBefore = user.Following.Count;
+        // PersonName constructor throws; AddStudent does not add a guard of its own
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => user.AddStudent(new PersonName(invalidName)));

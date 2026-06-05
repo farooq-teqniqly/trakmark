@@ -25,6 +25,8 @@ public sealed class Career
     /// <exception cref="InvalidOperationException">Thrown when a duplicate <see cref="SchoolYear"/> already exists.</exception>
     public void AddEnrollment(Enrollment enrollment)
     {
+        ArgumentNullException.ThrowIfNull(enrollment);
+
         if (_enrollments.Any(e => e.Year == enrollment.Year))
         {
             throw new InvalidOperationException(

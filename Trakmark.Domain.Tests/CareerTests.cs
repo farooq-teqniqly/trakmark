@@ -12,36 +12,25 @@ public sealed class CareerTests
     // ── Adding enrollment for a new year ─────────────────────────────────
 
     [Fact]
-    public void AddEnrollment_NewYear_BecomesCurrentEnrollment()
+    public void AddEnrollment_NewAndLaterYear_LatestYearBecomesCurrent()
     {
         // Arrange
         var career = new Career();
         var schoolId = SchoolId.NewId();
-        var year = new SchoolYear(2024);
-        var enrollment = new Enrollment(schoolId, year, GradeLevel.Junior);
+        var first = new Enrollment(schoolId, new SchoolYear(2023), GradeLevel.Junior);
+        var second = new Enrollment(schoolId, new SchoolYear(2024), GradeLevel.Senior);
 
         // Act
-        career.AddEnrollment(enrollment);
+        career.AddEnrollment(first);
 
         // Assert
-        Assert.Same(enrollment, career.Current);
-    }
-
-    [Fact]
-    public void AddEnrollment_LaterYear_LaterYearBecomesCurrent()
-    {
-        // Arrange
-        var career = new Career();
-        var schoolId = SchoolId.NewId();
-        var earlier = new Enrollment(schoolId, new SchoolYear(2023), GradeLevel.Junior);
-        var later = new Enrollment(schoolId, new SchoolYear(2024), GradeLevel.Senior);
+        Assert.Same(first, career.Current);
 
         // Act
-        career.AddEnrollment(earlier);
-        career.AddEnrollment(later);
+        career.AddEnrollment(second);
 
         // Assert
-        Assert.Same(later, career.Current);
+        Assert.Same(second, career.Current);
     }
 
     // ── Rejecting a duplicate year ────────────────────────────────────────
