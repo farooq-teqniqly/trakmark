@@ -14,12 +14,12 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 2. Discipline catalog and performance marks
 
-- [ ] 2.T Write failing tests for `MarkKind` comparison direction (time → min wins, distance → max wins), `Discipline` identity (distinct setup parameters yield distinct disciplines — e.g. differing hurdle height), `Performance` comparability per direction, and `Event` exposing relay-ness from its discipline. Use `[Theory]` for the direction/identity cases.
-- [ ] 2.1 Define `MarkKind` (time, distance, place-only) and the comparison direction it implies
-- [ ] 2.2 Model `Discipline` as a structured controlled vocabulary whose identity includes setup parameters (e.g. hurdle height, implement weight); ensure distinct parameters yield distinct disciplines
-- [ ] 2.3 Define `Performance` as a closed hierarchy of measured marks: `TimeMark`, `DistanceMark`, each comparable per the discipline direction
-- [ ] 2.4 Define `Placement` (positive-int finish rank) and `Tier` (Varsity/JV/Open, closed and extensible)
-- [ ] 2.5 Define `Event` value object pairing a `Discipline` with its `Sport`; expose relay-ness from the discipline
+- [x] 2.T Write failing tests for `MarkKind` comparison direction (time → min wins, distance → max wins), `Discipline` identity (distinct setup parameters yield distinct disciplines — e.g. differing hurdle height), `Performance` comparability per direction, and `Event` exposing relay-ness from its discipline. Use `[Theory]` for the direction/identity cases.
+- [x] 2.1 Define `MarkKind` (time, distance, place-only) and the comparison direction it implies
+- [x] 2.2 Model `Discipline` as a structured controlled vocabulary whose identity includes setup parameters (e.g. hurdle height, implement weight); ensure distinct parameters yield distinct disciplines
+- [x] 2.3 Define `Performance` as a closed hierarchy of measured marks: `TimeMark`, `DistanceMark`, each comparable per the discipline direction
+- [x] 2.4 Define `Placement` (positive-int finish rank) and `Tier` (Varsity/JV/Open, closed and extensible)
+- [x] 2.5 Define `Event` value object pairing a `Discipline` with its `Sport`; expose relay-ness from the discipline
 
 ## 3. School aggregate
 
