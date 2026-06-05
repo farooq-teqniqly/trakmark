@@ -34,6 +34,7 @@ Follow the TDD rule in config.yaml exactly. In general:
 2. Run the test suite. Confirm failures are missing-type/method, not your error.
 3. Implement numbered tasks in order. Run tests after each. Prior tests stay green.
 4. Stop at the section boundary. Do not stub or start adjacent sections.
+5. When your section's tests reference a type owned by a prior section, use only its already-merged public API (property names, method signatures, constructor shape exactly as implemented). Never invent a temporary API for a foreign type — if the type is not yet merged, block and report rather than guessing.
 
 ## After each task
 
@@ -45,7 +46,7 @@ do not batch at the end.
 
 Before staging files, run through this list:
 
-- **Value object type choice**: every domain value object that validates its constructor argument must be a `sealed class` implementing `IEquatable<T>` with `Equals`/`GetHashCode` overrides — not a `record`. Use `record`/`readonly record struct` only for pure data carriers with no validation logic.
+- **Value object type choice**: every domain value object that validates its constructor argument must be a `sealed class` implementing `IEquatable<T>` with `Equals`/`GetHashCode` overrides **and** `==`/`!=` operator overloads — not a `record`. Use `record`/`readonly record struct` only for pure data carriers with no validation logic.
 - **[Fact] vs [Theory] redundancy**: if a `[Theory]` already covers a case via `[InlineData]`, delete any `[Fact]` that tests the same scenario. Redundant facts diverge over time.
 
 ## Before finishing
@@ -57,6 +58,18 @@ Once all tasks in your section are green and checked off in `tasks.md`:
    subject, body explaining why not what, ≤72 chars per line).
 3. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
    trailer in the commit message body.
+
+## Orchestrator: post-merge cleanup
+
+After merging a worktree branch into the target branch, remove the worktree
+immediately:
+
+```bash
+git worktree remove <worktree-path> --force
+```
+
+Do this for every worktree once its branch is merged. Do not leave stale
+worktrees on disk after the merge is confirmed green.
 
 ## What you receive in the prompt
 
