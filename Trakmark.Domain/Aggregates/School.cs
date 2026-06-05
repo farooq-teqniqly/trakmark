@@ -50,6 +50,7 @@ public sealed class School
     /// </exception>
     public void AddTeam(Sport sport)
     {
+        ArgumentNullException.ThrowIfNull(sport);
         if (_teams.ContainsKey(sport))
         {
             throw new InvalidOperationException(

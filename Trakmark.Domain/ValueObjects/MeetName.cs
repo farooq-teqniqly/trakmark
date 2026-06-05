@@ -27,7 +27,15 @@ public sealed class MeetName : IEquatable<MeetName>
     public override bool Equals(object? obj) => Equals(obj as MeetName);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Value);
+    public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
+
+    /// <summary>Returns <see langword="true"/> when both operands are equal.</summary>
+    public static bool operator ==(MeetName? left, MeetName? right) =>
+        left is null ? right is null : left.Equals(right);
+
+    /// <summary>Returns <see langword="true"/> when both operands are not equal.</summary>
+    public static bool operator !=(MeetName? left, MeetName? right) =>
+        !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Value;

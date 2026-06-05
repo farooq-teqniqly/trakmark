@@ -27,7 +27,15 @@ public sealed class PersonName : IEquatable<PersonName>
     public override bool Equals(object? obj) => Equals(obj as PersonName);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Value);
+    public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
+
+    /// <summary>Returns <see langword="true"/> when both operands are equal.</summary>
+    public static bool operator ==(PersonName? left, PersonName? right) =>
+        left is null ? right is null : left.Equals(right);
+
+    /// <summary>Returns <see langword="true"/> when both operands are not equal.</summary>
+    public static bool operator !=(PersonName? left, PersonName? right) =>
+        !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Value;
