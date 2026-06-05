@@ -38,10 +38,10 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 5. RegisteredUser aggregate
 
-- [ ] 5.T Write failing tests from `manage-students` spec — `Adding a student creates and follows it`, `Person name must be valid`, `Unfollow removes the link only` (student still exists), `Following is idempotent`, and `A student has no account link by default`.
-- [ ] 5.1 Implement `RegisteredUser` root with `UserAccountId` and a mutable `Following` set of `StudentId`
-- [ ] 5.2 Implement idempotent `Follow` and `Unfollow` operations
-- [ ] 5.3 Implement `AddStudent` that creates a `Student` and follows it in one operation
+- [x] 5.T Write failing tests from `manage-students` spec — `Adding a student creates and follows it`, `Person name must be valid`, `Unfollow removes the link only` (student still exists), `Following is idempotent`, and `A student has no account link by default`.
+- [x] 5.1 Implement `RegisteredUser` root with `UserAccountId` and a mutable `Following` set of `StudentId`
+- [x] 5.2 Implement idempotent `Follow` and `Unfollow` operations
+- [x] 5.3 Implement `AddStudent` that creates a `Student` and follows it in one operation
 
 ## 6. Meet aggregate and result recording
 
