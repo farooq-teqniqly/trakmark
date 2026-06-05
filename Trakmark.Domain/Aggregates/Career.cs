@@ -7,8 +7,10 @@ namespace Trakmark.Domain.Aggregates;
 /// </summary>
 public sealed class Career
 {
+    /// <summary>The ordered list of enrollments, sorted by SchoolYear ascending.</summary>
     private readonly List<Enrollment> _enrollments = [];
 
+    /// <summary>Comparer that orders enrollments by SchoolYear ascending.</summary>
     private static readonly IComparer<Enrollment> BySchoolYear =
         Comparer<Enrollment>.Create((a, b) => a.SchoolYear.CompareTo(b.SchoolYear));
 

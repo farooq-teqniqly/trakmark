@@ -24,19 +24,12 @@ public sealed class Student
     /// <summary>The student's career (set of yearly enrollments).</summary>
     public Career Career { get; } = new Career();
 
-    /// <summary>Initializes a <see cref="Student"/> with no account link.</summary>
-    public Student(StudentId id, PersonName name)
+    /// <summary>Initializes a <see cref="Student"/>, optionally linking an account.</summary>
+    public Student(StudentId id, PersonName name, UserAccountId? accountId = null)
     {
         Id = id;
         Name = name;
-    }
-
-    /// <summary>Initializes a <see cref="Student"/> with an account link.</summary>
-    public Student(StudentId id, PersonName name, UserAccountId userAccountId)
-    {
-        Id = id;
-        Name = name;
-        UserAccountId = userAccountId;
+        UserAccountId = accountId;
     }
 
     /// <summary>
