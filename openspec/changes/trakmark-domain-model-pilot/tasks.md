@@ -4,13 +4,13 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 1. Strongly-typed IDs and shared primitives
 
-- [ ] 1.0 Create `Trakmark.Domain` class library (net10.0) and `Trakmark.Domain.Tests` xUnit project; reference Domain from Tests; add both to `Trakmark.slnx`
-- [ ] 1.T Write failing tests from `domain-identity-format` spec — per-type prefix and six-char Crockford body (`New id matches the type's format`, `Each aggregate type uses its own prefix`), rejection of wrong prefix / out-of-charset / wrong-length (`Ill-formed identifiers cannot be constructed`), text round-trip, and `UserAccountId` exemption; plus value-object invariant tests for `PersonName`/`SchoolName`/`MeetName`/`TeamName` (non-empty/trim) and the closed sets. Use `[Theory]` for the format/charset cases.
-- [ ] 1.1 Add `RegisteredUserId`, `StudentId`, `MeetId`, `SchoolId`, `TeamId`, `UserAccountId` as `readonly record struct`s with `Empty` and `NewId()`
-- [ ] 1.1a Add a Crockford base32 generator (uppercase, excluding `0/O/1/I/L`) and the per-type prefix format (`STU-`/`MEET-`/`SCH-`/`TEAM-`/`USR-` + six chars); implement `NewId()`, `ToString`, `Parse`/`TryParse` so ill-formed values cannot be constructed; keep `UserAccountId` exempt (wraps the raw Identity key)
-- [ ] 1.2 Add `PersonName`, `SchoolName`, `MeetName`, `TeamName` value objects with non-empty/trim validation
-- [ ] 1.3 Add `SchoolYear` (orderable academic year), `GradeLevel` (closed set), `CompetitionLevel` (HS/MS/Elementary closed set), and `Sport` (Track & Field / Cross-Country closed set)
-- [ ] 1.4 Add `MeetDate` value object over `DateOnly`
+- [x] 1.0 Create `Trakmark.Domain` class library (net10.0) and `Trakmark.Domain.Tests` xUnit project; reference Domain from Tests; add both to `Trakmark.slnx`
+- [x] 1.T Write failing tests from `domain-identity-format` spec — per-type prefix and six-char Crockford body (`New id matches the type's format`, `Each aggregate type uses its own prefix`), rejection of wrong prefix / out-of-charset / wrong-length (`Ill-formed identifiers cannot be constructed`), text round-trip, and `UserAccountId` exemption; plus value-object invariant tests for `PersonName`/`SchoolName`/`MeetName`/`TeamName` (non-empty/trim) and the closed sets. Use `[Theory]` for the format/charset cases.
+- [x] 1.1 Add `RegisteredUserId`, `StudentId`, `MeetId`, `SchoolId`, `TeamId`, `UserAccountId` as `readonly record struct`s with `Empty` and `NewId()`
+- [x] 1.1a Add a Crockford base32 generator (uppercase, excluding `0/O/1/I/L`) and the per-type prefix format (`STU-`/`MEET-`/`SCH-`/`TEAM-`/`USR-` + six chars); implement `NewId()`, `ToString`, `Parse`/`TryParse` so ill-formed values cannot be constructed; keep `UserAccountId` exempt (wraps the raw Identity key)
+- [x] 1.2 Add `PersonName`, `SchoolName`, `MeetName`, `TeamName` value objects with non-empty/trim validation
+- [x] 1.3 Add `SchoolYear` (orderable academic year), `GradeLevel` (closed set), `CompetitionLevel` (HS/MS/Elementary closed set), and `Sport` (Track & Field / Cross-Country closed set)
+- [x] 1.4 Add `MeetDate` value object over `DateOnly`
 
 ## 2. Discipline catalog and performance marks
 
