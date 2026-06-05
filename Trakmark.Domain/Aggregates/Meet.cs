@@ -90,7 +90,6 @@ public sealed class Meet
         var effectiveTier = tier ?? Tier.Open;
         var order = NextOrderFor(studentId);
         _results.Add(new Result(studentId, @event, status, mark, place, effectiveTier, order));
-        _resultCountByStudent[studentId] = order;
     }
 
     private void EnforceSportMatch(Event @event)
@@ -174,6 +173,8 @@ public sealed class Meet
     private int NextOrderFor(StudentId studentId)
     {
         _resultCountByStudent.TryGetValue(studentId, out var existingCount);
-        return existingCount + 1;
+        var order = existingCount + 1;
+        _resultCountByStudent[studentId] = order;
+        return order;
     }
 }
