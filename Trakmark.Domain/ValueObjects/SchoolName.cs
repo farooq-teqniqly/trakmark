@@ -1,7 +1,7 @@
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>A non-empty, trimmed name for a school.</summary>
-public sealed record SchoolName
+public sealed class SchoolName : IEquatable<SchoolName>
 {
     /// <summary>The trimmed name value.</summary>
     public string Value { get; }
@@ -18,6 +18,21 @@ public sealed record SchoolName
 
         Value = trimmed;
     }
+
+    /// <inheritdoc/>
+    public bool Equals(SchoolName? other) => other is not null && Value == other.Value;
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => Equals(obj as SchoolName);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
+
+    /// <summary>Returns <see langword="true"/> when both names have the same value.</summary>
+    public static bool operator ==(SchoolName? left, SchoolName? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the names differ.</summary>
+    public static bool operator !=(SchoolName? left, SchoolName? right) => !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Value;

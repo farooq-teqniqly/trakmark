@@ -30,11 +30,11 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 4. Student aggregate and career
 
-- [ ] 4.T Write failing tests from `manage-students` spec (career) — `Add an enrollment for a new school year` (latest year is current), `Reject a duplicate school year` (career unchanged), `Grade level is recorded independently`, and the empty-career-until-enrollment case from `Adding a student creates and follows it`.
-- [ ] 4.1 Implement `Enrollment` value object `(SchoolId, SchoolYear, GradeLevel)`
-- [ ] 4.2 Implement `Career` value object enforcing one enrollment per `SchoolYear` and deriving `Current` as the latest year
-- [ ] 4.3 Implement `Student` root with `PersonName`, optional `UserAccountId` (dormant), and `Career`; add enrollment operations that reject duplicate years
-- [ ] 4.4 Expose season helpers (current season = current enrollment; past seasons = prior enrollments)
+- [x] 4.T Write failing tests from `manage-students` spec (career) — `Add an enrollment for a new school year` (latest year is current), `Reject a duplicate school year` (career unchanged), `Grade level is recorded independently`, and the empty-career-until-enrollment case from `Adding a student creates and follows it`.
+- [x] 4.1 Implement `Enrollment` value object `(SchoolId, SchoolYear, GradeLevel)`
+- [x] 4.2 Implement `Career` value object enforcing one enrollment per `SchoolYear` and deriving `Current` as the latest year
+- [x] 4.3 Implement `Student` root with `PersonName`, optional `UserAccountId` (dormant), and `Career`; add enrollment operations that reject duplicate years
+- [x] 4.4 Expose season helpers (current season = current enrollment; past seasons = prior enrollments)
 
 ## 5. RegisteredUser aggregate
 
