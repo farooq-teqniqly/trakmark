@@ -1,5 +1,5 @@
 ---
-name: openspec-developer
+name: developer
 description: >-
   TDD implementer for any OpenSpec change. Pass a change name, section/task
   excerpt, and relevant spec filename(s). Agent self-discovers artifact paths

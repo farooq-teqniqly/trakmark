@@ -1,5 +1,5 @@
 ---
-name: openspec-retrospective
+name: retrospective
 description: >-
   Retrospective agent for OpenSpec implementation cycles. Analyzes recent git
   history, review findings, and rule files to identify process friction, then
