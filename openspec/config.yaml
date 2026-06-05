@@ -4,10 +4,10 @@ context: |
   Tech stack: .NET 10, C#, Blazor Web App (Interactive Server, per-page), EF Core + SQL Server, ASP.NET Core Identity (Google OAuth).
   Project naming: one project per layer/concern, prefixed `Trakmark.<Area>` (e.g. Trakmark.Domain); the web app project is `Trakmark`.
   Tests: each project's unit tests live in a sibling project `<Project>.Tests` (e.g. Trakmark.Domain.Tests) using xUnit (NSubstitute for mocking), referencing the project under test.
-  Test style: Arrange/Act/Assert comments in each test; prefer data-driven tests (Theory/InlineData/MemberData) over many near-duplicate Facts; test behavior not implementation (assert observable outcomes, not internal calls) so tests aren't brittle. Integration/end-to-end tests prefer the real database via Testcontainers over in-memory fakes.
+  Test style: Arrange/Act/Assert comments in each test; prefer data-driven tests (Theory/InlineData/MemberData) over many near-duplicate Facts; once a Theory covers a case do not also write a Fact for the same scenario — it is redundant and will diverge; test behavior not implementation (assert observable outcomes, not internal calls) so tests aren't brittle. Integration/end-to-end tests prefer the real database via Testcontainers over in-memory fakes.
   TDD: each `#### Scenario:` in a spec maps to a test case; write the failing tests from a spec's scenarios first, then implement to green.
   Register every new project in Trakmark.slnx.
-  Code style: types are `sealed` by default (unseal only when inheritance is designed for); XML `<summary>` docs on all public/internal types and members (constructors, methods, properties, non-trivial fields, and consts); always use braces for control statements (if, else, for, foreach, while, do) — even single-line bodies.
+  Code style: types are `sealed` by default (unseal only when inheritance is designed for); use `sealed record` only when the type is a pure data carrier with no validation logic and no custom equality semantics — domain value objects that enforce invariants must be `sealed class` and implement IEquatable<T> with Equals/GetHashCode overrides; XML `<summary>` docs on all public/internal types and members (constructors, methods, properties, non-trivial fields, and consts); always use braces for control statements (if, else, for, foreach, while, do) — even single-line bodies.
   We use conventional commits and U.S. English in all prose and docs.
 
 # Per-artifact rules (optional)

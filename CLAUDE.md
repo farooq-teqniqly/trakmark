@@ -11,7 +11,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Test projects use **xUnit** and reference the project under test.
 - Use **NSubstitute** for mocking in tests.
 - Each test has `// Arrange`, `// Act`, `// Assert` comments.
-- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s.
+- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
 - For integration and end-to-end tests, prefer the real database via **Testcontainers** over in-memory fakes.
 - Practice **TDD**: when a spec defines behavior (e.g. OpenSpec `#### Scenario:` blocks), write the failing tests from those scenarios first, then implement to green. Each scenario maps to a test case.
@@ -21,6 +21,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 
 - Target **net10.0**; use latest C# language features where they improve clarity.
 - Types are **`sealed` by default**; unseal only when inheritance is intended and designed for.
+- Use `sealed record` (or `readonly record struct`) only when the type is a pure data carrier with no validation logic and no custom equality semantics. Domain value objects that enforce invariants in their constructor must be `sealed class`, not `record`, and must implement `IEquatable<T>` with a matching `Equals`/`GetHashCode` override.
 - `Nullable` and `ImplicitUsings` enabled on all projects.
 - No inline XML comments on code that is self-explanatory. Add `<summary>` XML docs on all `internal` and `public` types and members (constructors, methods, properties, non-trivial fields, and `const`s). Exceptions: `[LoggerMessage]` methods in logging classes (`*.Logging.cs`) — the message template is self-documenting; EF Core migration files (`Migrations/`) — auto-generated, do not edit.
 - Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).

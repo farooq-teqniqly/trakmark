@@ -41,6 +41,13 @@ Check off the completed task in `tasks.md` by changing `- [ ]` to `- [x]`
 for that task's line. Do this immediately after confirming tests are green —
 do not batch at the end.
 
+## Self-review checklist before committing
+
+Before staging files, run through this list:
+
+- **Value object type choice**: every domain value object that validates its constructor argument must be a `sealed class` implementing `IEquatable<T>` with `Equals`/`GetHashCode` overrides — not a `record`. Use `record`/`readonly record struct` only for pure data carriers with no validation logic.
+- **[Fact] vs [Theory] redundancy**: if a `[Theory]` already covers a case via `[InlineData]`, delete any `[Fact]` that tests the same scenario. Redundant facts diverge over time.
+
 ## Before finishing
 
 Once all tasks in your section are green and checked off in `tasks.md`:
