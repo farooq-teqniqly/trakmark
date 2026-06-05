@@ -11,34 +11,23 @@ public sealed class DisciplineAndMarkTests
 {
     // ── MarkKind implies comparison direction ─────────────────────────────
 
-    [Fact]
-    public void MarkKind_Time_HasLowerIsBetterDirection()
+    [Theory]
+    [InlineData(nameof(MarkKind.Time),      ComparisonDirection.LowerIsBetter)]
+    [InlineData(nameof(MarkKind.Distance),  ComparisonDirection.HigherIsBetter)]
+    [InlineData(nameof(MarkKind.PlaceOnly), ComparisonDirection.None)]
+    public void MarkKind_Direction_MatchesKind(string kindName, ComparisonDirection expected)
     {
-        // Arrange / Act
-        var kind = MarkKind.Time;
+        // Arrange
+        var kind = kindName switch
+        {
+            nameof(MarkKind.Time)      => MarkKind.Time,
+            nameof(MarkKind.Distance)  => MarkKind.Distance,
+            nameof(MarkKind.PlaceOnly) => MarkKind.PlaceOnly,
+            _                          => throw new ArgumentOutOfRangeException(nameof(kindName))
+        };
 
-        // Assert
-        Assert.Equal(ComparisonDirection.LowerIsBetter, kind.Direction);
-    }
-
-    [Fact]
-    public void MarkKind_Distance_HasHigherIsBetterDirection()
-    {
-        // Arrange / Act
-        var kind = MarkKind.Distance;
-
-        // Assert
-        Assert.Equal(ComparisonDirection.HigherIsBetter, kind.Direction);
-    }
-
-    [Fact]
-    public void MarkKind_PlaceOnly_HasNoneDirection()
-    {
-        // Arrange / Act
-        var kind = MarkKind.PlaceOnly;
-
-        // Assert — place-only disciplines have no measurable direction
-        Assert.Equal(ComparisonDirection.None, kind.Direction);
+        // Act / Assert
+        Assert.Equal(expected, kind.Direction);
     }
 
     // ── TimeMark comparison — min wins ────────────────────────────────────
@@ -169,48 +158,31 @@ public sealed class DisciplineAndMarkTests
 
     // ── Discipline relay-ness ─────────────────────────────────────────────
 
-    [Fact]
-    public void Discipline_RelayRun_IsRelay()
+    [Theory]
+    [InlineData(true)]   // RelayRun → IsRelay = true
+    [InlineData(false)]  // Run     → IsRelay = false
+    public void Discipline_IsRelay_MatchesDisciplineFactory(bool expectRelay)
     {
         // Arrange
-        var relay = Discipline.RelayRun(400);
+        var discipline = expectRelay ? Discipline.RelayRun(400) : Discipline.Run(100);
 
         // Act / Assert
-        Assert.True(relay.IsRelay);
-    }
-
-    [Fact]
-    public void Discipline_PlainRun_IsNotRelay()
-    {
-        // Arrange
-        var run = Discipline.Run(100);
-
-        // Act / Assert
-        Assert.False(run.IsRelay);
+        Assert.Equal(expectRelay, discipline.IsRelay);
     }
 
     // ── Event exposes relay-ness from its discipline ──────────────────────
 
-    [Fact]
-    public void Event_RelayDiscipline_IsRelay()
-    {
-        // Arrange — scenario: Event exposing relay-ness from its discipline
-        var discipline = Discipline.RelayRun(400);
-        var ev = new Event(discipline, Sport.TrackAndField);
-
-        // Act / Assert
-        Assert.True(ev.IsRelay);
-    }
-
-    [Fact]
-    public void Event_IndividualDiscipline_IsNotRelay()
+    [Theory]
+    [InlineData(true)]   // relay discipline → Event.IsRelay = true
+    [InlineData(false)]  // plain discipline → Event.IsRelay = false
+    public void Event_IsRelay_ReflectsDisciplineRelayness(bool expectRelay)
     {
         // Arrange
-        var discipline = Discipline.Run(100);
+        var discipline = expectRelay ? Discipline.RelayRun(400) : Discipline.Run(100);
         var ev = new Event(discipline, Sport.TrackAndField);
 
         // Act / Assert
-        Assert.False(ev.IsRelay);
+        Assert.Equal(expectRelay, ev.IsRelay);
     }
 
     [Fact]

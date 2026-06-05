@@ -5,7 +5,7 @@ namespace Trakmark.Domain.Catalog;
 /// Placement is separate from <see cref="Performance"/> — every finished result
 /// carries a place; only timed or distance disciplines also carry a measured mark.
 /// </summary>
-public sealed record Placement
+public sealed class Placement : IEquatable<Placement>
 {
     /// <summary>The finish rank (1 = first place).</summary>
     public int Rank { get; }
@@ -17,6 +17,15 @@ public sealed record Placement
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(rank);
         Rank = rank;
     }
+
+    /// <inheritdoc/>
+    public bool Equals(Placement? other) => other is not null && Rank == other.Rank;
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => Equals(obj as Placement);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Rank.GetHashCode();
 
     /// <inheritdoc/>
     public override string ToString() => Rank.ToString();
