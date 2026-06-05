@@ -45,14 +45,14 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 6. Meet aggregate and result recording
 
-- [ ] 6.T Write failing tests from `record-meet-results` spec — `Create a meet`, `Tier defaults to Open`, `Record a result with a competitive tier`, `A finished result requires a mark and a place`, `A non-finished result carries neither mark nor place`, `Results preserve entry order`, `Reject a mismatched mark`, `A place-only discipline takes a place and no mark`, `Reject a cross-sport event`, and `Each relay leg's student gets the team time`. Drive the status × mark/place matrix with `[Theory]`.
-- [ ] 6.1 Implement `Meet` root with `MeetName`, `MeetDate`, one `CompetitionLevel`, one `Sport`, and a results collection
-- [ ] 6.2 Implement `Result` entity with `StudentId`, `Event`, optional `Mark`, optional `Place`, optional `Tier`, `Status`, and `Order`
-- [ ] 6.3 Enforce the status invariant: `Finished` ⇒ mark (per discipline kind) and place present; otherwise both absent
-- [ ] 6.4 Enforce mark-kind match at result construction (time vs distance vs place-only)
-- [ ] 6.5 Enforce in `Meet.RecordResult` that the event's sport equals the meet's sport
-- [ ] 6.6 Assign `Order` by entry sequence within a student's results for the meet
-- [ ] 6.7 Support relay recording: one result per participating student carrying the shared team `TimeMark`, no teammate linkage
+- [x] 6.T Write failing tests from `record-meet-results` spec — `Create a meet`, `Tier defaults to Open`, `Record a result with a competitive tier`, `A finished result requires a mark and a place`, `A non-finished result carries neither mark nor place`, `Results preserve entry order`, `Reject a mismatched mark`, `A place-only discipline takes a place and no mark`, `Reject a cross-sport event`, and `Each relay leg's student gets the team time`. Drive the status × mark/place matrix with `[Theory]`.
+- [x] 6.1 Implement `Meet` root with `MeetName`, `MeetDate`, one `CompetitionLevel`, one `Sport`, and a results collection
+- [x] 6.2 Implement `Result` entity with `StudentId`, `Event`, optional `Mark`, optional `Place`, optional `Tier`, `Status`, and `Order`
+- [x] 6.3 Enforce the status invariant: `Finished` ⇒ mark (per discipline kind) and place present; otherwise both absent
+- [x] 6.4 Enforce mark-kind match at result construction (time vs distance vs place-only)
+- [x] 6.5 Enforce in `Meet.RecordResult` that the event's sport equals the meet's sport
+- [x] 6.6 Assign `Order` by entry sequence within a student's results for the meet
+- [x] 6.7 Support relay recording: one result per participating student carrying the shared team `TimeMark`, no teammate linkage
 
 ## 7. Cross-aggregate domain services
 
