@@ -23,10 +23,10 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 3. School aggregate
 
-- [ ] 3.T Write failing tests from `manage-schools` spec — `Create a school`, `School name must be valid`, `Add a team for a sport`, and `Roster membership is not stored on the team`.
-- [ ] 3.1 Implement `School` root with `SchoolName` and one `CompetitionLevel`
-- [ ] 3.2 Add `Team` entity bound to one `Sport` and a method to add a team for a sport not yet fielded
-- [ ] 3.3 Verify no roster is stored on `Team` (membership is derived)
+- [x] 3.T Write failing tests from `manage-schools` spec — `Create a school`, `School name must be valid`, `Add a team for a sport`, and `Roster membership is not stored on the team`.
+- [x] 3.1 Implement `School` root with `SchoolName` and one `CompetitionLevel`
+- [x] 3.2 Add `Team` entity bound to one `Sport` and a method to add a team for a sport not yet fielded
+- [x] 3.3 Verify no roster is stored on `Team` (membership is derived)
 
 ## 4. Student aggregate and career
 

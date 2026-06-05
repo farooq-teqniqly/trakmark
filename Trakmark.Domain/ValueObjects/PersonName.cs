@@ -20,7 +20,8 @@ public sealed class PersonName : IEquatable<PersonName>
     }
 
     /// <inheritdoc/>
-    public bool Equals(PersonName? other) => other is not null && Value == other.Value;
+    public bool Equals(PersonName? other) =>
+        other is not null && string.Equals(Value, other.Value, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as PersonName);
@@ -28,11 +29,13 @@ public sealed class PersonName : IEquatable<PersonName>
     /// <inheritdoc/>
     public override int GetHashCode() => Value.GetHashCode(StringComparison.Ordinal);
 
-    /// <summary>Returns <see langword="true"/> when both names have the same value.</summary>
-    public static bool operator ==(PersonName? left, PersonName? right) => left?.Equals(right) ?? right is null;
+    /// <summary>Returns <see langword="true"/> when both operands are equal.</summary>
+    public static bool operator ==(PersonName? left, PersonName? right) =>
+        left is null ? right is null : left.Equals(right);
 
-    /// <summary>Returns <see langword="true"/> when the names differ.</summary>
-    public static bool operator !=(PersonName? left, PersonName? right) => !(left == right);
+    /// <summary>Returns <see langword="true"/> when both operands are not equal.</summary>
+    public static bool operator !=(PersonName? left, PersonName? right) =>
+        !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Value;
