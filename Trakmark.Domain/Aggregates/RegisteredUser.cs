@@ -51,7 +51,7 @@ public sealed class RegisteredUser
     /// </exception>
     public Student AddStudent(PersonName name)
     {
-        var student = new Student(name);
+        var student = new Student(StudentId.NewId(), name);
         Follow(student.Id);
         return student;
     }

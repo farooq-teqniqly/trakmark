@@ -34,6 +34,21 @@ public sealed class Career
         : [];
 
     /// <summary>
+    /// Adds an <paramref name="enrollment"/> to the career.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enrollment"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when an enrollment for the same school year already exists.</exception>
+    public void AddEnrollment(Enrollment enrollment)
+    {
+        ArgumentNullException.ThrowIfNull(enrollment);
+        if (!TryAdd(enrollment))
+        {
+            throw new InvalidOperationException(
+                $"An enrollment for school year {enrollment.SchoolYear} already exists.");
+        }
+    }
+
+    /// <summary>
     /// Attempts to add an <paramref name="enrollment"/> to the career.
     /// Returns <see langword="false"/> when an enrollment for the same school year already exists.
     /// </summary>

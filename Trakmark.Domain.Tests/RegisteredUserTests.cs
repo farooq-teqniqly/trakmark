@@ -100,6 +100,6 @@ public sealed class RegisteredUserTests
         var student = user.AddStudent(new PersonName("Dave Wilson"));
 
         // Assert
-        Assert.Null(student.AccountLink);
+        Assert.Null(student.UserAccountId);
     }
 }

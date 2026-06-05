@@ -66,6 +66,6 @@ public sealed class CareerTests
         career.AddEnrollment(enrollment);
 
         // Assert
-        Assert.Same(GradeLevel.Sophomore, career.Current!.Grade);
+        Assert.Same(GradeLevel.Sophomore, career.Current!.GradeLevel);
     }
 }
