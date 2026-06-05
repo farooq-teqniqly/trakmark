@@ -57,7 +57,9 @@ public sealed class SchoolAggregateTests
 
         // Assert
         Assert.Single(school.Teams);
-        Assert.Equal(sport, school.Teams.Single().Sport);
+        var team = school.Teams.Single();
+        Assert.Equal(sport, team.Sport);
+        Assert.NotEqual(TeamId.Empty, team.Id);
     }
 
     [Fact]
@@ -68,21 +70,8 @@ public sealed class SchoolAggregateTests
         school.AddTeam(Sport.TrackAndField);
 
         // Act / Assert
-        Assert.Throws<InvalidOperationException>(() => school.AddTeam(Sport.TrackAndField));
-    }
-
-    [Fact]
-    public void AddTeam_AssignsNewTeamId()
-    {
-        // Arrange
-        var school = School.Create(new SchoolName("Central HS"), CompetitionLevel.HighSchool);
-
-        // Act
-        school.AddTeam(Sport.CrossCountry);
-
-        // Assert
-        var team = school.Teams.Single();
-        Assert.NotEqual(TeamId.Empty, team.Id);
+        var ex = Assert.Throws<InvalidOperationException>(() => school.AddTeam(Sport.TrackAndField));
+        Assert.Contains("already", ex.Message);
     }
 
     // ── Roster membership is not stored on the team ───────────────────────
@@ -95,21 +84,13 @@ public sealed class SchoolAggregateTests
         school.AddTeam(Sport.CrossCountry);
         var team = school.Teams.Single();
 
-        // Act / Assert — Team must not expose any membership collection
-        Assert.False(HasRosterProperty(team), "Team must not contain a stored list of student members.");
-    }
+        // Act
+        var publicPropertyNames = typeof(Team)
+            .GetProperties()
+            .Select(p => p.Name)
+            .ToHashSet(StringComparer.Ordinal);
 
-    /// <summary>
-    /// Reflects whether the <see cref="Team"/> type exposes any property
-    /// that holds a collection of student membership records.
-    /// </summary>
-    private static bool HasRosterProperty(Team team)
-    {
-        var type = team.GetType();
-        return type.GetProperties()
-            .Any(p =>
-                p.Name.Contains("roster", StringComparison.OrdinalIgnoreCase) ||
-                p.Name.Contains("member", StringComparison.OrdinalIgnoreCase) ||
-                p.Name.Contains("student", StringComparison.OrdinalIgnoreCase));
+        // Assert — Team must expose exactly Id and Sport; no roster collection
+        Assert.Equal(new HashSet<string>(StringComparer.Ordinal) { "Id", "Sport" }, publicPropertyNames);
     }
 }

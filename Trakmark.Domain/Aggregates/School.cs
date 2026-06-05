@@ -9,7 +9,7 @@ namespace Trakmark.Domain.Aggregates;
 /// </summary>
 public sealed class School
 {
-    private readonly List<Team> _teams = [];
+    private readonly Dictionary<Sport, Team> _teams = [];
 
     /// <summary>The unique identifier for this school.</summary>
     public SchoolId Id { get; }
@@ -21,8 +21,11 @@ public sealed class School
     public CompetitionLevel Level { get; }
 
     /// <summary>The catalog of sports teams fielded by this school.</summary>
-    public IReadOnlyList<Team> Teams => _teams;
+    public IReadOnlyCollection<Team> Teams => _teams.Values;
 
+    /// <summary>
+    /// Initializes a <see cref="School"/> with the given identifier, name, and level.
+    /// </summary>
     private School(SchoolId id, SchoolName name, CompetitionLevel level)
     {
         Id = id;
@@ -47,12 +50,12 @@ public sealed class School
     /// </exception>
     public void AddTeam(Sport sport)
     {
-        if (_teams.Any(t => t.Sport.Equals(sport)))
+        if (_teams.ContainsKey(sport))
         {
             throw new InvalidOperationException(
                 $"School '{Name}' already fields a team for {sport}.");
         }
 
-        _teams.Add(new Team(TeamId.NewId(), sport));
+        _teams[sport] = new Team(TeamId.NewId(), sport);
     }
 }
