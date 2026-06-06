@@ -410,7 +410,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 
 2. ~~**Closed-set type equality intent:** Was `ReferenceEquals` chosen deliberately to enforce singleton identity (i.e., callers cannot create "equal but different" instances by accident), or was name-based equality the intent? If singleton identity, `GetHashCode` should use `RuntimeHelpers.GetHashCode(this)` to match.~~ — Answer: name-based equality; two instances with the same Name are equal regardless of object reference.
 
-3. **`SeasonViewService` return type:** Was returning deferred `IEnumerable` intentional for lazy evaluation, or should the service materialize results? If callers compose further LINQ on top, deferred is fine. If callers enumerate once and store, materialization at the service boundary is safer.
+3. ~~**`SeasonViewService` return type:** Was returning deferred `IEnumerable` intentional for lazy evaluation, or should the service materialize results? If callers compose further LINQ on top, deferred is fine. If callers enumerate once and store, materialization at the service boundary is safer.~~ — Deferred until persistence layer is implemented.
 
 4. ~~**`UserAccountId` null guard:** Since `UserAccountId` is a bridge to ASP.NET Identity, is it ever valid for `value` to be `null` at construction time (e.g., as an empty placeholder)? If not, the guard should be added; if yes, the intent should be documented.~~ — Answer: add the guard. Already applied in b7a0226.
 
