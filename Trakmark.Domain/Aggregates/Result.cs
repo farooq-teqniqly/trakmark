@@ -67,6 +67,8 @@ public sealed class Result
         int order,
         MeetDate meetDate)
     {
+        ArgumentNullException.ThrowIfNull(@event);
+        ArgumentNullException.ThrowIfNull(tier);
         StudentId = studentId;
         Event = @event;
         Status = status;
