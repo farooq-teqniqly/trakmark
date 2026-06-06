@@ -99,7 +99,7 @@ did not encode the meet date on `Result` because prior sections did not need it.
 
 ## Carry-forward
 
-- `ToSchoolYear` duplication — Low; extract to `SchoolYearHelper` as a follow-up.
-- `SelectBest` inner `null` guard is redundant (dead code) — Low/Info; harmless but could be removed.
+- ~~`ToSchoolYear` duplication — Low; extract to `SchoolYearHelper` as a follow-up.~~ Done `1f010b2`
+- ~~`SelectBest` inner `null` guard is redundant (dead code) — Low/Info; harmless but could be removed.~~ Done `1f010b2`
 - `Team` has no `SchoolId` back-reference — still deferred to EF Core persistence layer.
 - `Student.AccountLink` private set still has no internal mutator — deferred until `LinkAccount` operation is designed.
