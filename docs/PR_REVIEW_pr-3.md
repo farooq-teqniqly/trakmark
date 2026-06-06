@@ -21,8 +21,8 @@
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `School.Create`~~ | ~~`Trakmark.Domain/Aggregates/School.cs:41`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Meet.Create` and `Meet.RecordResult`~~ | ~~`Trakmark.Domain/Aggregates/Meet.cs:53,79`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~`Enrollment` constructor missing null guard on `gradeLevel`~~ | ~~`Trakmark.Domain/Aggregates/Enrollment.cs:23`~~ | ~~Claude~~ |
-| ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name`~~ | ~~`Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42`~~ | ~~Claude~~ |
-| ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency~~ | ~~`Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27`~~ | ~~Claude~~ |
+| ~~Medium~~ | ~~[Resolved in bc756b3]~~ | ~~`GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name`~~ | ~~`Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42`~~ | ~~Claude~~ |
+| ~~Medium~~ | ~~[Resolved in bc756b3]~~ | ~~`MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency~~ | ~~`Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27`~~ | ~~Claude~~ |
 | ~~Medium~~ | ~~[Resolved in a72ce5d]~~ | ~~`Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators~~ | ~~`Trakmark.Domain/Catalog/Performance.cs:8`~~ | ~~Claude~~ |
 | Medium | [New] | `Career.TryAdd` uses O(n) linear scan before binary-search insert | `Trakmark.Domain/Aggregates/Career.cs:57` | Claude |
 | ~~Low~~ | ~~[Resolved in 61f73b5]~~ | ~~`Discipline` factory methods missing `==`/`!=` operator overloads~~ | ~~`Trakmark.Domain/Catalog/Discipline.cs:76-92`~~ | ~~Claude~~ |
@@ -408,7 +408,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 
 1. ~~**`Career.AddEnrollment` vs `TryAdd`:** `Student.AddEnrollment` uses `Career.TryAdd` directly. Is `Career.AddEnrollment` (the throwing overload) used anywhere, or is it dead code that can be removed?~~ ✓ Resolved
 
-2. **Closed-set type equality intent:** Was `ReferenceEquals` chosen deliberately to enforce singleton identity (i.e., callers cannot create "equal but different" instances by accident), or was name-based equality the intent? If singleton identity, `GetHashCode` should use `RuntimeHelpers.GetHashCode(this)` to match.
+2. ~~**Closed-set type equality intent:** Was `ReferenceEquals` chosen deliberately to enforce singleton identity (i.e., callers cannot create "equal but different" instances by accident), or was name-based equality the intent? If singleton identity, `GetHashCode` should use `RuntimeHelpers.GetHashCode(this)` to match.~~ — Answer: name-based equality; two instances with the same Name are equal regardless of object reference.
 
 3. **`SeasonViewService` return type:** Was returning deferred `IEnumerable` intentional for lazy evaluation, or should the service materialize results? If callers compose further LINQ on top, deferred is fine. If callers enumerate once and store, materialization at the service boundary is safer.
 
