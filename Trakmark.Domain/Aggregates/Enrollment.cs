@@ -20,6 +20,9 @@ public sealed class Enrollment : IEquatable<Enrollment>
     public GradeLevel GradeLevel { get; }
 
     /// <summary>Initializes an <see cref="Enrollment"/>.</summary>
+    /// <param name="schoolId">The school the student was enrolled in.</param>
+    /// <param name="schoolYear">The academic year of the enrollment.</param>
+    /// <param name="gradeLevel">The grade level the student was in during this enrollment.</param>
     public Enrollment(SchoolId schoolId, SchoolYear schoolYear, GradeLevel gradeLevel)
     {
         ArgumentNullException.ThrowIfNull(gradeLevel);
