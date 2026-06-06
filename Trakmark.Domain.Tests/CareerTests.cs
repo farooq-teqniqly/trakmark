@@ -12,7 +12,7 @@ public sealed class CareerTests
     // ── Adding enrollment for a new year ─────────────────────────────────
 
     [Fact]
-    public void AddEnrollment_NewAndLaterYear_LatestYearBecomesCurrent()
+    public void TryAddEnrollment_NewAndLaterYear_LatestYearBecomesCurrent()
     {
         // Arrange
         var career = new Career();
@@ -21,13 +21,13 @@ public sealed class CareerTests
         var second = new Enrollment(schoolId, new SchoolYear(2024), GradeLevel.Senior);
 
         // Act
-        career.AddEnrollment(first);
+        career.TryAddEnrollment(first);
 
         // Assert
         Assert.Same(first, career.Current);
 
         // Act
-        career.AddEnrollment(second);
+        career.TryAddEnrollment(second);
 
         // Assert
         Assert.Same(second, career.Current);
@@ -36,7 +36,7 @@ public sealed class CareerTests
     // ── Rejecting a duplicate year ────────────────────────────────────────
 
     [Fact]
-    public void AddEnrollment_DuplicateYear_ThrowsAndCareerUnchanged()
+    public void TryAddEnrollment_DuplicateYear_ReturnsFalseAndCareerUnchanged()
     {
         // Arrange
         var career = new Career();
@@ -44,18 +44,21 @@ public sealed class CareerTests
         var year = new SchoolYear(2024);
         var first = new Enrollment(schoolId, year, GradeLevel.Junior);
         var duplicate = new Enrollment(schoolId, year, GradeLevel.Senior);
-        career.AddEnrollment(first);
+        career.TryAddEnrollment(first);
         var countBefore = career.Enrollments.Count;
 
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => career.AddEnrollment(duplicate));
+        // Act
+        var result = career.TryAddEnrollment(duplicate);
+
+        // Assert
+        Assert.False(result);
         Assert.Equal(countBefore, career.Enrollments.Count);
     }
 
     // ── Grade level stored correctly ──────────────────────────────────────
 
     [Fact]
-    public void AddEnrollment_Grade_StoredOnEnrollment()
+    public void TryAddEnrollment_Grade_StoredOnEnrollment()
     {
         // Arrange
         var career = new Career();
@@ -63,7 +66,7 @@ public sealed class CareerTests
         var enrollment = new Enrollment(schoolId, new SchoolYear(2024), GradeLevel.Sophomore);
 
         // Act
-        career.AddEnrollment(enrollment);
+        career.TryAddEnrollment(enrollment);
 
         // Assert
         Assert.Same(GradeLevel.Sophomore, career.Current!.GradeLevel);

@@ -42,7 +42,7 @@ public sealed class Student
         ArgumentNullException.ThrowIfNull(gradeLevel);
         var enrollment = new Enrollment(schoolId, schoolYear, gradeLevel);
 
-        if (!Career.TryAdd(enrollment))
+        if (!Career.TryAddEnrollment(enrollment))
         {
             return OperationResult.Failure($"An enrollment for school year {schoolYear} already exists.");
         }
