@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>
@@ -23,13 +21,13 @@ public sealed class CompetitionLevel : IEquatable<CompetitionLevel>
     public static readonly CompetitionLevel Elementary = new("Elementary");
 
     /// <inheritdoc/>
-    public bool Equals(CompetitionLevel? other) => ReferenceEquals(this, other);
+    public bool Equals(CompetitionLevel? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as CompetitionLevel);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both competition levels are equal.</summary>
     public static bool operator ==(CompetitionLevel? left, CompetitionLevel? right) => left?.Equals(right) ?? right is null;

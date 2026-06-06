@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>
@@ -19,13 +17,13 @@ public sealed class Sport : IEquatable<Sport>
     public static readonly Sport CrossCountry = new("Cross-Country");
 
     /// <inheritdoc/>
-    public bool Equals(Sport? other) => ReferenceEquals(this, other);
+    public bool Equals(Sport? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as Sport);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both sports are equal.</summary>
     public static bool operator ==(Sport? left, Sport? right) => left?.Equals(right) ?? right is null;

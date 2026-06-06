@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
@@ -30,13 +28,13 @@ public sealed class MarkKind : IEquatable<MarkKind>
     public static readonly MarkKind PlaceOnly = new("PlaceOnly", ComparisonDirection.None);
 
     /// <inheritdoc/>
-    public bool Equals(MarkKind? other) => ReferenceEquals(this, other);
+    public bool Equals(MarkKind? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as MarkKind);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both mark kinds are equal.</summary>
     public static bool operator ==(MarkKind? left, MarkKind? right) => left?.Equals(right) ?? right is null;

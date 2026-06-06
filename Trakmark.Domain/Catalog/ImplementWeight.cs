@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
@@ -24,13 +22,13 @@ public sealed class ImplementWeight : IEquatable<ImplementWeight>
     public static readonly ImplementWeight Kg7_26 = new("7.26 kg");
 
     /// <inheritdoc/>
-    public bool Equals(ImplementWeight? other) => ReferenceEquals(this, other);
+    public bool Equals(ImplementWeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as ImplementWeight);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both implement weights are equal.</summary>
     public static bool operator ==(ImplementWeight? left, ImplementWeight? right) => left?.Equals(right) ?? right is null;

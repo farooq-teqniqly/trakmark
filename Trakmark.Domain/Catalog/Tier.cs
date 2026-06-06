@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
@@ -24,13 +22,13 @@ public sealed class Tier : IEquatable<Tier>
     public static readonly Tier Open = new("Open");
 
     /// <inheritdoc/>
-    public bool Equals(Tier? other) => ReferenceEquals(this, other);
+    public bool Equals(Tier? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as Tier);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both tiers are equal.</summary>
     public static bool operator ==(Tier? left, Tier? right) => left?.Equals(right) ?? right is null;

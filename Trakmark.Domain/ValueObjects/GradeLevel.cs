@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>
@@ -35,13 +33,13 @@ public sealed class GradeLevel : IEquatable<GradeLevel>
     public static readonly GradeLevel Grade6 = new("6th Grade");
 
     /// <inheritdoc/>
-    public bool Equals(GradeLevel? other) => ReferenceEquals(this, other);
+    public bool Equals(GradeLevel? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as GradeLevel);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 
     /// <summary>Returns <see langword="true"/> when both grade levels are equal.</summary>
     public static bool operator ==(GradeLevel? left, GradeLevel? right) => left?.Equals(right) ?? right is null;
