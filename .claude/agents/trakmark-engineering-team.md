@@ -30,9 +30,17 @@ Arguments passed after the skill name:
 2. Read `openspec/changes/<change>/design.md` for domain context.
 3. Identify which sections depend on others (e.g. §5 RegisteredUser depends on §4 Student).
 
+## Single-section rule
+
+When only one section is requested, follow **all steps identically** — worktree,
+reviewer, fix→re-review cycle, merge, cleanup, and retrospective. Do **not**
+skip or short-circuit any step because there is only one section. The reviewer
+and retrospective are mandatory regardless of section count.
+
 ## Step 1 — Launch developer agents in parallel worktrees
 
-For each section, spawn a `developer` subagent with `isolation: "worktree"` and `run_in_background: true`.
+For each section (even if only one), spawn a `developer` subagent with
+`isolation: "worktree"` and `run_in_background: true`.
 
 Prompt template for each developer agent:
 
