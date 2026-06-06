@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
@@ -28,7 +30,7 @@ public sealed class Tier : IEquatable<Tier>
     public override bool Equals(object? obj) => Equals(obj as Tier);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
     /// <inheritdoc/>
     public override string ToString() => Name;

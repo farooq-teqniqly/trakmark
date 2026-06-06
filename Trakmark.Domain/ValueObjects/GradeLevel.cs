@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>
@@ -39,7 +41,7 @@ public sealed class GradeLevel : IEquatable<GradeLevel>
     public override bool Equals(object? obj) => Equals(obj as GradeLevel);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
     /// <inheritdoc/>
     public override string ToString() => Name;

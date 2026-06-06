@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
@@ -30,7 +32,7 @@ public sealed class HurdleHeight : IEquatable<HurdleHeight>
     public override bool Equals(object? obj) => Equals(obj as HurdleHeight);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
     /// <inheritdoc/>
     public override string ToString() => Name;

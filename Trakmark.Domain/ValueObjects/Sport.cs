@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Trakmark.Domain.ValueObjects;
 
 /// <summary>
@@ -23,7 +25,7 @@ public sealed class Sport : IEquatable<Sport>
     public override bool Equals(object? obj) => Equals(obj as Sport);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
     /// <inheritdoc/>
     public override string ToString() => Name;
