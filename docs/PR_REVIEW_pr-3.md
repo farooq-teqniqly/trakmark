@@ -13,14 +13,14 @@
 |---|---|---|---|---|
 | ~~High~~ | ~~[Resolved in f546bbd]~~ | ~~Non-thread-safe `Random` field~~ | ~~`Trakmark.Domain/Ids/CrockfordBase32.cs:12`~~ | ~~Copilot, Claude~~ |
 | High | [New] | `DomainId.IsValid` does not guard against `null` input | `Trakmark.Domain/Ids/DomainId.cs:15-18` | Copilot, Claude |
-| Medium | [New] | Missing `ArgumentNullException.ThrowIfNull` in `UserAccountId` constructor | `Trakmark.Domain/Ids/UserAccountId.cs:13` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `Event` constructor | `Trakmark.Domain/Catalog/Event.cs:24-28` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `Discipline` factory methods | `Trakmark.Domain/Catalog/Discipline.cs:49,58,66,73` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `Student` constructor and `AddEnrollment` | `Trakmark.Domain/Aggregates/Student.cs:28,39` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `RegisteredUser.AddStudent` | `Trakmark.Domain/Aggregates/RegisteredUser.cs:52` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `School.Create` | `Trakmark.Domain/Aggregates/School.cs:41` | Copilot, Claude |
-| Medium | [New] | Missing null guards on `Meet.Create` and `Meet.RecordResult` | `Trakmark.Domain/Aggregates/Meet.cs:53,79` | Copilot, Claude |
-| Medium | [New] | `Enrollment` constructor missing null guard on `gradeLevel` | `Trakmark.Domain/Aggregates/Enrollment.cs:23` | Claude |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing `ArgumentNullException.ThrowIfNull` in `UserAccountId` constructor~~ | ~~`Trakmark.Domain/Ids/UserAccountId.cs:13`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Event` constructor~~ | ~~`Trakmark.Domain/Catalog/Event.cs:24-28`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Discipline` factory methods~~ | ~~`Trakmark.Domain/Catalog/Discipline.cs:49,58,66,73`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Student` constructor and `AddEnrollment`~~ | ~~`Trakmark.Domain/Aggregates/Student.cs:28,39`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `RegisteredUser.AddStudent`~~ | ~~`Trakmark.Domain/Aggregates/RegisteredUser.cs:52`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `School.Create`~~ | ~~`Trakmark.Domain/Aggregates/School.cs:41`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Meet.Create` and `Meet.RecordResult`~~ | ~~`Trakmark.Domain/Aggregates/Meet.cs:53,79`~~ | ~~Copilot, Claude~~ |
+| ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~`Enrollment` constructor missing null guard on `gradeLevel`~~ | ~~`Trakmark.Domain/Aggregates/Enrollment.cs:23`~~ | ~~Claude~~ |
 | Medium | [New] | `GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name` | `Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42` | Claude |
 | Medium | [New] | `MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency | `Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27` | Claude |
 | Medium | [New] | `Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators | `Trakmark.Domain/Catalog/Performance.cs:8` | Claude |
@@ -46,18 +46,18 @@ All 20 Copilot inline review comments are from a single review pass (review `444
 |---|---|---|---|
 | ~~PRRC_kwDOSpaLns7IqDwi~~ | ~~Copilot~~ | ~~`CrockfordBase32.cs:13`~~ | ~~Non-thread-safe `Random`~~ |
 | PRRC_kwDOSpaLns7IqDwq | Copilot | `DomainId.cs:19` | No null guard → NRE instead of `false` |
-| PRRC_kwDOSpaLns7IqDwv | Copilot | `UserAccountId.cs:14` | Missing `ThrowIfNull` on constructor |
-| PRRC_kwDOSpaLns7IqDwz | Copilot | `Event.cs:28` | Missing `ThrowIfNull` on constructor |
-| PRRC_kwDOSpaLns7IqDw3 | Copilot | `Discipline.cs:52` | Missing `ThrowIfNull` on `HurdleRun` |
-| PRRC_kwDOSpaLns7IqDw6 | Copilot | `Discipline.cs:60` | Missing `ThrowIfNull` on `ImplementThrow` |
-| PRRC_kwDOSpaLns7IqDxE | Copilot | `Discipline.cs:67` | Missing `ThrowIfNull` on `Jump` |
-| PRRC_kwDOSpaLns7IqDxQ | Copilot | `Discipline.cs:74` | Missing `ThrowIfNull` on `PlaceOnly` |
-| PRRC_kwDOSpaLns7IqDxd | Copilot | `Student.cs:33` | Missing `ThrowIfNull` on constructor |
-| PRRC_kwDOSpaLns7IqDxm | Copilot | `Student.cs:43` | Missing `ThrowIfNull` on `AddEnrollment` |
-| PRRC_kwDOSpaLns7IqDxx | Copilot | `RegisteredUser.cs:56` | Missing `ThrowIfNull` on `AddStudent` |
-| PRRC_kwDOSpaLns7IqDx9 | Copilot | `School.cs:42` | Missing `ThrowIfNull` on `Create` |
-| PRRC_kwDOSpaLns7IqDyI | Copilot | `Meet.cs:54` | Missing `ThrowIfNull` on `Create` |
-| PRRC_kwDOSpaLns7IqDyS | Copilot | `Meet.cs:~87` | Missing `ThrowIfNull` on `RecordResult` |
+| ~~PRRC_kwDOSpaLns7IqDwv~~ | ~~Copilot~~ | ~~`UserAccountId.cs:14`~~ | ~~Missing `ThrowIfNull` on constructor~~ |
+| ~~PRRC_kwDOSpaLns7IqDwz~~ | ~~Copilot~~ | ~~`Event.cs:28`~~ | ~~Missing `ThrowIfNull` on constructor~~ |
+| ~~PRRC_kwDOSpaLns7IqDw3~~ | ~~Copilot~~ | ~~`Discipline.cs:52`~~ | ~~Missing `ThrowIfNull` on `HurdleRun`~~ |
+| ~~PRRC_kwDOSpaLns7IqDw6~~ | ~~Copilot~~ | ~~`Discipline.cs:60`~~ | ~~Missing `ThrowIfNull` on `ImplementThrow`~~ |
+| ~~PRRC_kwDOSpaLns7IqDxE~~ | ~~Copilot~~ | ~~`Discipline.cs:67`~~ | ~~Missing `ThrowIfNull` on `Jump`~~ |
+| ~~PRRC_kwDOSpaLns7IqDxQ~~ | ~~Copilot~~ | ~~`Discipline.cs:74`~~ | ~~Missing `ThrowIfNull` on `PlaceOnly`~~ |
+| ~~PRRC_kwDOSpaLns7IqDxd~~ | ~~Copilot~~ | ~~`Student.cs:33`~~ | ~~Missing `ThrowIfNull` on constructor~~ |
+| ~~PRRC_kwDOSpaLns7IqDxm~~ | ~~Copilot~~ | ~~`Student.cs:43`~~ | ~~Missing `ThrowIfNull` on `AddEnrollment`~~ |
+| ~~PRRC_kwDOSpaLns7IqDxx~~ | ~~Copilot~~ | ~~`RegisteredUser.cs:56`~~ | ~~Missing `ThrowIfNull` on `AddStudent`~~ |
+| ~~PRRC_kwDOSpaLns7IqDx9~~ | ~~Copilot~~ | ~~`School.cs:42`~~ | ~~Missing `ThrowIfNull` on `Create`~~ |
+| ~~PRRC_kwDOSpaLns7IqDyI~~ | ~~Copilot~~ | ~~`Meet.cs:54`~~ | ~~Missing `ThrowIfNull` on `Create`~~ |
+| ~~PRRC_kwDOSpaLns7IqDyS~~ | ~~Copilot~~ | ~~`Meet.cs:~87`~~ | ~~Missing `ThrowIfNull` on `RecordResult`~~ |
 
 ---
 
@@ -67,7 +67,7 @@ This is a well-structured, TDD-driven domain model pilot: 160 tests, 44 spec sce
 
 ~~**Block 1 (High):** `CrockfordBase32.Random` is `new Random()` (not thread-safe). Under concurrent ID generation from multiple threads, this can produce corrupted/identical sequences. Replace with `Random.Shared`.~~ ✓ Resolved
 
-**Block 2 (Medium, widespread):** The null-guard convention from CLAUDE.md (`ArgumentNullException.ThrowIfNull` on every public constructor/method reference parameter) is missing across the majority of public API methods — exactly as Copilot flagged. The pattern is applied correctly in `BestMarksService`, `SeasonViewService`, `CompetitionLevelMatchService`, and `StudentVisibilityService`, but not in the lower-level aggregates and catalog types. A single sweep pass is needed.
+~~**Block 2 (Medium, widespread):** The null-guard convention from CLAUDE.md (`ArgumentNullException.ThrowIfNull` on every public constructor/method reference parameter) is missing across the majority of public API methods — exactly as Copilot flagged. The pattern is applied correctly in `BestMarksService`, `SeasonViewService`, `CompetitionLevelMatchService`, and `StudentVisibilityService`, but not in the lower-level aggregates and catalog types. A single sweep pass is needed.~~ ✓ Resolved
 
 **Design concern (Medium):** The closed-set types (`GradeLevel`, `MarkKind`, `CompetitionLevel`, `Sport`) use `ReferenceEquals` for `Equals` but use `Name.GetHashCode(...)` for `GetHashCode`. CLAUDE.md explicitly requires these to use the same comparer. For singletons accessed only via static fields this is benign today, but violates the rule and breaks if any instance is ever deserialized or created via reflection (e.g., by EF Core). Fix: either use `RuntimeHelpers.GetHashCode(this)` (identity hash) or switch both `Equals` and `GetHashCode` to name-based comparison.
 
@@ -382,7 +382,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 ### Code Quality
 - [x] Follows existing patterns (sealed, XML docs, closed-set types)
 - [x] Source-generated logging not applicable (domain layer, no ILogger calls — correct)
-- [ ] Null guards missing on the majority of public constructors/methods (aggregates and catalog types)
+- [x] ~~Null guards missing on the majority of public constructors/methods~~
 - [x] XML `<summary>` docs present on all public/internal members
 - [x] Cyclomatic complexity within limit (largest method `EnforceStatusInvariant` is well-factored)
 - [ ] `Equals`/`GetHashCode` comparer mismatch on all closed-set types
