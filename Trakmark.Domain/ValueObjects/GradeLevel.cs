@@ -43,6 +43,12 @@ public sealed class GradeLevel : IEquatable<GradeLevel>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both grade levels are equal.</summary>
+    public static bool operator ==(GradeLevel? left, GradeLevel? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the grade levels differ.</summary>
+    public static bool operator !=(GradeLevel? left, GradeLevel? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

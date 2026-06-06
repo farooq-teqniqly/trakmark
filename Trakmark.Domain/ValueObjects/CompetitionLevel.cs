@@ -31,6 +31,12 @@ public sealed class CompetitionLevel : IEquatable<CompetitionLevel>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both competition levels are equal.</summary>
+    public static bool operator ==(CompetitionLevel? left, CompetitionLevel? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the competition levels differ.</summary>
+    public static bool operator !=(CompetitionLevel? left, CompetitionLevel? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

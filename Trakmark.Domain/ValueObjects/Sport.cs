@@ -27,6 +27,12 @@ public sealed class Sport : IEquatable<Sport>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both sports are equal.</summary>
+    public static bool operator ==(Sport? left, Sport? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the sports differ.</summary>
+    public static bool operator !=(Sport? left, Sport? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

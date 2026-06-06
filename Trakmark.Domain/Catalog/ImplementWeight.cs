@@ -32,6 +32,12 @@ public sealed class ImplementWeight : IEquatable<ImplementWeight>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both implement weights are equal.</summary>
+    public static bool operator ==(ImplementWeight? left, ImplementWeight? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the implement weights differ.</summary>
+    public static bool operator !=(ImplementWeight? left, ImplementWeight? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

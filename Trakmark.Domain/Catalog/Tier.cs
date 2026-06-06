@@ -32,6 +32,12 @@ public sealed class Tier : IEquatable<Tier>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both tiers are equal.</summary>
+    public static bool operator ==(Tier? left, Tier? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the tiers differ.</summary>
+    public static bool operator !=(Tier? left, Tier? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

@@ -38,6 +38,12 @@ public sealed class MarkKind : IEquatable<MarkKind>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both mark kinds are equal.</summary>
+    public static bool operator ==(MarkKind? left, MarkKind? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the mark kinds differ.</summary>
+    public static bool operator !=(MarkKind? left, MarkKind? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }

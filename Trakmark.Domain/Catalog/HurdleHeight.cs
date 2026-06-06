@@ -34,6 +34,12 @@ public sealed class HurdleHeight : IEquatable<HurdleHeight>
     /// <inheritdoc/>
     public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 
+    /// <summary>Returns <see langword="true"/> when both hurdle heights are equal.</summary>
+    public static bool operator ==(HurdleHeight? left, HurdleHeight? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the hurdle heights differ.</summary>
+    public static bool operator !=(HurdleHeight? left, HurdleHeight? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }
