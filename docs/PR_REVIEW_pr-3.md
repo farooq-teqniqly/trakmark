@@ -31,7 +31,7 @@
 | ~~Low~~ | ~~[Resolved in 2d41c04]~~ | ~~`Enrollment` missing `<summary>` doc on `GradeLevel` constructor parameter~~ | ~~`Trakmark.Domain/Aggregates/Enrollment.cs:22`~~ | ~~Claude~~ |
 | Low | [New] | `SeasonViewService.GetSeasonResults` returns deferred LINQ; callers may double-enumerate | `Trakmark.Domain/Services/SeasonViewService.cs:28` | Claude |
 | Low | [New] | `StudentVisibilityService` — `isLinked` compares `UserAccountId?` with `UserAccountId` without null check | `Trakmark.Domain/Services/StudentVisibilityService.cs:39` | Claude |
-| Low | [New] | `Career` public `AddEnrollment` duplicates logic of `TryAdd` | `Trakmark.Domain/Aggregates/Career.cs:41-48` | Claude |
+| ~~Low~~ | ~~[Resolved in c47b495]~~ | ~~`Career` public `AddEnrollment` duplicates logic of `TryAdd`~~ | ~~`Trakmark.Domain/Aggregates/Career.cs:41-48`~~ | ~~Claude~~ |
 | Info | [New] | Test project missing `FluentAssertions` / `bUnit` (domain-only, acceptable) | `Trakmark.Domain.Tests/` | Claude |
 | Info | [New] | No `==`/`!=` operators on closed-set types used in `Dictionary` keys (`Sport`) | `Trakmark.Domain/ValueObjects/Sport.cs` | Claude |
 | Info | [New] | `Result` internal constructor: `Event` and `Tier` reference parameters not null-guarded | `Trakmark.Domain/Aggregates/Result.cs:60` | Claude |
@@ -314,9 +314,9 @@ This eliminates the O(n) scan and makes the whole operation O(log n).
 
 **Note on `BinarySearch` comparer:** `BySchoolYear` compares by `SchoolYear` only. The `Enrollment.Equals` used for equality also includes `SchoolId` and `GradeLevel`. The `BinarySearch` call will only find a matching entry when `SchoolYear` matches; because the invariant is "one enrollment per school year" this is the correct key. The fix above is safe.
 
-**Lines 41-48 — `AddEnrollment` duplicates `TryAdd` logic [Low]**
+~~**Lines 41-48 — `AddEnrollment` duplicates `TryAdd` logic [Low]**~~
 
-`AddEnrollment` calls `TryAdd` and then throws if it fails. This is the only public add path; `TryAdd` is internal. If `AddEnrollment` is only called from `Student.AddEnrollment`, and `Student.AddEnrollment` already uses `TryAdd` directly, the public `Career.AddEnrollment` is dead code that duplicates logic. Consider removing it or making `TryAdd` the single code path.
+~~`AddEnrollment` calls `TryAdd` and then throws if it fails. This is the only public add path; `TryAdd` is internal. If `AddEnrollment` is only called from `Student.AddEnrollment`, and `Student.AddEnrollment` already uses `TryAdd` directly, the public `Career.AddEnrollment` is dead code that duplicates logic. Consider removing it or making `TryAdd` the single code path.~~ ✓ Resolved
 
 ---
 
@@ -389,7 +389,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 
 ### Simplification and Refactoring
 - [ ] `Career.TryAdd` O(n) duplicate-check is redundant with binary search
-- [ ] `Career.AddEnrollment` duplicates `TryAdd` logic; consider removing if it is dead code
+- [x] ~~`Career.AddEnrollment` duplicates `TryAdd` logic; consider removing if it is dead code~~
 - [ ] `SeasonViewService.GetSeasonResults` should materialize to `IReadOnlyList<Result>`
 
 ### Blazor / Component Quality
@@ -405,7 +405,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 
 ## Questions for Author
 
-1. **`Career.AddEnrollment` vs `TryAdd`:** `Student.AddEnrollment` uses `Career.TryAdd` directly. Is `Career.AddEnrollment` (the throwing overload) used anywhere, or is it dead code that can be removed?
+1. ~~**`Career.AddEnrollment` vs `TryAdd`:** `Student.AddEnrollment` uses `Career.TryAdd` directly. Is `Career.AddEnrollment` (the throwing overload) used anywhere, or is it dead code that can be removed?~~ ✓ Resolved
 
 2. **Closed-set type equality intent:** Was `ReferenceEquals` chosen deliberately to enforce singleton identity (i.e., callers cannot create "equal but different" instances by accident), or was name-based equality the intent? If singleton identity, `GetHashCode` should use `RuntimeHelpers.GetHashCode(this)` to match.
 
