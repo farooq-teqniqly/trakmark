@@ -412,7 +412,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 
 3. **`SeasonViewService` return type:** Was returning deferred `IEnumerable` intentional for lazy evaluation, or should the service materialize results? If callers compose further LINQ on top, deferred is fine. If callers enumerate once and store, materialization at the service boundary is safer.
 
-4. **`UserAccountId` null guard:** Since `UserAccountId` is a bridge to ASP.NET Identity, is it ever valid for `value` to be `null` at construction time (e.g., as an empty placeholder)? If not, the guard should be added; if yes, the intent should be documented.
+4. ~~**`UserAccountId` null guard:** Since `UserAccountId` is a bridge to ASP.NET Identity, is it ever valid for `value` to be `null` at construction time (e.g., as an empty placeholder)? If not, the guard should be added; if yes, the intent should be documented.~~ — Answer: add the guard. Already applied in b7a0226.
 
 ---
 
