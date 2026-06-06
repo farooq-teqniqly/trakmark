@@ -9,15 +9,13 @@ internal static class CrockfordBase32
     /// <summary>The valid Crockford base32 alphabet used by domain IDs.</summary>
     internal const string Alphabet = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
 
-    private static readonly Random Random = new();
-
     /// <summary>Generates a random body of <paramref name="length"/> Crockford base32 characters.</summary>
     internal static string GenerateBody(int length)
     {
         var chars = new char[length];
         for (var i = 0; i < length; i++)
         {
-            chars[i] = Alphabet[Random.Next(Alphabet.Length)];
+            chars[i] = Alphabet[Random.Shared.Next(Alphabet.Length)];
         }
 
         return new string(chars);
