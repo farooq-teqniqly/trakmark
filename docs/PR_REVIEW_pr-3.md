@@ -34,7 +34,7 @@
 | ~~Low~~ | ~~[Resolved in c47b495]~~ | ~~`Career` public `AddEnrollment` duplicates logic of `TryAdd`~~ | ~~`Trakmark.Domain/Aggregates/Career.cs:41-48`~~ | ~~Claude~~ |
 | ~~Info~~ | ~~[N/A — FluentAssertions will not be used]~~ | ~~Test project missing `FluentAssertions` / `bUnit` (domain-only, acceptable)~~ | ~~`Trakmark.Domain.Tests/`~~ | ~~Claude~~ |
 | ~~Info~~ | ~~[Resolved in 82f90b6]~~ | ~~No `==`/`!=` operators on closed-set types used in `Dictionary` keys (`Sport`)~~ | ~~`Trakmark.Domain/ValueObjects/Sport.cs`~~ | ~~Claude~~ |
-| Info | [New] | `Result` internal constructor: `Event` and `Tier` reference parameters not null-guarded | `Trakmark.Domain/Aggregates/Result.cs:60` | Claude |
+| ~~Info~~ | ~~[Resolved in 0aad342]~~ | ~~`Result` internal constructor: `Event` and `Tier` reference parameters not null-guarded~~ | ~~`Trakmark.Domain/Aggregates/Result.cs:60`~~ | ~~Claude~~ |
 
 ---
 
@@ -348,9 +348,9 @@ var isLinked = student.UserAccountId.HasValue
 
 ### `Trakmark.Domain/Aggregates/Result.cs`
 
-**Lines 60-78 — Internal constructor reference parameters not null-guarded [Info]**
+~~**Lines 60-78 — Internal constructor reference parameters not null-guarded [Info]**~~
 
-The `internal` constructor accepts `Event @event` and `Tier tier` as reference types without guards. `internal` constructors are exempt from the CLAUDE.md rule (which covers "public constructors and methods"), but `Meet` is the only caller and it already validates `@event` via `EnforceSportMatch`. No action required; noted for completeness.
+~~The `internal` constructor accepts `Event @event` and `Tier tier` as reference types without guards. `internal` constructors are exempt from the CLAUDE.md rule (which covers "public constructors and methods"), but `Meet` is the only caller and it already validates `@event` via `EnforceSportMatch`. No action required; noted for completeness.~~ ✓ Resolved
 
 ---
 
