@@ -58,6 +58,7 @@ All 20 Copilot inline review comments are from a single review pass (review `444
 | ~~PRRC_kwDOSpaLns7IqDx9~~ | ~~Copilot~~ | ~~`School.cs:42`~~ | ~~Missing `ThrowIfNull` on `Create`~~ |
 | ~~PRRC_kwDOSpaLns7IqDyI~~ | ~~Copilot~~ | ~~`Meet.cs:54`~~ | ~~Missing `ThrowIfNull` on `Create`~~ |
 | ~~PRRC_kwDOSpaLns7IqDyS~~ | ~~Copilot~~ | ~~`Meet.cs:~87`~~ | ~~Missing `ThrowIfNull` on `RecordResult`~~ |
+| ~~PRRT_kwDOSpaLns6HhmyW~~ | ~~Copilot~~ | ~~`OperationResult.cs:25`~~ | ~~Missing `ThrowIfNull` on `Failure` — N/A: `reason` is `string?`, null guard does not apply~~ |
 
 ---
 
