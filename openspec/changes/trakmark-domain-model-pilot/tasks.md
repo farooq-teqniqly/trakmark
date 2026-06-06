@@ -62,11 +62,11 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 8. Derived reads: season view and bests
 
-- [ ] 8.T Write failing tests from `view-athlete-season` and `personal-and-season-best` specs — `Current season is the current enrollment`, `Show a student's current season results` (entry order), `Navigate to a past season`; `Best time wins for a time discipline`, `Best distance wins for a distance discipline`, `Non-finished results are excluded`, `Personal best spans seasons`, `Personal best updates as results are added`, `A JV mark can be a personal best` (tier-agnostic), `Relay marks are excluded`, and `Place-only disciplines have no best`. Use `[Theory]` across multiple seasons and both directions.
-- [ ] 8.1 Implement a read projection listing a student's results for a season's `SchoolYear`, ordered by `Order`
-- [ ] 8.2 Implement `SeasonBest(student, discipline, season)` — best finished, individual, mark-present result, direction per mark kind
-- [ ] 8.3 Implement `PersonalBest(student, discipline)` as the best across season bests
-- [ ] 8.4 Ensure bests exclude non-`Finished` results, relays, and place-only disciplines, and are tier-agnostic
+- [x] 8.T Write failing tests from `view-athlete-season` and `personal-and-season-best` specs — `Current season is the current enrollment`, `Show a student's current season results` (entry order), `Navigate to a past season`; `Best time wins for a time discipline`, `Best distance wins for a distance discipline`, `Non-finished results are excluded`, `Personal best spans seasons`, `Personal best updates as results are added`, `A JV mark can be a personal best` (tier-agnostic), `Relay marks are excluded`, and `Place-only disciplines have no best`. Use `[Theory]` across multiple seasons and both directions.
+- [x] 8.1 Implement a read projection listing a student's results for a season's `SchoolYear`, ordered by `Order`
+- [x] 8.2 Implement `SeasonBest(student, discipline, season)` — best finished, individual, mark-present result, direction per mark kind
+- [x] 8.3 Implement `PersonalBest(student, discipline)` as the best across season bests
+- [x] 8.4 Ensure bests exclude non-`Finished` results, relays, and place-only disciplines, and are tier-agnostic
 
 ## 9. Cleanup
 
