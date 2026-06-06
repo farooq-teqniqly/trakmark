@@ -21,8 +21,8 @@
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `School.Create`~~ | ~~`Trakmark.Domain/Aggregates/School.cs:41`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Meet.Create` and `Meet.RecordResult`~~ | ~~`Trakmark.Domain/Aggregates/Meet.cs:53,79`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~`Enrollment` constructor missing null guard on `gradeLevel`~~ | ~~`Trakmark.Domain/Aggregates/Enrollment.cs:23`~~ | ~~Claude~~ |
-| Medium | [New] | `GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name` | `Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42` | Claude |
-| Medium | [New] | `MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency | `Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27` | Claude |
+| ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name`~~ | ~~`Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42`~~ | ~~Claude~~ |
+| ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency~~ | ~~`Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27`~~ | ~~Claude~~ |
 | Medium | [New] | `Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators | `Trakmark.Domain/Catalog/Performance.cs:8` | Claude |
 | Medium | [New] | `Career.TryAdd` uses O(n) linear scan before binary-search insert | `Trakmark.Domain/Aggregates/Career.cs:57` | Claude |
 | Low | [New] | `Discipline` factory methods missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Discipline.cs:76-92` | Claude |
@@ -69,7 +69,7 @@ This is a well-structured, TDD-driven domain model pilot: 160 tests, 44 spec sce
 
 ~~**Block 2 (Medium, widespread):** The null-guard convention from CLAUDE.md (`ArgumentNullException.ThrowIfNull` on every public constructor/method reference parameter) is missing across the majority of public API methods — exactly as Copilot flagged. The pattern is applied correctly in `BestMarksService`, `SeasonViewService`, `CompetitionLevelMatchService`, and `StudentVisibilityService`, but not in the lower-level aggregates and catalog types. A single sweep pass is needed.~~ ✓ Resolved
 
-**Design concern (Medium):** The closed-set types (`GradeLevel`, `MarkKind`, `CompetitionLevel`, `Sport`) use `ReferenceEquals` for `Equals` but use `Name.GetHashCode(...)` for `GetHashCode`. CLAUDE.md explicitly requires these to use the same comparer. For singletons accessed only via static fields this is benign today, but violates the rule and breaks if any instance is ever deserialized or created via reflection (e.g., by EF Core). Fix: either use `RuntimeHelpers.GetHashCode(this)` (identity hash) or switch both `Equals` and `GetHashCode` to name-based comparison.
+~~**Design concern (Medium):** The closed-set types (`GradeLevel`, `MarkKind`, `CompetitionLevel`, `Sport`) use `ReferenceEquals` for `Equals` but use `Name.GetHashCode(...)` for `GetHashCode`. CLAUDE.md explicitly requires these to use the same comparer. For singletons accessed only via static fields this is benign today, but violates the rule and breaks if any instance is ever deserialized or created via reflection (e.g., by EF Core). Fix: either use `RuntimeHelpers.GetHashCode(this)` (identity hash) or switch both `Equals` and `GetHashCode` to name-based comparison.~~ ✓ Resolved
 
 ---
 
@@ -385,7 +385,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 - [x] ~~Null guards missing on the majority of public constructors/methods~~
 - [x] XML `<summary>` docs present on all public/internal members
 - [x] Cyclomatic complexity within limit (largest method `EnforceStatusInvariant` is well-factored)
-- [ ] `Equals`/`GetHashCode` comparer mismatch on all closed-set types
+- [x] ~~`Equals`/`GetHashCode` comparer mismatch on all closed-set types~~
 
 ### Simplification and Refactoring
 - [ ] `Career.TryAdd` O(n) duplicate-check is redundant with binary search
