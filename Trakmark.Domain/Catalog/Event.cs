@@ -43,6 +43,12 @@ public sealed class Event : IEquatable<Event>
     /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(Discipline, Sport);
 
+    /// <summary>Returns <see langword="true"/> when both events are equal.</summary>
+    public static bool operator ==(Event? left, Event? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the events differ.</summary>
+    public static bool operator !=(Event? left, Event? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => $"{Sport} — {Discipline}";
 }

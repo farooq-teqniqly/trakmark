@@ -100,6 +100,12 @@ public sealed class Discipline : IEquatable<Discipline>
     /// <inheritdoc/>
     public override int GetHashCode() => _identityKey.GetHashCode(StringComparison.Ordinal);
 
+    /// <summary>Returns <see langword="true"/> when both disciplines are equal.</summary>
+    public static bool operator ==(Discipline? left, Discipline? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the disciplines differ.</summary>
+    public static bool operator !=(Discipline? left, Discipline? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => Name;
 }
