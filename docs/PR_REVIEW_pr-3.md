@@ -25,9 +25,9 @@
 | ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency~~ | ~~`Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27`~~ | ~~Claude~~ |
 | ~~Medium~~ | ~~[Resolved in a72ce5d]~~ | ~~`Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators~~ | ~~`Trakmark.Domain/Catalog/Performance.cs:8`~~ | ~~Claude~~ |
 | Medium | [New] | `Career.TryAdd` uses O(n) linear scan before binary-search insert | `Trakmark.Domain/Aggregates/Career.cs:57` | Claude |
-| Low | [New] | `Discipline` factory methods missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Discipline.cs:76-92` | Claude |
-| Low | [New] | `Placement`, `TimeMark`, `DistanceMark` missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Performance.cs:21-91` `Trakmark.Domain/Catalog/Placement.cs:8` | Claude |
-| Low | [New] | `Event` missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Event.cs:10` | Claude |
+| ~~Low~~ | ~~[Resolved in 61f73b5]~~ | ~~`Discipline` factory methods missing `==`/`!=` operator overloads~~ | ~~`Trakmark.Domain/Catalog/Discipline.cs:76-92`~~ | ~~Claude~~ |
+| ~~Low~~ | ~~[Resolved in 61f73b5]~~ | ~~`Placement`, `TimeMark`, `DistanceMark` missing `==`/`!=` operator overloads~~ | ~~`Trakmark.Domain/Catalog/Performance.cs:21-91` `Trakmark.Domain/Catalog/Placement.cs:8`~~ | ~~Claude~~ |
+| ~~Low~~ | ~~[Resolved in 61f73b5]~~ | ~~`Event` missing `==`/`!=` operator overloads~~ | ~~`Trakmark.Domain/Catalog/Event.cs:10`~~ | ~~Claude~~ |
 | Low | [New] | `Enrollment` missing `<summary>` doc on `GradeLevel` constructor parameter | `Trakmark.Domain/Aggregates/Enrollment.cs:22` | Claude |
 | Low | [New] | `SeasonViewService.GetSeasonResults` returns deferred LINQ; callers may double-enumerate | `Trakmark.Domain/Services/SeasonViewService.cs:28` | Claude |
 | Low | [New] | `StudentVisibilityService` — `isLinked` compares `UserAccountId?` with `UserAccountId` without null check | `Trakmark.Domain/Services/StudentVisibilityService.cs:39` | Claude |
