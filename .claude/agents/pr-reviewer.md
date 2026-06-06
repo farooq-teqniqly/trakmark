@@ -101,9 +101,24 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 2. `git diff <old-hash>..HEAD` + `git log <old-hash>..HEAD --oneline` to scope analysis.
 3. Update header to new hash; add **Changelog** section listing prior commits.
 4. Mark prior findings **[Resolved in <short-hash>]** where addressed; keep for traceability.
-5. Add new findings only for changed code or newly surfaced issues.
-6. Refresh `gh api` comments; refresh Summary table (resolved/new/outstanding).
-7. Reply: "Updated review from `<old>` → `<new>` (N resolved, M new, K outstanding)" + path.
+5. Cross out resolved items everywhere they appear in the doc using Markdown strikethrough (`~~text~~`):
+   - Summary of findings table: strikethrough the entire row (`| ~~col~~ | ~~col~~ | ... |`)
+   - Existing review comments table: strikethrough the entire row
+   - TL;DR prose blocks: strikethrough the block and append ` ✓ Resolved`
+   - File-by-file notes heading for the finding: prepend `~~` / append `~~`
+   - Checklist items: change `- [ ]` to `- [x]` and strikethrough the label text (`- [x] ~~label~~`)
+6. Add new findings only for changed code or newly surfaced issues.
+7. Refresh `gh api` comments; refresh Summary table (resolved/new/outstanding).
+7. For each finding now marked resolved, resolve the corresponding GitHub review thread:
+   ```bash
+   gh api repos/{owner}/{repo}/pulls/{pr}/reviews/{review_id}/dismissals \
+     --method PUT -f message="Resolved"
+   # or for inline review comments, use the GraphQL mutation:
+   gh api graphql -f query='mutation { resolveReviewThread(input: { threadId: "<thread_node_id>" }) { thread { isResolved } } }'
+   ```
+   - Match resolved finding to comment by `path:line` and body text from the deduplicated index.
+   - If thread node ID is unavailable or resolution fails (API error, no matching thread), report to caller: "Could not resolve GitHub comment for `<path:line>` — <reason>. Resolve manually."
+9. Reply: "Updated review from `<old>` → `<new>` (N resolved, M new, K outstanding)" + path. List any unresolvable threads.
 
 ## Execution flow
 
@@ -133,7 +148,15 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
     8. Checklist
     9. Questions for author
     10. References
-13. Reply with path + highlights. On re-run: resolved/new/outstanding counts + old→new hash.
+13. For each finding confirmed addressed (code fix merged, rename done, etc.): resolve the GitHub review thread via GraphQL `resolveReviewThread` mutation using the thread node ID from the `gh api` comment fetch. If resolution fails or thread ID is missing, report to caller: "Could not resolve GitHub comment for `<path:line>` — <reason>."
+14. After each issue is fixed, stage the changed files and commit. Do not push. Commit message format (Conventional Commits, ≤50 char subject):
+    ```
+    fix: <what was fixed>
+
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    ```
+    One commit per fixed issue. If committing fails, report to caller and do not retry.
+15. Reply with path + highlights. On re-run: resolved/new/outstanding counts + old→new hash. List any threads that could not be resolved.
 
 ## Review checklist
 
