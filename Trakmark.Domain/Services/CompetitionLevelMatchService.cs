@@ -41,7 +41,7 @@ public sealed class CompetitionLevelMatchService
         ArgumentNullException.ThrowIfNull(meet);
         ArgumentNullException.ThrowIfNull(schools);
 
-        var season = ToSchoolYear(meet.Date.Value);
+        var season = SchoolYearHelper.ToSchoolYear(meet.Date.Value);
 
         var enrollment = student.Career.Enrollments
             .FirstOrDefault(e => e.SchoolYear == season);
@@ -57,18 +57,5 @@ public sealed class CompetitionLevelMatchService
         }
 
         return school.Level.Equals(meet.Level);
-    }
-
-    /// <summary>
-    /// Converts a calendar date to the <see cref="SchoolYear"/> that contains it.
-    /// School years start in August: dates in August or later belong to the year
-    /// starting in that calendar year; earlier dates belong to the year that started
-    /// the previous calendar year.
-    /// </summary>
-    /// <param name="date">The calendar date to resolve.</param>
-    private static SchoolYear ToSchoolYear(DateOnly date)
-    {
-        var startYear = date.Month >= 8 ? date.Year : date.Year - 1;
-        return new SchoolYear(startYear);
     }
 }

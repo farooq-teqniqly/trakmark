@@ -59,7 +59,7 @@ public sealed class BestMarksService
                 && r.Status == ResultStatus.Finished
                 && !r.Event.IsRelay
                 && r.Mark is not null
-                && ToSchoolYear(r.MeetDate.Value) == season);
+                && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season);
 
         return SelectBest(eligible);
     }
@@ -121,28 +121,12 @@ public sealed class BestMarksService
 
         foreach (var result in eligible)
         {
-            if (result.Mark is null)
-            {
-                continue;
-            }
-
-            if (best is null || result.Mark.IsBetterThan(best))
+            if (best is null || result.Mark!.IsBetterThan(best))
             {
                 best = result.Mark;
             }
         }
 
         return best;
-    }
-
-    /// <summary>
-    /// Converts a calendar date to the <see cref="SchoolYear"/> that contains it.
-    /// Dates in August or later belong to the year starting that calendar year;
-    /// earlier dates belong to the year that started the prior calendar year.
-    /// </summary>
-    private static SchoolYear ToSchoolYear(DateOnly date)
-    {
-        var startYear = date.Month >= 8 ? date.Year : date.Year - 1;
-        return new SchoolYear(startYear);
     }
 }

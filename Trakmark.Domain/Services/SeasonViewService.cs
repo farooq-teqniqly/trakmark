@@ -34,18 +34,7 @@ public sealed class SeasonViewService
         ArgumentNullException.ThrowIfNull(allResults);
 
         return allResults
-            .Where(r => r.StudentId == student.Id && ToSchoolYear(r.MeetDate.Value) == season)
+            .Where(r => r.StudentId == student.Id && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season)
             .OrderBy(r => r.Order);
-    }
-
-    /// <summary>
-    /// Converts a calendar date to the <see cref="SchoolYear"/> that contains it.
-    /// Dates in August or later belong to the year starting that calendar year;
-    /// earlier dates belong to the year that started the prior calendar year.
-    /// </summary>
-    private static SchoolYear ToSchoolYear(DateOnly date)
-    {
-        var startYear = date.Month >= 8 ? date.Year : date.Year - 1;
-        return new SchoolYear(startYear);
     }
 }
