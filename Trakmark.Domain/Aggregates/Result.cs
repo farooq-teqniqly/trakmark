@@ -1,5 +1,6 @@
 using Trakmark.Domain.Catalog;
 using Trakmark.Domain.Ids;
+using Trakmark.Domain.ValueObjects;
 
 namespace Trakmark.Domain.Aggregates;
 
@@ -10,6 +11,9 @@ namespace Trakmark.Domain.Aggregates;
 /// result carries them, and all other statuses must carry neither.
 /// <see cref="Order"/> records the entry sequence of this result among the
 /// student's results within the meet.
+/// <see cref="MeetDate"/> is carried on the result so that read projections
+/// can resolve the <see cref="SchoolYear"/> without requiring a separate join to
+/// the owning <see cref="Meet"/>.
 /// </summary>
 public sealed class Result
 {
@@ -46,6 +50,13 @@ public sealed class Result
     /// </summary>
     public int Order { get; }
 
+    /// <summary>
+    /// The date of the meet at which this result was recorded.
+    /// Carried here so that season-view projections can resolve the
+    /// <see cref="SchoolYear"/> without a separate join to the owning meet.
+    /// </summary>
+    public MeetDate MeetDate { get; }
+
     internal Result(
         StudentId studentId,
         Event @event,
@@ -53,7 +64,8 @@ public sealed class Result
         Performance? mark,
         Placement? place,
         Tier tier,
-        int order)
+        int order,
+        MeetDate meetDate)
     {
         StudentId = studentId;
         Event = @event;
@@ -62,5 +74,6 @@ public sealed class Result
         Place = place;
         Tier = tier;
         Order = order;
+        MeetDate = meetDate;
     }
 }
