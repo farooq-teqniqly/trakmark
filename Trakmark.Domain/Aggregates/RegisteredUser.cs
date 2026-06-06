@@ -51,6 +51,7 @@ public sealed class RegisteredUser
     /// </exception>
     public Student AddStudent(PersonName name)
     {
+        ArgumentNullException.ThrowIfNull(name);
         var student = new Student(StudentId.NewId(), name);
         Follow(student.Id);
         return student;

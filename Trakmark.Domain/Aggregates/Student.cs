@@ -27,6 +27,7 @@ public sealed class Student
     /// <summary>Initializes a <see cref="Student"/>, optionally linking an account.</summary>
     public Student(StudentId id, PersonName name, UserAccountId? accountId = null)
     {
+        ArgumentNullException.ThrowIfNull(name);
         Id = id;
         Name = name;
         UserAccountId = accountId;
@@ -38,6 +39,7 @@ public sealed class Student
     /// </summary>
     public OperationResult AddEnrollment(SchoolId schoolId, SchoolYear schoolYear, GradeLevel gradeLevel)
     {
+        ArgumentNullException.ThrowIfNull(gradeLevel);
         var enrollment = new Enrollment(schoolId, schoolYear, gradeLevel);
 
         if (!Career.TryAdd(enrollment))

@@ -23,6 +23,8 @@ public sealed class Event : IEquatable<Event>
     /// <param name="sport">The sport.</param>
     public Event(Discipline discipline, Sport sport)
     {
+        ArgumentNullException.ThrowIfNull(discipline);
+        ArgumentNullException.ThrowIfNull(sport);
         Discipline = discipline;
         Sport = sport;
     }

@@ -22,6 +22,7 @@ public sealed class Enrollment : IEquatable<Enrollment>
     /// <summary>Initializes an <see cref="Enrollment"/>.</summary>
     public Enrollment(SchoolId schoolId, SchoolYear schoolYear, GradeLevel gradeLevel)
     {
+        ArgumentNullException.ThrowIfNull(gradeLevel);
         SchoolId = schoolId;
         SchoolYear = schoolYear;
         GradeLevel = gradeLevel;

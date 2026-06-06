@@ -38,8 +38,12 @@ public sealed class School
     /// </summary>
     /// <param name="name">The school's name.</param>
     /// <param name="level">The competition level.</param>
-    public static School Create(SchoolName name, CompetitionLevel level) =>
-        new(SchoolId.NewId(), name, level);
+    public static School Create(SchoolName name, CompetitionLevel level)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(level);
+        return new(SchoolId.NewId(), name, level);
+    }
 
     /// <summary>
     /// Adds a <see cref="Team"/> for the given <paramref name="sport"/> to this school's catalog.

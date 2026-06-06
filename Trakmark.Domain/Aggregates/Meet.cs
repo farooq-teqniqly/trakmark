@@ -50,8 +50,13 @@ public sealed class Meet
     /// <param name="date">The meet date.</param>
     /// <param name="level">The competition level.</param>
     /// <param name="sport">The sport for all events in this meet.</param>
-    public static Meet Create(MeetName name, MeetDate date, CompetitionLevel level, Sport sport) =>
-        new(MeetId.NewId(), name, date, level, sport);
+    public static Meet Create(MeetName name, MeetDate date, CompetitionLevel level, Sport sport)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(level);
+        ArgumentNullException.ThrowIfNull(sport);
+        return new(MeetId.NewId(), name, date, level, sport);
+    }
 
     /// <summary>
     /// Records a result for a student in an event at this meet.
@@ -84,6 +89,7 @@ public sealed class Meet
         Placement? place,
         Tier? tier)
     {
+        ArgumentNullException.ThrowIfNull(@event);
         EnforceSportMatch(@event);
         EnforceStatusInvariant(@event, status, mark, place);
 

@@ -10,7 +10,11 @@ public readonly record struct UserAccountId
     public string Value { get; }
 
     /// <summary>Initializes a <see cref="UserAccountId"/> from an external account key.</summary>
-    public UserAccountId(string value) => Value = value;
+    public UserAccountId(string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        Value = value;
+    }
 
     /// <inheritdoc/>
     public override string ToString() => Value;

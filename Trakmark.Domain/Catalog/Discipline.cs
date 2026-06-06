@@ -46,32 +46,45 @@ public sealed class Discipline : IEquatable<Discipline>
     /// </summary>
     /// <param name="distanceMeters">The race distance in metres.</param>
     /// <param name="height">The hurdle height setup parameter.</param>
-    public static Discipline HurdleRun(int distanceMeters, HurdleHeight height) =>
-        new($"{distanceMeters}m Hurdles @ {height}", MarkKind.Time, false,
+    public static Discipline HurdleRun(int distanceMeters, HurdleHeight height)
+    {
+        ArgumentNullException.ThrowIfNull(height);
+        return new($"{distanceMeters}m Hurdles @ {height}", MarkKind.Time, false,
             $"hurdle:{distanceMeters}:{height.Name}");
+    }
 
     /// <summary>
     /// Creates a field-throw discipline. Implement weight is part of identity.
     /// </summary>
     /// <param name="eventName">The throw event name (e.g., "Shot Put", "Discus").</param>
     /// <param name="weight">The implement weight setup parameter.</param>
-    public static Discipline ImplementThrow(string eventName, ImplementWeight weight) =>
-        new($"{eventName} @ {weight}", MarkKind.Distance, false,
+    public static Discipline ImplementThrow(string eventName, ImplementWeight weight)
+    {
+        ArgumentNullException.ThrowIfNull(eventName);
+        ArgumentNullException.ThrowIfNull(weight);
+        return new($"{eventName} @ {weight}", MarkKind.Distance, false,
             $"throw:{eventName}:{weight.Name}");
+    }
 
     /// <summary>
     /// Creates a plain field-jump discipline (e.g., Long Jump, High Jump).
     /// </summary>
     /// <param name="eventName">The jump event name.</param>
-    public static Discipline Jump(string eventName) =>
-        new(eventName, MarkKind.Distance, false, $"jump:{eventName}");
+    public static Discipline Jump(string eventName)
+    {
+        ArgumentNullException.ThrowIfNull(eventName);
+        return new(eventName, MarkKind.Distance, false, $"jump:{eventName}");
+    }
 
     /// <summary>
     /// Creates a place-only discipline (e.g., a combined-points event where only placement is recorded).
     /// </summary>
     /// <param name="eventName">The event name.</param>
-    public static Discipline PlaceOnly(string eventName) =>
-        new(eventName, MarkKind.PlaceOnly, false, $"placeonly:{eventName}");
+    public static Discipline PlaceOnly(string eventName)
+    {
+        ArgumentNullException.ThrowIfNull(eventName);
+        return new(eventName, MarkKind.PlaceOnly, false, $"placeonly:{eventName}");
+    }
 
     /// <inheritdoc/>
     public bool Equals(Discipline? other)
