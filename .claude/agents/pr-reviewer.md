@@ -147,7 +147,8 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
     7. File-by-file notes
     8. Checklist
     9. Questions for author
-    10. References
+    10. Process improvements
+    11. References
 13. For each finding confirmed addressed (code fix merged, rename done, etc.): resolve the GitHub review thread via GraphQL `resolveReviewThread` mutation using the thread node ID from the `gh api` comment fetch. If resolution fails or thread ID is missing, report to caller: "Could not resolve GitHub comment for `<path:line>` — <reason>."
 14. After each issue is fixed, stage the changed files and commit. Do not push. Commit message format (Conventional Commits, ≤50 char subject):
     ```
@@ -215,6 +216,36 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 - [ ] Integration tests if applicable
 - [ ] Blazor component tests use bUnit where applicable
 
+## Process improvements
+
+After completing the review, analyze the findings as a group and identify patterns that reveal a gap in the development process — not just individual bugs. Write a **Process Improvements** section in the review doc (before References) only when patterns exist; omit the section when findings are isolated.
+
+### When to raise a process improvement
+
+Raise one when two or more findings share a root cause that a rule, convention, or tooling change could prevent wholesale — not when a finding is a one-off mistake.
+
+Examples of patterns that warrant a process improvement:
+- Same convention violated across ≥ 3 files/types (e.g., missing null guards everywhere) → suggest adding a self-check step to CLAUDE.md / openspec/config.yaml `rules.tasks`
+- Thread-safety bug on a shared static → suggest a linting rule or code-review checklist entry
+- Equality contract broken on multiple types → suggest a base-class or analyzer to enforce it
+
+### Format in the review doc
+
+```markdown
+## Process Improvements
+
+| Pattern | Files affected | Suggested fix |
+|---|---|---|
+| Missing null guards on public API (widespread) | 8 files, 13 methods | Add self-check step to CLAUDE.md and openspec/config.yaml rules.tasks |
+```
+
+One row per pattern. Keep suggestions concrete: name the exact file/section to change (CLAUDE.md, openspec/config.yaml `rules.tasks`, a new analyzer package, a checklist item). If a suggestion was already applied in this session, mark it **[Applied]**.
+
+### Anti-patterns
+- Raising a process improvement for a single isolated finding
+- Vague suggestions ("improve the process") without naming what to change
+- Duplicating suggestions already present in CLAUDE.md or openspec/config.yaml
+
 ## Findings format
 
 - **Summary of findings** table at top: `Severity | Tag | Topic | Location | Source`
@@ -236,3 +267,4 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 - Skipping `gh api` comment fetch
 - Ignoring human rename requests
 - Overlooking duplication/refactoring without at least an Info-level note
+- Skipping the Process Improvements section when a pattern spans ≥ 3 findings
