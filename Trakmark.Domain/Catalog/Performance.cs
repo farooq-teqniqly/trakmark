@@ -48,6 +48,12 @@ public sealed class TimeMark : Performance, IEquatable<TimeMark>
     /// <inheritdoc/>
     public override int GetHashCode() => Milliseconds.GetHashCode();
 
+    /// <summary>Returns <see langword="true"/> when both marks are equal.</summary>
+    public static bool operator ==(TimeMark? left, TimeMark? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the marks differ.</summary>
+    public static bool operator !=(TimeMark? left, TimeMark? right) => !(left == right);
+
     /// <inheritdoc/>
     public override string ToString() => $"{Milliseconds}ms";
 }
@@ -85,6 +91,12 @@ public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
 
     /// <inheritdoc/>
     public override int GetHashCode() => Centimetres.GetHashCode();
+
+    /// <summary>Returns <see langword="true"/> when both marks are equal.</summary>
+    public static bool operator ==(DistanceMark? left, DistanceMark? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the marks differ.</summary>
+    public static bool operator !=(DistanceMark? left, DistanceMark? right) => !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => $"{Centimetres}cm";
