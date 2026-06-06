@@ -23,11 +23,42 @@ merged into `domain-modelling`. 126 tests green post-merge.
 - ~~`StringComparison.Ordinal` for user-typed name values~~ — resolved: switched to `OrdinalIgnoreCase` (decision confirmed by owner).
 - `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
 - `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
-- ~~`StringComparison.Ordinal` for user-typed name values~~ — resolved: switched to `OrdinalIgnoreCase` (decision confirmed by owner).
-- `Team` has no `SchoolId` back-reference — noted by reviewer; relevant when EF Core persistence is added.
-- `Student.AccountLink` private set has no internal mutator — unreachable until a `LinkAccount` operation is designed.
 
 ## Process additions
 
 - Created `.claude/agents/trakmark-engineering-team.md` — orchestrator skill; invoke as `/trakmark-engineering-team <change> <sections>` to run the full parallel workflow.
 - Retrospective output now written to `docs/retros/` and committed alongside rule edits.
+
+---
+
+# Section 7 — Cross-aggregate domain services — 2026-06-05
+
+Single developer agent (no parallel worktrees). Reviewer found **zero issues** — clean pass.
+11 new tests added; 136 total passing.
+Files changed: `Trakmark.Domain/Services/CompetitionLevelMatchService.cs`,
+`Trakmark.Domain/Services/StudentVisibilityService.cs`,
+`Trakmark.Domain.Tests/DomainServicesTests.cs`.
+
+## Findings applied
+
+| Evidence | Improvement | File(s) changed |
+|----------|-------------|-----------------|
+| None — reviewer found nothing to correct | No rule changes warranted | — |
+
+## What held
+
+The rules added in the sections 3–6 retro directly prevented every prior class of finding:
+
+- Null guards (`ThrowIfNull`) present on all public service method parameters — no reviewer catch needed.
+- XML `<summary>` docs on both service types, all public methods, and all test helper methods — complete on first submission.
+- `sealed class` used correctly for stateless services (no value objects authored, so `IEquatable`/`==`/`!=` rule was not exercised but not applicable).
+- Braces on all control flow bodies — no exceptions found.
+- `// Arrange`, `// Act`, `// Assert` present in all 11 tests.
+- No `[Fact]`/`[Theory]` redundancy — each of the 11 tests covers a distinct scenario with meaningfully different behavior; `[Theory]` would not have collapsed them.
+- Commit message: 46 words, imperative subject ≤50 chars, body explains why — within all limits.
+- Prior-section public API used correctly (no invented stubs); `Student`, `Meet`, `School`, `RegisteredUser` referenced only via their merged signatures.
+
+## Carry-forward
+
+- `Team` has no `SchoolId` back-reference — still deferred to EF Core persistence layer.
+- `Student.AccountLink` private set still has no internal mutator — deferred until `LinkAccount` operation is designed.
