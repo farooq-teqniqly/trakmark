@@ -56,9 +56,9 @@ Work test-first (TDD). In each section, complete the `.T` task — write failing
 
 ## 7. Cross-aggregate domain services
 
-- [ ] 7.T Write failing tests for the level-match service — `Reject a level mismatch` and `Historical meets validate against the season's enrollment` (`record-meet-results` spec) — and for visibility resolution — `Followed students are visible` and `Unrelated students are not visible` (`view-athlete-season` spec), including the `UserAccountId`-match union.
-- [ ] 7.1 Implement a domain service that validates a meet's `CompetitionLevel` against the student's enrollment level for the meet's season (resolved by meet date → `SchoolYear`)
-- [ ] 7.2 Implement student visibility resolution: `Following` set ∪ the student whose `UserAccountId` equals the user's account
+- [x] 7.T Write failing tests for the level-match service — `Reject a level mismatch` and `Historical meets validate against the season's enrollment` (`record-meet-results` spec) — and for visibility resolution — `Followed students are visible` and `Unrelated students are not visible` (`view-athlete-season` spec), including the `UserAccountId`-match union.
+- [x] 7.1 Implement a domain service that validates a meet's `CompetitionLevel` against the student's enrollment level for the meet's season (resolved by meet date → `SchoolYear`)
+- [x] 7.2 Implement student visibility resolution: `Following` set ∪ the student whose `UserAccountId` equals the user's account
 
 ## 8. Derived reads: season view and bests
 
