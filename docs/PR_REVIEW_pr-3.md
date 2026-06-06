@@ -23,7 +23,7 @@
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~`Enrollment` constructor missing null guard on `gradeLevel`~~ | ~~`Trakmark.Domain/Aggregates/Enrollment.cs:23`~~ | ~~Claude~~ |
 | ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`GradeLevel` equality broken: `ReferenceEquals` but `GetHashCode` uses `Name`~~ | ~~`Trakmark.Domain/ValueObjects/GradeLevel.cs:36,42`~~ | ~~Claude~~ |
 | ~~Medium~~ | ~~[Resolved in 09cfef4]~~ | ~~`MarkKind`, `CompetitionLevel`, `Sport` — same `ReferenceEquals`/name-hash inconsistency~~ | ~~`Trakmark.Domain/Catalog/MarkKind.cs:31,37` `Trakmark.Domain/ValueObjects/CompetitionLevel.cs:24,30` `Trakmark.Domain/ValueObjects/Sport.cs:21,27`~~ | ~~Claude~~ |
-| Medium | [New] | `Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators | `Trakmark.Domain/Catalog/Performance.cs:8` | Claude |
+| ~~Medium~~ | ~~[Resolved in a72ce5d]~~ | ~~`Performance` base class is `public abstract` (not `sealed`); subtypes should use `==`/`!=` operators~~ | ~~`Trakmark.Domain/Catalog/Performance.cs:8`~~ | ~~Claude~~ |
 | Medium | [New] | `Career.TryAdd` uses O(n) linear scan before binary-search insert | `Trakmark.Domain/Aggregates/Career.cs:57` | Claude |
 | Low | [New] | `Discipline` factory methods missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Discipline.cs:76-92` | Claude |
 | Low | [New] | `Placement`, `TimeMark`, `DistanceMark` missing `==`/`!=` operator overloads | `Trakmark.Domain/Catalog/Performance.cs:21-91` `Trakmark.Domain/Catalog/Placement.cs:8` | Claude |
@@ -182,13 +182,13 @@ A null `eventName` would silently create a discipline with identity key `"jump:"
 
 ---
 
-### `Trakmark.Domain/Catalog/Performance.cs`
+### ~~`Trakmark.Domain/Catalog/Performance.cs`~~
 
-**`Performance` base class should be `sealed` or documented as intentionally open [Medium]**
+~~**`Performance` base class should be `sealed` or documented as intentionally open [Medium]**~~
 
-CLAUDE.md states "types are sealed by default; unseal only when inheritance is intended and designed for." `Performance` is abstract and unsealed by design (for `TimeMark`/`DistanceMark`), which is correct. However, the subtypes `TimeMark` and `DistanceMark` are `sealed` and implement `IEquatable<T>` correctly. Both are missing `==`/`!=` operator overloads.
+~~CLAUDE.md states "types are sealed by default; unseal only when inheritance is intended and designed for." `Performance` is abstract and unsealed by design (for `TimeMark`/`DistanceMark`), which is correct. However, the subtypes `TimeMark` and `DistanceMark` are `sealed` and implement `IEquatable<T>` correctly. Both are missing `==`/`!=` operator overloads.~~ ✓ Resolved
 
-`TimeMark` and `DistanceMark` should expose:
+~~`TimeMark` and `DistanceMark` should expose:~~
 ```csharp
 public static bool operator ==(TimeMark? left, TimeMark? right) => left?.Equals(right) ?? right is null;
 public static bool operator !=(TimeMark? left, TimeMark? right) => !(left == right);
