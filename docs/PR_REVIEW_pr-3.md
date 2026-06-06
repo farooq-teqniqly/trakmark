@@ -32,7 +32,7 @@
 | Low | [New] | `SeasonViewService.GetSeasonResults` returns deferred LINQ; callers may double-enumerate | `Trakmark.Domain/Services/SeasonViewService.cs:28` | Claude |
 | Low | [New] | `StudentVisibilityService` — `isLinked` compares `UserAccountId?` with `UserAccountId` without null check | `Trakmark.Domain/Services/StudentVisibilityService.cs:39` | Claude |
 | ~~Low~~ | ~~[Resolved in c47b495]~~ | ~~`Career` public `AddEnrollment` duplicates logic of `TryAdd`~~ | ~~`Trakmark.Domain/Aggregates/Career.cs:41-48`~~ | ~~Claude~~ |
-| Info | [New] | Test project missing `FluentAssertions` / `bUnit` (domain-only, acceptable) | `Trakmark.Domain.Tests/` | Claude |
+| ~~Info~~ | ~~[N/A — FluentAssertions will not be used]~~ | ~~Test project missing `FluentAssertions` / `bUnit` (domain-only, acceptable)~~ | ~~`Trakmark.Domain.Tests/`~~ | ~~Claude~~ |
 | Info | [New] | No `==`/`!=` operators on closed-set types used in `Dictionary` keys (`Sport`) | `Trakmark.Domain/ValueObjects/Sport.cs` | Claude |
 | Info | [New] | `Result` internal constructor: `Event` and `Tier` reference parameters not null-guarded | `Trakmark.Domain/Aggregates/Result.cs:60` | Claude |
 
