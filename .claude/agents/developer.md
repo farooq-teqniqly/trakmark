@@ -50,6 +50,8 @@ Before staging files, run through this list:
 - **[Fact] vs [Theory] redundancy**: if a `[Theory]` already covers a case via `[InlineData]`, delete any `[Fact]` that tests the same scenario. Redundant facts diverge over time.
 - **Null guards**: every public constructor and method that accepts a reference-type parameter must call `ArgumentNullException.ThrowIfNull(param)` as its first line. Exception: DI-injected dependencies.
 - **Equals/GetHashCode comparer parity**: if `Equals` uses `StringComparison.Ordinal` (or any explicit comparer), `GetHashCode` must use the same — e.g. `Value.GetHashCode(StringComparison.Ordinal)`. Mismatches silently break dictionary lookups.
+- **Shared private helpers across services**: if a private static helper (e.g. `ToSchoolYear`) appears in more than one service, extract it to a dedicated `internal static class` (e.g. `SchoolYearHelper`) rather than duplicating it. Duplicated logic diverges silently when the rule changes.
+- **Denormalized date on child entities**: when a read projection needs a date from the owning aggregate to resolve context (e.g. school year), add a denormalized date field to the child entity at construction time (e.g. `Result.MeetDate` set from `Meet.Date`). Do not require callers to join back to the owning aggregate to resolve the date.
 
 ## Before finishing
 
