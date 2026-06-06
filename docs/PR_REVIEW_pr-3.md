@@ -12,7 +12,7 @@
 | Severity | Tag | Topic | Location | Source |
 |---|---|---|---|---|
 | ~~High~~ | ~~[Resolved in f546bbd]~~ | ~~Non-thread-safe `Random` field~~ | ~~`Trakmark.Domain/Ids/CrockfordBase32.cs:12`~~ | ~~Copilot, Claude~~ |
-| High | [New] | `DomainId.IsValid` does not guard against `null` input | `Trakmark.Domain/Ids/DomainId.cs:15-18` | Copilot, Claude |
+| ~~High~~ | ~~[Resolved in b4eeea3]~~ | ~~`DomainId.IsValid` does not guard against `null` input~~ | ~~`Trakmark.Domain/Ids/DomainId.cs:15-18`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing `ArgumentNullException.ThrowIfNull` in `UserAccountId` constructor~~ | ~~`Trakmark.Domain/Ids/UserAccountId.cs:13`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Event` constructor~~ | ~~`Trakmark.Domain/Catalog/Event.cs:24-28`~~ | ~~Copilot, Claude~~ |
 | ~~Medium~~ | ~~[Resolved in b7a0226]~~ | ~~Missing null guards on `Discipline` factory methods~~ | ~~`Trakmark.Domain/Catalog/Discipline.cs:49,58,66,73`~~ | ~~Copilot, Claude~~ |
@@ -45,7 +45,7 @@ All 20 Copilot inline review comments are from a single review pass (review `444
 | ID | Source | Path:Line | Topic |
 |---|---|---|---|
 | ~~PRRC_kwDOSpaLns7IqDwi~~ | ~~Copilot~~ | ~~`CrockfordBase32.cs:13`~~ | ~~Non-thread-safe `Random`~~ |
-| PRRC_kwDOSpaLns7IqDwq | Copilot | `DomainId.cs:19` | No null guard → NRE instead of `false` |
+| ~~PRRC_kwDOSpaLns7IqDwq~~ | ~~Copilot~~ | ~~`DomainId.cs:19`~~ | ~~No null guard → NRE instead of `false`~~ |
 | ~~PRRC_kwDOSpaLns7IqDwv~~ | ~~Copilot~~ | ~~`UserAccountId.cs:14`~~ | ~~Missing `ThrowIfNull` on constructor~~ |
 | ~~PRRC_kwDOSpaLns7IqDwz~~ | ~~Copilot~~ | ~~`Event.cs:28`~~ | ~~Missing `ThrowIfNull` on constructor~~ |
 | ~~PRRC_kwDOSpaLns7IqDw3~~ | ~~Copilot~~ | ~~`Discipline.cs:52`~~ | ~~Missing `ThrowIfNull` on `HurdleRun`~~ |
@@ -63,7 +63,7 @@ All 20 Copilot inline review comments are from a single review pass (review `444
 
 ## TL;DR
 
-This is a well-structured, TDD-driven domain model pilot: 160 tests, 44 spec scenarios covered, clean DDD aggregate design, strong XML documentation, correct use of `sealed` types and closed-set patterns. It is ready for approval pending resolution of two blocking concerns and a sweep of missing null guards across the public API surface.
+This is a well-structured, TDD-driven domain model pilot: 160 tests, 44 spec scenarios covered, clean DDD aggregate design, strong XML documentation, correct use of `sealed` types and closed-set patterns. All previously identified blocking concerns and null-guard sweep items have been resolved; remaining open findings are Medium or below.
 
 ~~**Block 1 (High):** `CrockfordBase32.Random` is `new Random()` (not thread-safe). Under concurrent ID generation from multiple threads, this can produce corrupted/identical sequences. Replace with `Random.Shared`.~~ ✓ Resolved
 
@@ -366,7 +366,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 ### Functionality
 - [x] Core functionality works as intended (160 tests, 44 spec scenarios)
 - [x] Edge cases handled (duplicate enrollment, sport mismatch, mark-kind mismatch)
-- [ ] `DomainId.IsValid(null, prefix)` throws NRE instead of returning `false`
+- [x] ~~`DomainId.IsValid(null, prefix)` throws NRE instead of returning `false`~~
 - [x] Configuration correct (no secrets in appsettings; no appsettings changes)
 
 ### Thread Safety
