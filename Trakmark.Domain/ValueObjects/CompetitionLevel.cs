@@ -1,0 +1,40 @@
+namespace Trakmark.Domain.ValueObjects;
+
+/// <summary>
+/// A closed set representing the level of competition for a school or meet
+/// (High School, Middle School, or Elementary).
+/// </summary>
+public sealed class CompetitionLevel : IEquatable<CompetitionLevel>
+{
+    /// <summary>The display name of this competition level.</summary>
+    public string Name { get; }
+
+    private CompetitionLevel(string name) => Name = name;
+
+    /// <summary>High school competition level.</summary>
+    public static readonly CompetitionLevel HighSchool = new("High School");
+
+    /// <summary>Middle school competition level.</summary>
+    public static readonly CompetitionLevel MiddleSchool = new("Middle School");
+
+    /// <summary>Elementary school competition level.</summary>
+    public static readonly CompetitionLevel Elementary = new("Elementary");
+
+    /// <inheritdoc/>
+    public bool Equals(CompetitionLevel? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) => Equals(obj as CompetitionLevel);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+
+    /// <summary>Returns <see langword="true"/> when both competition levels are equal.</summary>
+    public static bool operator ==(CompetitionLevel? left, CompetitionLevel? right) => left?.Equals(right) ?? right is null;
+
+    /// <summary>Returns <see langword="true"/> when the competition levels differ.</summary>
+    public static bool operator !=(CompetitionLevel? left, CompetitionLevel? right) => !(left == right);
+
+    /// <inheritdoc/>
+    public override string ToString() => Name;
+}
