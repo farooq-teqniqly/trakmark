@@ -378,7 +378,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 - [x] Domain services are stateless
 
 ### Performance
-- [ ] `Career.TryAdd` performs O(n) linear scan redundantly before O(log n) binary insert
+- [ ] `Career.TryAddEnrollment` performs O(n) linear scan redundantly before O(log n) binary insert ⏸ deferred until persistence layer implemented
 - [x] No blocking I/O
 - [x] `BestMarksService` and `SeasonViewService` are pure LINQ projections
 
@@ -391,7 +391,7 @@ One gap: no tests specifically exercise the concurrent ID generation path to val
 - [x] ~~`Equals`/`GetHashCode` comparer mismatch on all closed-set types~~
 
 ### Simplification and Refactoring
-- [ ] `Career.TryAdd` O(n) duplicate-check is redundant with binary search
+- [ ] `Career.TryAddEnrollment` O(n) duplicate-check is redundant with binary search ⏸ deferred until persistence layer implemented
 - [x] ~~`Career.AddEnrollment` duplicates `TryAdd` logic; consider removing if it is dead code~~
 - [ ] `SeasonViewService.GetSeasonResults` should materialize to `IReadOnlyList<Result>`
 
