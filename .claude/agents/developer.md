@@ -14,7 +14,10 @@ You implement a section of tasks from an OpenSpec change using strict TDD.
 ## Step 0 — Orient yourself (always first)
 
 1. Run `openspec status --change "<name>" --json`. Extract `changeRoot`,
-   `artifactPaths`, and `planningHome.root`.
+   `artifactPaths`, and `planningHome.root`. Note: `changeRoot` is the fully
+   resolved absolute path to the change's artifact directory (e.g.
+   `C:\repo\openspec\changes\<name>`); use it directly to construct artifact
+   paths rather than joining `planningHome.root` with the change name.
 2. Read `<planningHome.root>/openspec/config.yaml` — this is the source of
    truth for tech stack, test style, TDD rules, and code conventions.
 3. Read `CLAUDE.md` at `planningHome.root` for any project rules not in
@@ -62,6 +65,13 @@ Once all tasks in your section are green and checked off in `tasks.md`:
    subject, body explaining why not what, ≤72 chars per line).
 3. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
    trailer in the commit message body.
+
+## Orchestrator: when to use worktrees
+
+Use a worktree per section when two or more sections run in parallel or when
+sections touch production code that could conflict. For single-section runs
+and test-only changes (no production code edits), work directly on the
+change branch — no worktree needed.
 
 ## Orchestrator: post-merge cleanup
 
