@@ -196,4 +196,270 @@ public sealed class DisciplineAndMarkTests
         Assert.Equal(discipline, ev.Discipline);
         Assert.Equal(Sport.CrossCountry, ev.Sport);
     }
+
+    // ── Discipline equality ───────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same_key",    true)]   // same identity key → equal
+    [InlineData("diff_key",    false)]  // different factory method → not equal
+    public void Discipline_Equality_ByIdentityKey(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = Discipline.Run(100);
+        var b = scenario == "same_key" ? Discipline.Run(100) : Discipline.Run(200);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void Discipline_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var d = Discipline.Run(100);
+
+        // Act / Assert
+        Assert.False(d.Equals((Discipline?)null));
+        Assert.False(d == null);
+        Assert.True(d != null);
+    }
+
+    [Fact]
+    public void Discipline_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var d = Discipline.Run(100);
+
+        // Act / Assert
+        Assert.False(d.Equals((object)"not a discipline"));
+    }
+
+    [Fact]
+    public void Discipline_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = Discipline.Run(100);
+        var b = Discipline.Run(100);
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void Discipline_ToString_ReturnsName()
+    {
+        // Arrange
+        var d = Discipline.Run(400);
+
+        // Act / Assert
+        Assert.Equal("400m", d.ToString());
+    }
+
+    // ── Event equality ────────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("equal",              true)]   // same discipline + sport → equal
+    [InlineData("diff_sport",         false)]  // same discipline, different sport → not equal
+    [InlineData("diff_discipline",    false)]  // different discipline, same sport → not equal
+    public void Event_Equality_CoversBothFields(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var disc100 = Discipline.Run(100);
+        var disc200 = Discipline.Run(200);
+
+        Event a = new(disc100, Sport.TrackAndField);
+        Event b = scenario switch
+        {
+            "equal"           => new(disc100, Sport.TrackAndField),
+            "diff_sport"      => new(disc100, Sport.CrossCountry),
+            "diff_discipline" => new(disc200, Sport.TrackAndField),
+            _                 => throw new ArgumentOutOfRangeException(nameof(scenario))
+        };
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void Event_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
+
+        // Act / Assert
+        Assert.False(ev.Equals((Event?)null));
+        Assert.False(ev == null);
+        Assert.True(ev != null);
+    }
+
+    [Fact]
+    public void Event_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
+
+        // Act / Assert
+        Assert.False(ev.Equals((object)"not an event"));
+    }
+
+    // ── Tier equality ─────────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void Tier_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = Tier.Varsity;
+        var b = scenario == "same" ? Tier.Varsity : Tier.JV;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void Tier_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(Tier.Varsity.Equals((Tier?)null));
+        Assert.False(Tier.Varsity == null);
+        Assert.True(Tier.Varsity != null);
+    }
+
+    [Fact]
+    public void Tier_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(Tier.Varsity.Equals((object)"Varsity"));
+    }
+
+    [Fact]
+    public void Tier_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Varsity", Tier.Varsity.ToString());
+        Assert.Equal("JV", Tier.JV.ToString());
+        Assert.Equal("Open", Tier.Open.ToString());
+    }
+
+    // ── HurdleHeight equality ─────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void HurdleHeight_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = HurdleHeight.Inches39;
+        var b = scenario == "same" ? HurdleHeight.Inches39 : HurdleHeight.Inches33;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void HurdleHeight_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(HurdleHeight.Inches39.Equals((HurdleHeight?)null));
+        Assert.False(HurdleHeight.Inches39 == null);
+        Assert.True(HurdleHeight.Inches39 != null);
+    }
+
+    [Fact]
+    public void HurdleHeight_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("39\"", HurdleHeight.Inches39.ToString());
+        Assert.Equal("33\"", HurdleHeight.Inches33.ToString());
+    }
+
+    // ── ImplementWeight equality ──────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void ImplementWeight_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = ImplementWeight.Kg4;
+        var b = scenario == "same" ? ImplementWeight.Kg4 : ImplementWeight.Kg6;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void ImplementWeight_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(ImplementWeight.Kg4.Equals((ImplementWeight?)null));
+        Assert.False(ImplementWeight.Kg4 == null);
+        Assert.True(ImplementWeight.Kg4 != null);
+    }
+
+    [Fact]
+    public void ImplementWeight_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("4 kg", ImplementWeight.Kg4.ToString());
+        Assert.Equal("6 kg", ImplementWeight.Kg6.ToString());
+    }
+
+    // ── Placement equality ────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData(1, 1, true)]   // same rank → equal
+    [InlineData(1, 2, false)]  // different rank → not equal
+    public void Placement_Equality_ByRank(int rankA, int rankB, bool expectedEqual)
+    {
+        // Arrange
+        var a = new Placement(rankA);
+        var b = new Placement(rankB);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void Placement_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var p = new Placement(1);
+
+        // Act / Assert
+        Assert.False(p.Equals((Placement?)null));
+        Assert.False(p == null);
+        Assert.True(p != null);
+    }
+
+    [Fact]
+    public void Placement_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var p = new Placement(1);
+
+        // Act / Assert
+        Assert.False(p.Equals((object)"1"));
+    }
+
+    [Fact]
+    public void Placement_ToString_ReturnsRank()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("1", new Placement(1).ToString());
+        Assert.Equal("3", new Placement(3).ToString());
+    }
 }

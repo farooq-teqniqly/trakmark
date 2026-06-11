@@ -10,34 +10,34 @@
 
 ## 2. Add Catalog Equality Tests
 
-- [ ] 2.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[Theory]` covering `Discipline` equality: same identity key → equal; different factory method → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString` returns name
-- [ ] 2.2 Add `[Theory]` covering `Event` equality: same discipline + sport → equal; same discipline, different sport → not equal; different discipline, same sport → not equal (exercises each short-circuit branch); null → false; wrong type → false; `==`/`!=`
-- [ ] 2.3 Add `[Theory]` covering `Tier` equality: same singleton → equal; different singleton → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
-- [ ] 2.4 Add `[Theory]` covering `HurdleHeight` equality: same singleton → equal; different singleton → not equal; null → false; `==`/`!=`; `ToString`
-- [ ] 2.5 Add `[Theory]` covering `ImplementWeight` equality: same singleton → equal; different singleton → not equal; null → false; `==`/`!=`; `ToString`
-- [ ] 2.6 Add `[Theory]` covering `Placement` equality: same rank → equal; different rank → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
-- [ ] 2.7 Run `dotnet test` — all tests pass
+- [x] 2.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[Theory]` covering `Discipline` equality: same identity key → equal; different factory method → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString` returns name
+- [x] 2.2 Add `[Theory]` covering `Event` equality: same discipline + sport → equal; same discipline, different sport → not equal; different discipline, same sport → not equal (exercises each short-circuit branch); null → false; wrong type → false; `==`/`!=`
+- [x] 2.3 Add `[Theory]` covering `Tier` equality: same singleton → equal; different singleton → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
+- [x] 2.4 Add `[Theory]` covering `HurdleHeight` equality: same singleton → equal; different singleton → not equal; null → false; `==`/`!=`; `ToString`
+- [x] 2.5 Add `[Theory]` covering `ImplementWeight` equality: same singleton → equal; different singleton → not equal; null → false; `==`/`!=`; `ToString`
+- [x] 2.6 Add `[Theory]` covering `Placement` equality: same rank → equal; different rank → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
+- [x] 2.7 Run `dotnet test` — all tests pass
 
 ## 3. Add Value Object Equality Tests
 
-- [ ] 3.1 In `ValueObjects/ValueObjectTests.cs`, add `[Theory]` covering `MeetName` equality: same value (case-insensitive) → equal; different value → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString`
-- [ ] 3.2 Add `[Theory]` covering `PersonName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
-- [ ] 3.3 Add `[Theory]` covering `SchoolName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
-- [ ] 3.4 Add `[Theory]` covering `TeamName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
-- [ ] 3.5 Add `[Theory]` covering `GradeLevel` equality: same singleton → equal; different singleton → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
-- [ ] 3.6 Add `[Theory]` covering `CompetitionLevel` equality: same/different singletons; null; wrong type; `==`/`!=`; `ToString`
-- [ ] 3.7 Add `[Theory]` covering `Sport` equality: same/different singletons; null; wrong type; `==`/`!=`; `ToString`
-- [ ] 3.8 Run `dotnet test` — all tests pass
+- [x] 3.1 In `ValueObjects/ValueObjectTests.cs`, add `[Theory]` covering `MeetName` equality: same value (case-insensitive) → equal; different value → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString`
+- [x] 3.2 Add `[Theory]` covering `PersonName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
+- [x] 3.3 Add `[Theory]` covering `SchoolName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
+- [x] 3.4 Add `[Theory]` covering `TeamName` equality: same/different/null/wrong-type/`==`/`!=`/`GetHashCode`/`ToString`
+- [x] 3.5 Add `[Theory]` covering `GradeLevel` equality: same singleton → equal; different singleton → not equal; null → false; wrong type → false; `==`/`!=`; `ToString`
+- [x] 3.6 Add `[Theory]` covering `CompetitionLevel` equality: same/different singletons; null; wrong type; `==`/`!=`; `ToString`
+- [x] 3.7 Add `[Theory]` covering `Sport` equality: same/different singletons; null; wrong type; `==`/`!=`; `ToString`
+- [x] 3.8 Run `dotnet test` — all tests pass
 
 ## 4. Add Enrollment Equality Tests
 
-- [ ] 4.1 Create `Aggregates/EnrollmentTests.cs` (namespace `Trakmark.Domain.Tests.Aggregates`) with `[Theory]` covering `Enrollment` equality: same all-fields → equal; differ by `SchoolId` → not equal; differ by `SchoolYear` → not equal; differ by `GradeLevel` → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent
-- [ ] 4.2 Run `dotnet test` — all tests pass
+- [x] 4.1 Create `Aggregates/EnrollmentTests.cs` (namespace `Trakmark.Domain.Tests.Aggregates`) with `[Theory]` covering `Enrollment` equality: same all-fields → equal; differ by `SchoolId` → not equal; differ by `SchoolYear` → not equal; differ by `GradeLevel` → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent
+- [x] 4.2 Run `dotnet test` — all tests pass
 
 ## 5. Add ID TryParse Failure-Path Tests
 
-- [ ] 5.1 In `Ids/StronglyTypedIdTests.cs`, add `[Theory]` with one malformed input per type (`MeetId`, `RegisteredUserId`, `SchoolId`, `TeamId`) — wrong prefix, wrong length, or invalid charset — asserting `TryParse` returns `false`
-- [ ] 5.2 Run `dotnet test` — all tests pass
+- [x] 5.1 In `Ids/StronglyTypedIdTests.cs`, add `[Theory]` with one malformed input per type (`MeetId`, `RegisteredUserId`, `SchoolId`, `TeamId`) — wrong prefix, wrong length, or invalid charset — asserting `TryParse` returns `false`
+- [x] 5.2 Run `dotnet test` — all tests pass
 
 ## 6. Verify Coverage Target
 

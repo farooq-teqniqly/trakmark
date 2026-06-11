@@ -172,4 +172,359 @@ public sealed class ValueObjectTests
         // Assert
         Assert.Equal(a, b);
     }
+
+    // ── MeetName equality ─────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("Spring Classic",  "Spring Classic",  true)]   // same value → equal
+    [InlineData("Spring Classic",  "spring classic",  true)]   // case-insensitive → equal
+    [InlineData("Spring Classic",  "Fall Classic",    false)]  // different value → not equal
+    public void MeetName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
+    {
+        // Arrange
+        var a = new MeetName(valA);
+        var b = new MeetName(valB);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void MeetName_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var n = new MeetName("Spring Classic");
+
+        // Act / Assert
+        Assert.False(n.Equals((MeetName?)null));
+        Assert.False(n == null);
+        Assert.True(n != null);
+    }
+
+    [Fact]
+    public void MeetName_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var n = new MeetName("Spring Classic");
+
+        // Act / Assert
+        Assert.False(n.Equals((object)"Spring Classic"));
+    }
+
+    [Fact]
+    public void MeetName_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new MeetName("Spring Classic");
+        var b = new MeetName("spring classic");
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void MeetName_ToString_ReturnsValue()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Spring Classic", new MeetName("Spring Classic").ToString());
+    }
+
+    // ── PersonName equality ───────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("Alice",  "Alice",  true)]   // same value → equal
+    [InlineData("Alice",  "alice",  true)]   // case-insensitive → equal
+    [InlineData("Alice",  "Bob",    false)]  // different value → not equal
+    public void PersonName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
+    {
+        // Arrange
+        var a = new PersonName(valA);
+        var b = new PersonName(valB);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void PersonName_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var n = new PersonName("Alice");
+
+        // Act / Assert
+        Assert.False(n.Equals((PersonName?)null));
+        Assert.False(n == null);
+        Assert.True(n != null);
+    }
+
+    [Fact]
+    public void PersonName_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var n = new PersonName("Alice");
+
+        // Act / Assert
+        Assert.False(n.Equals((object)"Alice"));
+    }
+
+    [Fact]
+    public void PersonName_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new PersonName("Alice");
+        var b = new PersonName("ALICE");
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void PersonName_ToString_ReturnsValue()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Alice", new PersonName("Alice").ToString());
+    }
+
+    // ── SchoolName equality ───────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("Springfield High",  "Springfield High",  true)]   // same value → equal
+    [InlineData("Springfield High",  "springfield high",  true)]   // case-insensitive → equal
+    [InlineData("Springfield High",  "Central High",      false)]  // different value → not equal
+    public void SchoolName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
+    {
+        // Arrange
+        var a = new SchoolName(valA);
+        var b = new SchoolName(valB);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void SchoolName_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var n = new SchoolName("Springfield High");
+
+        // Act / Assert
+        Assert.False(n.Equals((SchoolName?)null));
+        Assert.False(n == null);
+        Assert.True(n != null);
+    }
+
+    [Fact]
+    public void SchoolName_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var n = new SchoolName("Springfield High");
+
+        // Act / Assert
+        Assert.False(n.Equals((object)"Springfield High"));
+    }
+
+    [Fact]
+    public void SchoolName_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new SchoolName("Springfield High");
+        var b = new SchoolName("SPRINGFIELD HIGH");
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void SchoolName_ToString_ReturnsValue()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Springfield High", new SchoolName("Springfield High").ToString());
+    }
+
+    // ── TeamName equality ─────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("Varsity Boys",  "Varsity Boys",  true)]   // same value → equal
+    [InlineData("Varsity Boys",  "varsity boys",  true)]   // case-insensitive → equal
+    [InlineData("Varsity Boys",  "JV Girls",      false)]  // different value → not equal
+    public void TeamName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
+    {
+        // Arrange
+        var a = new TeamName(valA);
+        var b = new TeamName(valB);
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void TeamName_Equals_Null_ReturnsFalse()
+    {
+        // Arrange
+        var n = new TeamName("Varsity Boys");
+
+        // Act / Assert
+        Assert.False(n.Equals((TeamName?)null));
+        Assert.False(n == null);
+        Assert.True(n != null);
+    }
+
+    [Fact]
+    public void TeamName_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange
+        var n = new TeamName("Varsity Boys");
+
+        // Act / Assert
+        Assert.False(n.Equals((object)"Varsity Boys"));
+    }
+
+    [Fact]
+    public void TeamName_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new TeamName("Varsity Boys");
+        var b = new TeamName("VARSITY BOYS");
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void TeamName_ToString_ReturnsValue()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Varsity Boys", new TeamName("Varsity Boys").ToString());
+    }
+
+    // ── GradeLevel equality ───────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void GradeLevel_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = GradeLevel.Freshman;
+        var b = scenario == "same" ? GradeLevel.Freshman : GradeLevel.Senior;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void GradeLevel_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(GradeLevel.Freshman.Equals((GradeLevel?)null));
+        Assert.False(GradeLevel.Freshman == null);
+        Assert.True(GradeLevel.Freshman != null);
+    }
+
+    [Fact]
+    public void GradeLevel_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(GradeLevel.Freshman.Equals((object)"Freshman"));
+    }
+
+    [Fact]
+    public void GradeLevel_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Freshman", GradeLevel.Freshman.ToString());
+        Assert.Equal("Senior", GradeLevel.Senior.ToString());
+    }
+
+    // ── CompetitionLevel equality ─────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void CompetitionLevel_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = CompetitionLevel.HighSchool;
+        var b = scenario == "same" ? CompetitionLevel.HighSchool : CompetitionLevel.MiddleSchool;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void CompetitionLevel_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(CompetitionLevel.HighSchool.Equals((CompetitionLevel?)null));
+        Assert.False(CompetitionLevel.HighSchool == null);
+        Assert.True(CompetitionLevel.HighSchool != null);
+    }
+
+    [Fact]
+    public void CompetitionLevel_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(CompetitionLevel.HighSchool.Equals((object)"High School"));
+    }
+
+    [Fact]
+    public void CompetitionLevel_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("High School", CompetitionLevel.HighSchool.ToString());
+        Assert.Equal("Middle School", CompetitionLevel.MiddleSchool.ToString());
+    }
+
+    // ── Sport equality ────────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void Sport_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = Sport.TrackAndField;
+        var b = scenario == "same" ? Sport.TrackAndField : Sport.CrossCountry;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void Sport_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(Sport.TrackAndField.Equals((Sport?)null));
+        Assert.False(Sport.TrackAndField == null);
+        Assert.True(Sport.TrackAndField != null);
+    }
+
+    [Fact]
+    public void Sport_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(Sport.TrackAndField.Equals((object)"Track & Field"));
+    }
+
+    [Fact]
+    public void Sport_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Track & Field", Sport.TrackAndField.ToString());
+        Assert.Equal("Cross-Country", Sport.CrossCountry.ToString());
+    }
 }

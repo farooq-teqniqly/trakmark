@@ -154,4 +154,49 @@ public sealed class StronglyTypedIdTests
         // Assert
         Assert.NotEqual(empty, newId);
     }
+
+    // ── Scenario: TryParse failure paths for each aggregate ID type ───────
+    [Theory]
+    [InlineData("SCH-7F3K90")]   // MeetId prefix — wrong prefix
+    [InlineData("SCH-7F3K9")]    // too short body
+    [InlineData("SCH-7F3K9MM")]  // too long body
+    [InlineData("SCH-7F3K9O")]   // invalid charset char 'O'
+    public void MeetId_TryParse_ReturnsFalseForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.False(MeetId.TryParse(value, out _));
+    }
+
+    [Theory]
+    [InlineData("MEET-7F3K9M")]  // wrong prefix (MeetId prefix, not USR-)
+    [InlineData("USR-7F3K9")]    // too short body
+    [InlineData("USR-7F3K9MM")] // too long body
+    [InlineData("USR-7F3K9I")]  // invalid charset char 'I'
+    public void RegisteredUserId_TryParse_ReturnsFalseForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.False(RegisteredUserId.TryParse(value, out _));
+    }
+
+    [Theory]
+    [InlineData("MEET-7F3K9M")]  // wrong prefix
+    [InlineData("SCH-7F3K9")]    // too short body
+    [InlineData("SCH-7F3K9MM")] // too long body
+    [InlineData("SCH-7F3K9L")]  // invalid charset char 'L'
+    public void SchoolId_TryParse_ReturnsFalseForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.False(SchoolId.TryParse(value, out _));
+    }
+
+    [Theory]
+    [InlineData("SCH-7F3K9M")]   // wrong prefix
+    [InlineData("TEAM-7F3K9")]   // too short body
+    [InlineData("TEAM-7F3K9MM")] // too long body
+    [InlineData("TEAM-7F3K91")]  // invalid charset char '1'
+    public void TeamId_TryParse_ReturnsFalseForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.False(TeamId.TryParse(value, out _));
+    }
 }
