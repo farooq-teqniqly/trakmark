@@ -200,6 +200,48 @@ public sealed class StronglyTypedIdTests
         Assert.False(TeamId.TryParse(value, out _));
     }
 
+    // ── Parse throws FormatException for each aggregate ID type ──────────
+
+    [Theory]
+    [InlineData("MEET-7F3K90")]   // invalid charset char '0'
+    [InlineData("wrong-format")]  // completely wrong
+    [InlineData("MEET-")]         // no body
+    public void MeetId_Parse_ThrowsFormatExceptionForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.Throws<FormatException>(() => MeetId.Parse(value));
+    }
+
+    [Theory]
+    [InlineData("USR-7F3K9I")]    // invalid charset char 'I'
+    [InlineData("wrong-format")]
+    [InlineData("USR-")]
+    public void RegisteredUserId_Parse_ThrowsFormatExceptionForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.Throws<FormatException>(() => RegisteredUserId.Parse(value));
+    }
+
+    [Theory]
+    [InlineData("SCH-7F3K9L")]    // invalid charset char 'L'
+    [InlineData("wrong-format")]
+    [InlineData("SCH-")]
+    public void SchoolId_Parse_ThrowsFormatExceptionForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.Throws<FormatException>(() => SchoolId.Parse(value));
+    }
+
+    [Theory]
+    [InlineData("TEAM-7F3K91")]   // invalid charset char '1'
+    [InlineData("wrong-format")]
+    [InlineData("TEAM-")]
+    public void TeamId_Parse_ThrowsFormatExceptionForMalformedInput(string value)
+    {
+        // Arrange / Act / Assert
+        Assert.Throws<FormatException>(() => TeamId.Parse(value));
+    }
+
     // ── Scenario: DomainId.IsValid null/empty branch ──────────────────────
 
     /// <summary>
