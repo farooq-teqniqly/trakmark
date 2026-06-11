@@ -4,7 +4,7 @@ using Trakmark.Domain.Ids;
 using Trakmark.Domain.Services;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Services;
 
 /// <summary>
 /// Tests for section 8: Derived reads — season view and personal/season bests.

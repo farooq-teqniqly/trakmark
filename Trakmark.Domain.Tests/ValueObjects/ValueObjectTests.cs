@@ -1,6 +1,6 @@
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.ValueObjects;
 
 /// <summary>
 /// Tests for value-object invariants: PersonName, SchoolName, MeetName, TeamName,

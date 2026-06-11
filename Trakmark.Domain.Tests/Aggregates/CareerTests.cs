@@ -2,7 +2,7 @@ using Trakmark.Domain.Aggregates;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Aggregates;
 
 /// <summary>
 /// Tests for Career aggregate component: enrollment history management.

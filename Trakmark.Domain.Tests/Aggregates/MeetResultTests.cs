@@ -3,7 +3,7 @@ using Trakmark.Domain.Catalog;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Aggregates;
 
 /// <summary>
 /// Tests for section 6: Meet aggregate and result recording.

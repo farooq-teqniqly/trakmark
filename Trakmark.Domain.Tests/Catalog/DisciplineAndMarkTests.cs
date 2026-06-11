@@ -1,7 +1,7 @@
 using Trakmark.Domain.Catalog;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Catalog;
 
 /// <summary>
 /// Tests for section 2: discipline catalog, mark kinds, performance marks, and events.

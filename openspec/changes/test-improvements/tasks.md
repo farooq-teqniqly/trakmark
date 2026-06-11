@@ -1,12 +1,12 @@
 ## 1. Reorganize Test Files Into Subfolders
 
-- [ ] 1.1 Create subfolders `Aggregates/`, `Catalog/`, `Ids/`, `Services/`, `ValueObjects/` under `Trakmark.Domain.Tests/`
-- [ ] 1.2 Move `CareerTests.cs`, `StudentCareerTests.cs`, `MeetResultTests.cs`, `SchoolAggregateTests.cs`, `RegisteredUserTests.cs` to `Aggregates/`; update namespace to `Trakmark.Domain.Tests.Aggregates`
-- [ ] 1.3 Move `DisciplineAndMarkTests.cs` to `Catalog/`; update namespace to `Trakmark.Domain.Tests.Catalog`
-- [ ] 1.4 Move `StronglyTypedIdTests.cs` to `Ids/`; update namespace to `Trakmark.Domain.Tests.Ids`
-- [ ] 1.5 Move `DomainServicesTests.cs` and `DerivedReadsTests.cs` to `Services/`; update namespace to `Trakmark.Domain.Tests.Services`
-- [ ] 1.6 Move `ValueObjectTests.cs` to `ValueObjects/`; update namespace to `Trakmark.Domain.Tests.ValueObjects`
-- [ ] 1.7 Run `dotnet test` — all 160 existing tests must still pass
+- [x] 1.1 Create subfolders `Aggregates/`, `Catalog/`, `Ids/`, `Services/`, `ValueObjects/` under `Trakmark.Domain.Tests/`
+- [x] 1.2 Move `CareerTests.cs`, `StudentCareerTests.cs`, `MeetResultTests.cs`, `SchoolAggregateTests.cs`, `RegisteredUserTests.cs` to `Aggregates/`; update namespace to `Trakmark.Domain.Tests.Aggregates`
+- [x] 1.3 Move `DisciplineAndMarkTests.cs` to `Catalog/`; update namespace to `Trakmark.Domain.Tests.Catalog`
+- [x] 1.4 Move `StronglyTypedIdTests.cs` to `Ids/`; update namespace to `Trakmark.Domain.Tests.Ids`
+- [x] 1.5 Move `DomainServicesTests.cs` and `DerivedReadsTests.cs` to `Services/`; update namespace to `Trakmark.Domain.Tests.Services`
+- [x] 1.6 Move `ValueObjectTests.cs` to `ValueObjects/`; update namespace to `Trakmark.Domain.Tests.ValueObjects`
+- [x] 1.7 Run `dotnet test` — all 160 existing tests must still pass
 
 ## 2. Add Catalog Equality Tests
 

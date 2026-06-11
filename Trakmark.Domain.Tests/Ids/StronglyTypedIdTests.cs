@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Trakmark.Domain.Ids;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Ids;
 
 /// <summary>
 /// Tests for domain-identity-format spec: per-type prefix + six Crockford base32 chars.
