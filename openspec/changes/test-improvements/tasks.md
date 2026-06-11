@@ -103,8 +103,8 @@
 
 ## 19. Cover IsBetterThan Equal/Worse Branch
 
-- [ ] 19.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[InlineData]` rows to existing `DistanceMark` and `TimeMark` theories where the candidate is equal to or worse than the reference; assert `IsBetterThan` returns `false`
-- [ ] 19.2 Run `dotnet test` — all tests pass
+- [x] 19.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[Theory]` with wrong-type `Performance` pairs asserting `IsBetterThan` returns `false`
+- [x] 19.2 Run `dotnet test` — all tests pass
 
 ## 20. Verify Final Coverage
 
