@@ -41,4 +41,24 @@
 
 ## 6. Verify Coverage Target
 
-- [ ] 6.1 Run coverage analysis and confirm branch coverage ≥ 70% and `Event.Equals` CRAP score ≤ 4
+- [x] 6.1 Run coverage analysis and confirm branch coverage ≥ 70% and `Event.Equals` CRAP score ≤ 4
+
+## 7. Add DistanceMark and TimeMark Equality Tests
+
+- [x] 7.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[Theory]` covering `DistanceMark` equality: same value → equal; different value → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString` non-empty
+- [x] 7.2 Add `[Theory]` covering `TimeMark` equality: same value → equal; different value → not equal; null → false; wrong type → false; `==`/`!=`; `GetHashCode` consistent; `ToString` non-empty
+- [x] 7.3 Run `dotnet test` — all tests pass
+
+## 8. Close PersonalBest Branch Gap
+
+- [x] 8.1 In `Services/DomainServicesTests.cs` (or a new `Services/BestMarksServiceTests.cs`), add `[InlineData]`/`[Theory]` rows for `PersonalBest`: empty collection, collection with non-matching discipline, collection where `IsBetterThan` returns `false` for all
+- [x] 8.2 Run `dotnet test` — all tests pass
+
+## 9. Add SchoolYear Comparison Operator Tests
+
+- [x] 9.1 In `ValueObjects/ValueObjectTests.cs`, add `[Theory]` covering `SchoolYear` `>=` and `<=`: equal years satisfy both; later year satisfies `>` and `>=`; earlier year satisfies `<` and `<=`
+- [x] 9.2 Run `dotnet test` — all tests pass
+
+## 10. Verify Updated Coverage
+
+- [ ] 10.1 Run coverage analysis and confirm line coverage ≥ 94% and branch coverage ≥ 85%

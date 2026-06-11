@@ -118,6 +118,26 @@ public sealed class ValueObjectTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new SchoolYear(0));
     }
 
+    [Theory]
+    [InlineData(2024, 2024, false, true,  false, true)]   // equal: < false, <= true, > false, >= true
+    [InlineData(2025, 2024, false, false, true,  true)]   // later: < false, <= false, > true, >= true
+    [InlineData(2024, 2025, true,  true,  false, false)]  // earlier: < true, <= true, > false, >= false
+    public void SchoolYear_ComparisonOperators_Correct(
+        int leftYear, int rightYear,
+        bool expectedLt, bool expectedLte,
+        bool expectedGt, bool expectedGte)
+    {
+        // Arrange
+        var left  = new SchoolYear(leftYear);
+        var right = new SchoolYear(rightYear);
+
+        // Act / Assert
+        Assert.Equal(expectedLt,  left < right);
+        Assert.Equal(expectedLte, left <= right);
+        Assert.Equal(expectedGt,  left > right);
+        Assert.Equal(expectedGte, left >= right);
+    }
+
     // ── GradeLevel ────────────────────────────────────────────────────────
     [Fact]
     public void GradeLevel_ClosedSet_ContainsExpectedValues()

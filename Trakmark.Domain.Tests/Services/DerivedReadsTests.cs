@@ -428,6 +428,74 @@ public sealed class DerivedReadsTests
     }
 
     /// <summary>
+    /// Scenario: Empty collection returns null.
+    /// When no results exist, PersonalBest returns null.
+    /// </summary>
+    [Fact]
+    public void PersonalBest_EmptyCollection_ReturnsNull()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var service = new BestMarksService();
+
+        // Act
+        var pb = service.PersonalBest(student, Run100, Enumerable.Empty<Result>());
+
+        // Assert
+        Assert.Null(pb);
+    }
+
+    /// <summary>
+    /// Scenario: Collection has results but none match the requested discipline.
+    /// PersonalBest returns null when no result shares the discipline.
+    /// </summary>
+    [Fact]
+    public void PersonalBest_NonMatchingDiscipline_ReturnsNull()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var meet = CreateMeet(DateInSeason2025);
+
+        // Record only a 200m result; ask for 100m PB
+        meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place1, null);
+
+        var service = new BestMarksService();
+
+        // Act
+        var pb = service.PersonalBest(student, Run100, meet.Results);
+
+        // Assert
+        Assert.Null(pb);
+    }
+
+    /// <summary>
+    /// Scenario: All results have IsBetterThan return false — the first eligible mark is still returned.
+    /// When every subsequent result is equal to the first (not strictly better), the first mark wins.
+    /// </summary>
+    [Fact]
+    public void PersonalBest_AllResultsEqualMark_ReturnsFirstEligibleMark()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var meet = CreateMeet(DateInSeason2025);
+
+        // Three equal time results — IsBetterThan returns false for all after the first
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+
+        var service = new BestMarksService();
+
+        // Act
+        var pb = service.PersonalBest(student, Run100, meet.Results);
+
+        // Assert — a mark is still returned even when none is "better" than the first
+        Assert.NotNull(pb);
+        var timeMark = Assert.IsType<TimeMark>(pb);
+        Assert.Equal(12000, timeMark.Milliseconds);
+    }
+
+    /// <summary>
     /// Personal best across two seasons with distance discipline — highest distance wins.
     /// </summary>
     [Theory]
