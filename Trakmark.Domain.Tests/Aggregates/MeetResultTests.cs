@@ -244,6 +244,17 @@ public sealed class MeetResultTests
             meet.RecordResult(StudentId.NewId(), TfPlaceOnlyEvent, ResultStatus.Finished, new TimeMark(11500), new Placement(1), null));
     }
 
+    [Fact]
+    public void RecordResult_PlaceOnly_Finished_WithNoPlace_Throws()
+    {
+        // Arrange
+        var meet = CreateTrackMeet();
+
+        // Act / Assert
+        Assert.Throws<InvalidOperationException>(() =>
+            meet.RecordResult(StudentId.NewId(), TfPlaceOnlyEvent, ResultStatus.Finished, mark: null, place: null, null));
+    }
+
     // ── Reject a cross-sport event ─────────────────────────────────────────────
 
     [Fact]

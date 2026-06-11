@@ -89,4 +89,23 @@
 
 ## 16. Verify Final Branch Coverage
 
-- [ ] 16.1 Run coverage analysis and confirm branch coverage ≥ 88%
+- [x] 16.1 Run coverage analysis and confirm branch coverage ≥ 88% — PASS (95.5%)
+
+## 17. Cover Meet.EnforceFinishedInvariant Missing Branch
+
+- [x] 17.1 In `Aggregates/MeetResultTests.cs` (or equivalent), add a test with the specific Event/Performance/Placement combination that exercises the uncovered branch in `EnforceFinishedInvariant`; assert the invariant is enforced correctly
+- [x] 17.2 Run `dotnet test` — all tests pass; confirm `EnforceFinishedInvariant` CRAP drops from 8.01 to 8.0
+
+## 18. Cover ID Parse Failure Paths
+
+- [ ] 18.1 In `Ids/StronglyTypedIdTests.cs`, add `[Theory]` asserting `Parse` throws for a malformed input on each of `MeetId`, `RegisteredUserId`, `SchoolId`, and `TeamId`
+- [ ] 18.2 Run `dotnet test` — all tests pass
+
+## 19. Cover IsBetterThan Equal/Worse Branch
+
+- [ ] 19.1 In `Catalog/DisciplineAndMarkTests.cs`, add `[InlineData]` rows to existing `DistanceMark` and `TimeMark` theories where the candidate is equal to or worse than the reference; assert `IsBetterThan` returns `false`
+- [ ] 19.2 Run `dotnet test` — all tests pass
+
+## 20. Verify Final Coverage
+
+- [ ] 20.1 Run coverage analysis and confirm line coverage ≥ 99% and branch coverage ≥ 97%
