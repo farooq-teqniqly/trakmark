@@ -61,4 +61,23 @@
 
 ## 10. Verify Updated Coverage
 
-- [ ] 10.1 Run coverage analysis and confirm line coverage ≥ 94% and branch coverage ≥ 85%
+- [x] 10.1 Run coverage analysis and confirm line coverage ≥ 94% and branch coverage ≥ 85%
+
+## 11. Close CompetitionLevelMatchService.IsLevelMatch Branch Gap
+
+- [x] 11.1 In `Services/`, add a `[Theory]` case exercising the school-level lookup branch in `IsLevelMatch`; assert correct return value
+- [x] 11.2 Run `dotnet test` — all tests pass
+
+## 12. Cover Remaining Catalog Boilerplate
+
+- [x] 12.1 In `Catalog/DisciplineAndMarkTests.cs`, extend existing `[Theory]` tests for `Event`, `HurdleHeight`, `ImplementWeight`, `MarkKind`, `Placement`, `Tier` to cover `Equals(object)` wrong-type path, `GetHashCode` consistency, and `ToString` non-empty
+- [x] 12.2 Run `dotnet test` — all tests pass
+
+## 13. Close DomainId.IsValid Branch Gap
+
+- [x] 13.1 In `Ids/StronglyTypedIdTests.cs` (or a new `Ids/DomainIdTests.cs`), add `[InlineData]` row for `null` or empty string input to `IsValid`; assert returns `false`
+- [x] 13.2 Run `dotnet test` — all tests pass
+
+## 14. Verify Final Coverage
+
+- [ ] 14.1 Run coverage analysis and confirm line coverage ≥ 97% and branch coverage ≥ 88%

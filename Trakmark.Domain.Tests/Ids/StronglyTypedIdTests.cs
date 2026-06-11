@@ -199,4 +199,19 @@ public sealed class StronglyTypedIdTests
         // Arrange / Act / Assert
         Assert.False(TeamId.TryParse(value, out _));
     }
+
+    // ── Scenario: DomainId.IsValid null/empty branch ──────────────────────
+
+    /// <summary>
+    /// Null and empty-string inputs must be rejected by every ID type's TryParse,
+    /// exercising the null-guard branch in DomainId.IsValid.
+    /// </summary>
+    [Theory]
+    [InlineData(null)]   // null input hits the null-guard in DomainId.IsValid
+    [InlineData("")]     // empty string: length check fails before prefix check
+    public void DomainId_IsValid_NullOrEmpty_ReturnsFalse(string? value)
+    {
+        // Arrange / Act / Assert — exercise through StudentId as a representative type
+        Assert.False(StudentId.TryParse(value!, out _));
+    }
 }

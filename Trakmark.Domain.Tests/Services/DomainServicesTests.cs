@@ -157,6 +157,29 @@ public sealed class DomainServicesTests
     }
 
     /// <summary>
+    /// When the student has an enrollment for the season but the school is not in the
+    /// schools dictionary, the service returns false (covers the TryGetValue branch).
+    /// </summary>
+    [Fact]
+    public void LevelMatch_SchoolNotInDictionary_ReturnsFalse()
+    {
+        // Arrange
+        var hsSchool = CreateHsSchool();
+        var student = StudentEnrolledAt(hsSchool, new SchoolYear(2025));
+        var hsMeet = HighSchoolMeet2025();
+
+        // Pass an empty schools map — enrollment exists but school cannot be resolved
+        var emptySchools = new Dictionary<SchoolId, School>();
+        var service = new CompetitionLevelMatchService();
+
+        // Act
+        var isValid = service.IsLevelMatch(student, hsMeet, emptySchools);
+
+        // Assert
+        Assert.False(isValid);
+    }
+
+    /// <summary>
     /// When the student has no enrollment for the meet's season, the service returns false.
     /// </summary>
     [Fact]

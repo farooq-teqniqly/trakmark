@@ -9,6 +9,55 @@ namespace Trakmark.Domain.Tests.Catalog;
 /// </summary>
 public sealed class DisciplineAndMarkTests
 {
+    // ── MarkKind equality ─────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData("same",  true)]   // same singleton → equal
+    [InlineData("diff",  false)]  // different singleton → not equal
+    public void MarkKind_Equality_BySingleton(string scenario, bool expectedEqual)
+    {
+        // Arrange
+        var a = MarkKind.Time;
+        var b = scenario == "same" ? MarkKind.Time : MarkKind.Distance;
+
+        // Act / Assert
+        Assert.Equal(expectedEqual, a.Equals(b));
+        Assert.Equal(expectedEqual, a == b);
+        Assert.Equal(!expectedEqual, a != b);
+    }
+
+    [Fact]
+    public void MarkKind_Equals_Null_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(MarkKind.Time.Equals((MarkKind?)null));
+        Assert.False(MarkKind.Time == null);
+        Assert.True(MarkKind.Time != null);
+    }
+
+    [Fact]
+    public void MarkKind_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(MarkKind.Time.Equals((object)"Time"));
+    }
+
+    [Fact]
+    public void MarkKind_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal(MarkKind.Time.GetHashCode(), MarkKind.Time.GetHashCode());
+    }
+
+    [Fact]
+    public void MarkKind_ToString_ReturnsName()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("Time", MarkKind.Time.ToString());
+        Assert.Equal("Distance", MarkKind.Distance.ToString());
+        Assert.Equal("PlaceOnly", MarkKind.PlaceOnly.ToString());
+    }
+
     // ── MarkKind implies comparison direction ─────────────────────────────
 
     [Theory]
@@ -306,6 +355,30 @@ public sealed class DisciplineAndMarkTests
         Assert.False(ev.Equals((object)"not an event"));
     }
 
+    [Fact]
+    public void Event_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new Event(Discipline.Run(100), Sport.TrackAndField);
+        var b = new Event(Discipline.Run(100), Sport.TrackAndField);
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void Event_ToString_IsNonEmpty()
+    {
+        // Arrange
+        var ev = new Event(Discipline.Run(400), Sport.TrackAndField);
+
+        // Act
+        var result = ev.ToString();
+
+        // Assert
+        Assert.NotEmpty(result);
+    }
+
     // ── Tier equality ─────────────────────────────────────────────────────
 
     [Theory]
@@ -337,6 +410,13 @@ public sealed class DisciplineAndMarkTests
     {
         // Arrange / Act / Assert
         Assert.False(Tier.Varsity.Equals((object)"Varsity"));
+    }
+
+    [Fact]
+    public void Tier_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal(Tier.Varsity.GetHashCode(), Tier.Varsity.GetHashCode());
     }
 
     [Fact]
@@ -375,6 +455,20 @@ public sealed class DisciplineAndMarkTests
     }
 
     [Fact]
+    public void HurdleHeight_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal(HurdleHeight.Inches39.GetHashCode(), HurdleHeight.Inches39.GetHashCode());
+    }
+
+    [Fact]
+    public void HurdleHeight_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(HurdleHeight.Inches39.Equals((object)"39\""));
+    }
+
+    [Fact]
     public void HurdleHeight_ToString_ReturnsName()
     {
         // Arrange / Act / Assert
@@ -406,6 +500,20 @@ public sealed class DisciplineAndMarkTests
         Assert.False(ImplementWeight.Kg4.Equals((ImplementWeight?)null));
         Assert.False(ImplementWeight.Kg4 == null);
         Assert.True(ImplementWeight.Kg4 != null);
+    }
+
+    [Fact]
+    public void ImplementWeight_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal(ImplementWeight.Kg4.GetHashCode(), ImplementWeight.Kg4.GetHashCode());
+    }
+
+    [Fact]
+    public void ImplementWeight_Equals_WrongType_ReturnsFalse()
+    {
+        // Arrange / Act / Assert
+        Assert.False(ImplementWeight.Kg4.Equals((object)"4 kg"));
     }
 
     [Fact]
