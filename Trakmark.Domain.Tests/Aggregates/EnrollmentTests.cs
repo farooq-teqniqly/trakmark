@@ -50,6 +50,9 @@ public sealed class EnrollmentTests
         Assert.False(e.Equals((Enrollment?)null));
         Assert.False(e == null);
         Assert.True(e != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == e);
+        Assert.True(null != e);
     }
 
     [Fact]

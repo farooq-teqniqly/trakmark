@@ -80,4 +80,13 @@
 
 ## 14. Verify Final Coverage
 
-- [ ] 14.1 Run coverage analysis and confirm line coverage ≥ 97% and branch coverage ≥ 88%
+- [x] 14.1 Run coverage analysis and confirm line coverage ≥ 97% and branch coverage ≥ 88% — line PASS (98.9%), branch FAIL (86.9%, target 88%)
+
+## 15. Close Null-Guard Branch Gaps on Value Object Operators
+
+- [x] 15.1 For each value object and catalog type with `op_Equality`/`op_Inequality` tests, ensure the existing `[Theory]` or `[Fact]` passes `null` as the left-hand operand (e.g. `null == x`) to exercise the null-guard branch. Affected types: all types in `Catalog/`, `ValueObjects/`, `Aggregates/`, and `Ids/` that implement `==`/`!=`. Also add null-left assertions for `IsBetterThan` and `Parse`/`TryParse` helpers where applicable.
+- [x] 15.2 Run `dotnet test` — all tests pass
+
+## 16. Verify Final Branch Coverage
+
+- [ ] 16.1 Run coverage analysis and confirm branch coverage ≥ 88%

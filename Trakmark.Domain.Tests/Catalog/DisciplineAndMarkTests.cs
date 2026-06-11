@@ -33,6 +33,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(MarkKind.Time.Equals((MarkKind?)null));
         Assert.False(MarkKind.Time == null);
         Assert.True(MarkKind.Time != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == MarkKind.Time);
+        Assert.True(null != MarkKind.Time);
     }
 
     [Fact]
@@ -273,6 +276,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(d.Equals((Discipline?)null));
         Assert.False(d == null);
         Assert.True(d != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == d);
+        Assert.True(null != d);
     }
 
     [Fact]
@@ -343,6 +349,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(ev.Equals((Event?)null));
         Assert.False(ev == null);
         Assert.True(ev != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == ev);
+        Assert.True(null != ev);
     }
 
     [Fact]
@@ -403,6 +412,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(Tier.Varsity.Equals((Tier?)null));
         Assert.False(Tier.Varsity == null);
         Assert.True(Tier.Varsity != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == Tier.Varsity);
+        Assert.True(null != Tier.Varsity);
     }
 
     [Fact]
@@ -452,6 +464,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(HurdleHeight.Inches39.Equals((HurdleHeight?)null));
         Assert.False(HurdleHeight.Inches39 == null);
         Assert.True(HurdleHeight.Inches39 != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == HurdleHeight.Inches39);
+        Assert.True(null != HurdleHeight.Inches39);
     }
 
     [Fact]
@@ -500,6 +515,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(ImplementWeight.Kg4.Equals((ImplementWeight?)null));
         Assert.False(ImplementWeight.Kg4 == null);
         Assert.True(ImplementWeight.Kg4 != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == ImplementWeight.Kg4);
+        Assert.True(null != ImplementWeight.Kg4);
     }
 
     [Fact]
@@ -551,6 +569,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(p.Equals((Placement?)null));
         Assert.False(p == null);
         Assert.True(p != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == p);
+        Assert.True(null != p);
     }
 
     [Fact]
@@ -598,6 +619,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(d.Equals((DistanceMark?)null));
         Assert.False(d == null);
         Assert.True(d != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == d);
+        Assert.True(null != d);
     }
 
     [Fact]
@@ -661,6 +685,9 @@ public sealed class DisciplineAndMarkTests
         Assert.False(t.Equals((TimeMark?)null));
         Assert.False(t == null);
         Assert.True(t != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == t);
+        Assert.True(null != t);
     }
 
     [Fact]

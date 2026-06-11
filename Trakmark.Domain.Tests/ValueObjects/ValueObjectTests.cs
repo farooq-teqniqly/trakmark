@@ -221,6 +221,9 @@ public sealed class ValueObjectTests
         Assert.False(n.Equals((MeetName?)null));
         Assert.False(n == null);
         Assert.True(n != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == n);
+        Assert.True(null != n);
     }
 
     [Fact]
@@ -279,6 +282,9 @@ public sealed class ValueObjectTests
         Assert.False(n.Equals((PersonName?)null));
         Assert.False(n == null);
         Assert.True(n != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == n);
+        Assert.True(null != n);
     }
 
     [Fact]
@@ -337,6 +343,9 @@ public sealed class ValueObjectTests
         Assert.False(n.Equals((SchoolName?)null));
         Assert.False(n == null);
         Assert.True(n != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == n);
+        Assert.True(null != n);
     }
 
     [Fact]
@@ -395,6 +404,9 @@ public sealed class ValueObjectTests
         Assert.False(n.Equals((TeamName?)null));
         Assert.False(n == null);
         Assert.True(n != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == n);
+        Assert.True(null != n);
     }
 
     [Fact]
@@ -449,6 +461,9 @@ public sealed class ValueObjectTests
         Assert.False(GradeLevel.Freshman.Equals((GradeLevel?)null));
         Assert.False(GradeLevel.Freshman == null);
         Assert.True(GradeLevel.Freshman != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == GradeLevel.Freshman);
+        Assert.True(null != GradeLevel.Freshman);
     }
 
     [Fact]
@@ -490,6 +505,9 @@ public sealed class ValueObjectTests
         Assert.False(CompetitionLevel.HighSchool.Equals((CompetitionLevel?)null));
         Assert.False(CompetitionLevel.HighSchool == null);
         Assert.True(CompetitionLevel.HighSchool != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == CompetitionLevel.HighSchool);
+        Assert.True(null != CompetitionLevel.HighSchool);
     }
 
     [Fact]
@@ -531,6 +549,9 @@ public sealed class ValueObjectTests
         Assert.False(Sport.TrackAndField.Equals((Sport?)null));
         Assert.False(Sport.TrackAndField == null);
         Assert.True(Sport.TrackAndField != null);
+        // null as left operand — exercises the `?? right is null` branch of op_Equality
+        Assert.False(null == Sport.TrackAndField);
+        Assert.True(null != Sport.TrackAndField);
     }
 
     [Fact]
