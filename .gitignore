@@ -430,3 +430,5 @@ FodyWeavers.xsd
 
 # Test results
  **/TestResults/
+# Coverage analysis reports
+docs/coverage-analysis/
