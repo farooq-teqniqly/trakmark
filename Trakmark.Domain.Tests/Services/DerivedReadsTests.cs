@@ -58,6 +58,96 @@ public sealed class DerivedReadsTests
     private static Meet CreateMeet(MeetDate date) =>
         Meet.Create(new MeetName("Test Meet"), date, CompetitionLevel.HighSchool, Tf);
 
+    // ── SeasonViewService null-guard branches ─────────────────────────────────
+
+    /// <summary>
+    /// Exercises the <c>ArgumentNullException.ThrowIfNull(student)</c> branch of
+    /// <see cref="SeasonViewService.GetSeasonResults"/>.
+    /// </summary>
+    [Fact]
+    public void GetSeasonResults_NullStudent_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var service = new SeasonViewService();
+
+        // Act / Assert
+        Assert.Throws<ArgumentNullException>(() =>
+            service.GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025).ToList());
+    }
+
+    /// <summary>
+    /// Exercises the <c>ArgumentNullException.ThrowIfNull(allResults)</c> branch of
+    /// <see cref="SeasonViewService.GetSeasonResults"/>.
+    /// </summary>
+    [Fact]
+    public void GetSeasonResults_NullResults_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var service = new SeasonViewService();
+
+        // Act / Assert
+        Assert.Throws<ArgumentNullException>(() =>
+            service.GetSeasonResults(student, null!, Season2025).ToList());
+    }
+
+    // ── SchoolYearHelper branch: fall meet date (month >= 8) ─────────────────
+
+    /// <summary>
+    /// Exercises the <c>date.Month &gt;= 8</c> branch of <c>SchoolYearHelper.ToSchoolYear</c>.
+    /// A meet held in August or later belongs to the school year starting that same calendar year.
+    /// </summary>
+    [Theory]
+    [InlineData(8,  2025, 2025)]   // August — start of school year 2025-26
+    [InlineData(9,  2025, 2025)]   // September — still 2025-26
+    [InlineData(12, 2025, 2025)]   // December — still 2025-26
+    [InlineData(4,  2026, 2025)]   // April — spring of 2025-26 (year-1 path)
+    public void SchoolYearHelper_ToSchoolYear_CorrectlyResolvesSeasonFromMeetDate(
+        int month, int calendarYear, int expectedStartYear)
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(new SchoolYear(expectedStartYear));
+        var meetDate = new MeetDate(new DateOnly(calendarYear, month, 15));
+        var meet = Meet.Create(
+            new MeetName("Test Meet"),
+            meetDate,
+            CompetitionLevel.HighSchool,
+            Tf);
+
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+
+        var service = new SeasonViewService();
+
+        // Act
+        var results = service.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
+
+        // Assert — result is visible in the expected season
+        Assert.Single(results);
+    }
+
+    // ── GetSeasonResults filters out results belonging to other students ──────
+
+    [Fact]
+    public void GetSeasonResults_OtherStudentResults_AreExcluded()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var otherStudent = CreateStudentWithEnrollments(Season2025);
+        var meet = CreateMeet(DateInSeason2025);
+
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+        meet.RecordResult(otherStudent.Id, E100, ResultStatus.Finished, new TimeMark(11000), Place1, null);
+
+        var service = new SeasonViewService();
+
+        // Act
+        var results = service.GetSeasonResults(student, meet.Results, Season2025).ToList();
+
+        // Assert — only the target student's result is returned
+        Assert.Single(results);
+        Assert.Equal(student.Id, results[0].StudentId);
+    }
+
     // ── Season view: current and past seasons ─────────────────────────────────
 
     /// <summary>

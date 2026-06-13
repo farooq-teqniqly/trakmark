@@ -216,6 +216,19 @@ public sealed class MeetResultTests
             meet.RecordResult(StudentId.NewId(), TfJumpEvent, ResultStatus.Finished, new TimeMark(11500), new Placement(1), null));
     }
 
+    // ── A finished result for a distance discipline requires a mark ───────────
+
+    [Fact]
+    public void RecordResult_Finished_DistanceDiscipline_NoMark_Throws()
+    {
+        // Arrange
+        var meet = CreateTrackMeet();
+
+        // Act / Assert
+        Assert.Throws<InvalidOperationException>(() =>
+            meet.RecordResult(StudentId.NewId(), TfJumpEvent, ResultStatus.Finished, mark: null, new Placement(1), null));
+    }
+
     // ── A place-only discipline takes a place and no mark ─────────────────────
 
     [Fact]

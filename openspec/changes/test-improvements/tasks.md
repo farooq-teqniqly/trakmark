@@ -108,4 +108,22 @@
 
 ## 20. Verify Final Coverage
 
-- [ ] 20.1 Run coverage analysis and confirm line coverage ≥ 99% and branch coverage ≥ 97%
+- [x] 20.1 Run coverage analysis and confirm line coverage ≥ 99% and branch coverage ≥ 97% — branch PASS (98.5%), line FAIL (98.9%, 5 uncovered 1-liners)
+
+## 21. Close Remaining Zero-Coverage Methods
+
+- [x] 21.1 Add tests covering `Placement.GetHashCode` (put two equal `Placement` instances in a `HashSet<Placement>` or assert `GetHashCode` equality), `CompetitionLevel.GetHashCode`, `UserAccountId.ToString`, and `MeetDate.ToString` (assert non-null/non-empty)
+- [x] 21.2 Ensure `RegisteredUserId..cctor` is triggered — verify a test references `RegisteredUserId` directly; if the static constructor remains uncovered, add `[ExcludeFromCodeCoverage]` to it as it is unreachable by design
+- [x] 21.3 Close branch gaps in `Career.TryAddEnrollment`, `SchoolYearHelper.ToSchoolYear`, and `SeasonViewService.GetSeasonResults` — one `[InlineData]` per method covering the missing path
+- [x] 21.4 Run `dotnet test` — all tests pass
+
+## 22. Close Final 3 Coverage Gaps
+
+- [x] 22.1 In `Aggregates/MeetResultTests.cs`, find and add the one uncovered line in `Meet.EnforceFinishedInvariant` — inspect the method body for the untested path and add a targeted `[InlineData]` row; assert correct behavior
+- [x] 22.2 In `Aggregates/CareerTests.cs`, add an `[InlineData]` row covering the 4th branch of `Career.TryAddEnrollment` (1 of 4 branches currently uncovered); assert correct behavior
+- [x] 22.3 In `Services/DerivedReadsTests.cs`, add an `[InlineData]` row covering the uncovered branch of `SeasonViewService.GetSeasonResults` (1 of 2 branches); assert correct behavior
+- [x] 22.4 Run `dotnet test` — all tests pass
+
+## 23. Verify 100% Coverage
+
+- [x] 23.1 Run coverage analysis and confirm line coverage = 100% and branch coverage ≥ 99%

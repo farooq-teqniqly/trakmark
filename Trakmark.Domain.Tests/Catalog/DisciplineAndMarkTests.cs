@@ -605,6 +605,32 @@ public sealed class DisciplineAndMarkTests
     }
 
     [Fact]
+    public void Placement_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange
+        var a = new Placement(1);
+        var b = new Placement(1);
+
+        // Act / Assert
+        Assert.Equal(a.GetHashCode(), b.GetHashCode());
+    }
+
+    [Fact]
+    public void Placement_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
+    {
+        // Arrange
+        var set = new HashSet<Placement>
+        {
+            new Placement(1),
+            new Placement(1),
+            new Placement(2)
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
+    }
+
+    [Fact]
     public void Placement_ToString_ReturnsRank()
     {
         // Arrange / Act / Assert

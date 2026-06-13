@@ -193,6 +193,20 @@ public sealed class ValueObjectTests
         Assert.Equal(a, b);
     }
 
+    [Fact]
+    public void MeetDate_ToString_ReturnsIsoFormattedDate()
+    {
+        // Arrange
+        var meetDate = new MeetDate(new DateOnly(2025, 4, 10));
+
+        // Act
+        var result = meetDate.ToString();
+
+        // Assert
+        Assert.Equal("2025-04-10", result);
+        Assert.NotEmpty(result);
+    }
+
     // ── MeetName equality ─────────────────────────────────────────────────
 
     [Theory]
@@ -515,6 +529,30 @@ public sealed class ValueObjectTests
     {
         // Arrange / Act / Assert
         Assert.False(CompetitionLevel.HighSchool.Equals((object)"High School"));
+    }
+
+    [Fact]
+    public void CompetitionLevel_GetHashCode_EqualInstances_SameHash()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal(
+            CompetitionLevel.HighSchool.GetHashCode(),
+            CompetitionLevel.HighSchool.GetHashCode());
+    }
+
+    [Fact]
+    public void CompetitionLevel_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
+    {
+        // Arrange
+        var set = new HashSet<CompetitionLevel>
+        {
+            CompetitionLevel.HighSchool,
+            CompetitionLevel.HighSchool,
+            CompetitionLevel.MiddleSchool
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
     }
 
     [Fact]

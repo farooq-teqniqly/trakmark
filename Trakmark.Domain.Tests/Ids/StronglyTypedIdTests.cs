@@ -135,6 +135,21 @@ public sealed class StronglyTypedIdTests
         Assert.Equal(key, id.Value);
     }
 
+    [Fact]
+    public void UserAccountId_ToString_ReturnsValue()
+    {
+        // Arrange
+        var key = "some-external-key-abc123";
+        var id = new UserAccountId(key);
+
+        // Act
+        var result = id.ToString();
+
+        // Assert
+        Assert.Equal(key, result);
+        Assert.NotEmpty(result);
+    }
+
     // ── Parse throws for ill-formed values ────────────────────────────────
     [Fact]
     public void Parse_ThrowsForIllFormedValue()
