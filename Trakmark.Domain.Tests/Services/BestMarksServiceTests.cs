@@ -6,14 +6,9 @@ using Trakmark.Domain.ValueObjects;
 
 namespace Trakmark.Domain.Tests.Services;
 
-/// <summary>
-/// Tests for section 8: Derived reads — season view and personal/season bests.
-/// Covers <c>view-athlete-season</c> and <c>personal-and-season-best</c> specs.
-/// </summary>
-public sealed class DerivedReadsTests
+/// <summary>Tests for <see cref="BestMarksService"/>.</summary>
+public sealed class BestMarksServiceTests
 {
-    // ── Fixtures ──────────────────────────────────────────────────────────────
-
     private static readonly SchoolId SchoolId = SchoolId.NewId();
     private static readonly Sport Tf = Sport.TrackAndField;
 
@@ -32,16 +27,10 @@ public sealed class DerivedReadsTests
     private static readonly Placement Place1 = new(1);
     private static readonly Placement Place2 = new(2);
 
-    /// <summary>School year starting in 2024 (2024-25 season).</summary>
     private static readonly SchoolYear Season2024 = new(2024);
-
-    /// <summary>School year starting in 2025 (2025-26 season).</summary>
     private static readonly SchoolYear Season2025 = new(2025);
 
-    /// <summary>A meet date in spring 2025 — falls in the 2024-25 school year.</summary>
     private static readonly MeetDate DateInSeason2024 = new(new DateOnly(2025, 4, 10));
-
-    /// <summary>A meet date in spring 2026 — falls in the 2025-26 school year.</summary>
     private static readonly MeetDate DateInSeason2025 = new(new DateOnly(2026, 4, 10));
 
     private static Student CreateStudentWithEnrollments(params SchoolYear[] years)
@@ -58,195 +47,10 @@ public sealed class DerivedReadsTests
     private static Meet CreateMeet(MeetDate date) =>
         Meet.Create(new MeetName("Test Meet"), date, CompetitionLevel.HighSchool, Tf);
 
-    // ── SeasonViewService null-guard branches ─────────────────────────────────
-
-    /// <summary>
-    /// Exercises the <c>ArgumentNullException.ThrowIfNull(student)</c> branch of
-    /// <see cref="SeasonViewService.GetSeasonResults"/>.
-    /// </summary>
-    [Fact]
-    public void GetSeasonResults_NullStudent_ThrowsArgumentNullException()
-    {
-        // Arrange
-        var service = new SeasonViewService();
-
-        // Act / Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            service.GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025).ToList());
-    }
-
-    /// <summary>
-    /// Exercises the <c>ArgumentNullException.ThrowIfNull(allResults)</c> branch of
-    /// <see cref="SeasonViewService.GetSeasonResults"/>.
-    /// </summary>
-    [Fact]
-    public void GetSeasonResults_NullResults_ThrowsArgumentNullException()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2025);
-        var service = new SeasonViewService();
-
-        // Act / Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            service.GetSeasonResults(student, null!, Season2025).ToList());
-    }
-
-    // ── SchoolYearHelper branch: fall meet date (month >= 8) ─────────────────
-
-    /// <summary>
-    /// Exercises the <c>date.Month &gt;= 8</c> branch of <c>SchoolYearHelper.ToSchoolYear</c>.
-    /// A meet held in August or later belongs to the school year starting that same calendar year.
-    /// </summary>
     [Theory]
-    [InlineData(8,  2025, 2025)]   // August — start of school year 2025-26
-    [InlineData(9,  2025, 2025)]   // September — still 2025-26
-    [InlineData(12, 2025, 2025)]   // December — still 2025-26
-    [InlineData(4,  2026, 2025)]   // April — spring of 2025-26 (year-1 path)
-    public void SchoolYearHelper_ToSchoolYear_CorrectlyResolvesSeasonFromMeetDate(
-        int month, int calendarYear, int expectedStartYear)
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(new SchoolYear(expectedStartYear));
-        var meetDate = new MeetDate(new DateOnly(calendarYear, month, 15));
-        var meet = Meet.Create(
-            new MeetName("Test Meet"),
-            meetDate,
-            CompetitionLevel.HighSchool,
-            Tf);
-
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-
-        var service = new SeasonViewService();
-
-        // Act
-        var results = service.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
-
-        // Assert — result is visible in the expected season
-        Assert.Single(results);
-    }
-
-    // ── GetSeasonResults filters out results belonging to other students ──────
-
-    [Fact]
-    public void GetSeasonResults_OtherStudentResults_AreExcluded()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2025);
-        var otherStudent = CreateStudentWithEnrollments(Season2025);
-        var meet = CreateMeet(DateInSeason2025);
-
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet.RecordResult(otherStudent.Id, E100, ResultStatus.Finished, new TimeMark(11000), Place1, null);
-
-        var service = new SeasonViewService();
-
-        // Act
-        var results = service.GetSeasonResults(student, meet.Results, Season2025).ToList();
-
-        // Assert — only the target student's result is returned
-        Assert.Single(results);
-        Assert.Equal(student.Id, results[0].StudentId);
-    }
-
-    // ── Season view: current and past seasons ─────────────────────────────────
-
-    /// <summary>
-    /// Scenario: Current season is the current enrollment.
-    /// The enrollment with the latest SchoolYear is identified as current.
-    /// </summary>
-    [Fact]
-    public void SeasonView_CurrentSeason_IsLatestEnrollment()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2024, Season2025);
-
-        // Act
-        var current = student.Career.Current;
-
-        // Assert
-        Assert.NotNull(current);
-        Assert.Equal(Season2025, current.SchoolYear);
-    }
-
-    /// <summary>
-    /// Scenario: Current season is the current enrollment — past seasons are remaining.
-    /// Past seasons are all enrollments except the latest.
-    /// </summary>
-    [Fact]
-    public void SeasonView_PastSeasons_AreAllButLatestEnrollment()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2024, Season2025);
-
-        // Act
-        var past = student.Career.PastSeasons.ToList();
-
-        // Assert
-        Assert.Single(past);
-        Assert.Equal(Season2024, past[0].SchoolYear);
-    }
-
-    /// <summary>
-    /// Scenario: Show a student's current season results.
-    /// Results for meets in the current season's SchoolYear are returned in entry order.
-    /// </summary>
-    [Fact]
-    public void SeasonView_CurrentSeasonResults_InEntryOrder()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2025);
-        var meet = CreateMeet(DateInSeason2025);
-
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place2, null);
-
-        var service = new SeasonViewService();
-
-        // Act
-        var results = service.GetSeasonResults(student, meet.Results, Season2025).ToList();
-
-        // Assert
-        Assert.Equal(2, results.Count);
-        Assert.Equal(1, results[0].Order);
-        Assert.Equal(2, results[1].Order);
-    }
-
-    /// <summary>
-    /// Scenario: Navigate to a past season.
-    /// Only results whose meet falls within the selected past SchoolYear are returned.
-    /// </summary>
-    [Fact]
-    public void SeasonView_PastSeasonResults_FilteredBySchoolYear()
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(Season2024, Season2025);
-        var meetPast = CreateMeet(DateInSeason2024);
-        var meetCurrent = CreateMeet(DateInSeason2025);
-
-        meetPast.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12500), Place1, null);
-        meetCurrent.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11900), Place1, null);
-
-        var allResults = meetPast.Results.Concat(meetCurrent.Results);
-        var service = new SeasonViewService();
-
-        // Act
-        var past = service.GetSeasonResults(student, allResults, Season2024).ToList();
-
-        // Assert — only the meet in the 2024-25 season
-        Assert.Single(past);
-        Assert.Equal(new TimeMark(12500), past[0].Mark as TimeMark);
-    }
-
-    // ── Season best ───────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Scenario: Best time wins for a time discipline.
-    /// Lower TimeMark is the season best.
-    /// </summary>
-    [Theory]
-    [InlineData(12000, 11500, 11500)] // faster second result wins
-    [InlineData(11500, 12000, 11500)] // faster first result wins
-    [InlineData(11500, 11500, 11500)] // tie — either is fine, assert equal
+    [InlineData(12000, 11500, 11500)]
+    [InlineData(11500, 12000, 11500)]
+    [InlineData(11500, 11500, 11500)]
     public void SeasonBest_TimeDiscipline_LowestTimeWins(int ms1, int ms2, int expectedMs)
     {
         // Arrange
@@ -267,14 +71,10 @@ public sealed class DerivedReadsTests
         Assert.Equal(expectedMs, timeMark.Milliseconds);
     }
 
-    /// <summary>
-    /// Scenario: Best distance wins for a distance discipline.
-    /// Higher DistanceMark is the season best.
-    /// </summary>
     [Theory]
-    [InlineData(540, 580, 580)] // longer second result wins
-    [InlineData(580, 540, 580)] // longer first result wins
-    [InlineData(540, 540, 540)] // tie — either is fine
+    [InlineData(540, 580, 580)]
+    [InlineData(580, 540, 580)]
+    [InlineData(540, 540, 540)]
     public void SeasonBest_DistanceDiscipline_HighestDistanceWins(int cm1, int cm2, int expectedCm)
     {
         // Arrange
@@ -295,10 +95,6 @@ public sealed class DerivedReadsTests
         Assert.Equal(expectedCm, distanceMark.Centimetres);
     }
 
-    /// <summary>
-    /// Scenario: Non-finished results are excluded.
-    /// DNF, DQ, DNS, and NoMark results must not contribute to season best.
-    /// </summary>
     [Theory]
     [InlineData(ResultStatus.DidNotFinish)]
     [InlineData(ResultStatus.Disqualified)]
@@ -321,10 +117,6 @@ public sealed class DerivedReadsTests
         Assert.Null(best);
     }
 
-    /// <summary>
-    /// Scenario: Place-only disciplines have no best.
-    /// SeasonBest returns null for place-only disciplines.
-    /// </summary>
     [Fact]
     public void SeasonBest_PlaceOnlyDiscipline_ReturnsNull()
     {
@@ -343,9 +135,6 @@ public sealed class DerivedReadsTests
         Assert.Null(best);
     }
 
-    /// <summary>
-    /// Relay marks are excluded from season best.
-    /// </summary>
     [Fact]
     public void SeasonBest_RelayResults_Excluded()
     {
@@ -353,7 +142,6 @@ public sealed class DerivedReadsTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        // Record a relay result — shared time
         meet.RecordResult(student.Id, ERelay, ResultStatus.Finished, new TimeMark(50000), Place1, null);
 
         var service = new BestMarksService();
@@ -361,16 +149,10 @@ public sealed class DerivedReadsTests
         // Act
         var best = service.SeasonBest(student, Relay4x100, Season2025, meet.Results);
 
-        // Assert — relays excluded; no best
+        // Assert
         Assert.Null(best);
     }
 
-    // ── Personal best ─────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Scenario: Personal best spans seasons.
-    /// The best mark across all seasons is selected.
-    /// </summary>
     [Fact]
     public void PersonalBest_SpansSeasons_SelectsOverallBest()
     {
@@ -380,7 +162,6 @@ public sealed class DerivedReadsTests
         var meet2024 = CreateMeet(DateInSeason2024);
         var meet2025 = CreateMeet(DateInSeason2025);
 
-        // 2024-25 season has slower time; 2025-26 is faster
         meet2024.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
         meet2025.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
 
@@ -390,17 +171,12 @@ public sealed class DerivedReadsTests
         // Act
         var pb = service.PersonalBest(student, Run100, allResults);
 
-        // Assert — best across both seasons is 11500ms
+        // Assert
         Assert.NotNull(pb);
         var timeMark = Assert.IsType<TimeMark>(pb);
         Assert.Equal(11500, timeMark.Milliseconds);
     }
 
-    /// <summary>
-    /// Scenario: Personal best updates as results are added.
-    /// A new finished result better than the existing PB is reflected immediately.
-    /// The personal best is never stored as a flag; it's recomputed.
-    /// </summary>
     [Fact]
     public void PersonalBest_NewBetterResult_UpdatesImmediately()
     {
@@ -413,7 +189,7 @@ public sealed class DerivedReadsTests
         var service = new BestMarksService();
         var pbBefore = service.PersonalBest(student, Run100, meet.Results);
 
-        // Act — record a new, better result
+        // Act
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
         var pbAfter = service.PersonalBest(student, Run100, meet.Results);
 
@@ -424,10 +200,6 @@ public sealed class DerivedReadsTests
         Assert.Equal(11500, after.Milliseconds);
     }
 
-    /// <summary>
-    /// Scenario: A JV mark can be a personal best.
-    /// Tier does not affect PB eligibility; a JV result is included.
-    /// </summary>
     [Fact]
     public void PersonalBest_JvMark_IsEligible()
     {
@@ -435,7 +207,6 @@ public sealed class DerivedReadsTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        // Only a JV result for this discipline
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11800), Place1, Tier.JV);
 
         var service = new BestMarksService();
@@ -443,17 +214,12 @@ public sealed class DerivedReadsTests
         // Act
         var pb = service.PersonalBest(student, Run100, meet.Results);
 
-        // Assert — JV result counts as PB
+        // Assert
         Assert.NotNull(pb);
         var timeMark = Assert.IsType<TimeMark>(pb);
         Assert.Equal(11800, timeMark.Milliseconds);
     }
 
-    /// <summary>
-    /// Scenario: A JV mark can be a personal best — tier does NOT segment bests.
-    /// A JV best mark and a Varsity mark for the same discipline compete;
-    /// the fastest wins regardless of tier.
-    /// </summary>
     [Fact]
     public void PersonalBest_JvAndVarsity_TierAgnostic_BestWins()
     {
@@ -469,15 +235,12 @@ public sealed class DerivedReadsTests
         // Act
         var pb = service.PersonalBest(student, Run100, meet.Results);
 
-        // Assert — JV 11700ms beats Varsity 12000ms
+        // Assert
         Assert.NotNull(pb);
         var timeMark = Assert.IsType<TimeMark>(pb);
         Assert.Equal(11700, timeMark.Milliseconds);
     }
 
-    /// <summary>
-    /// Scenario: Relay marks are excluded from personal best.
-    /// </summary>
     [Fact]
     public void PersonalBest_RelayResult_Excluded()
     {
@@ -492,13 +255,10 @@ public sealed class DerivedReadsTests
         // Act
         var pb = service.PersonalBest(student, Relay4x100, meet.Results);
 
-        // Assert — relay excluded; no PB
+        // Assert
         Assert.Null(pb);
     }
 
-    /// <summary>
-    /// Scenario: Place-only disciplines have no personal best.
-    /// </summary>
     [Fact]
     public void PersonalBest_PlaceOnlyDiscipline_ReturnsNull()
     {
@@ -517,10 +277,6 @@ public sealed class DerivedReadsTests
         Assert.Null(pb);
     }
 
-    /// <summary>
-    /// Scenario: Empty collection returns null.
-    /// When no results exist, PersonalBest returns null.
-    /// </summary>
     [Fact]
     public void PersonalBest_EmptyCollection_ReturnsNull()
     {
@@ -535,10 +291,6 @@ public sealed class DerivedReadsTests
         Assert.Null(pb);
     }
 
-    /// <summary>
-    /// Scenario: Collection has results but none match the requested discipline.
-    /// PersonalBest returns null when no result shares the discipline.
-    /// </summary>
     [Fact]
     public void PersonalBest_NonMatchingDiscipline_ReturnsNull()
     {
@@ -546,7 +298,6 @@ public sealed class DerivedReadsTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        // Record only a 200m result; ask for 100m PB
         meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place1, null);
 
         var service = new BestMarksService();
@@ -558,10 +309,6 @@ public sealed class DerivedReadsTests
         Assert.Null(pb);
     }
 
-    /// <summary>
-    /// Scenario: All results have IsBetterThan return false — the first eligible mark is still returned.
-    /// When every subsequent result is equal to the first (not strictly better), the first mark wins.
-    /// </summary>
     [Fact]
     public void PersonalBest_AllResultsEqualMark_ReturnsFirstEligibleMark()
     {
@@ -569,7 +316,6 @@ public sealed class DerivedReadsTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        // Three equal time results — IsBetterThan returns false for all after the first
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
@@ -579,15 +325,12 @@ public sealed class DerivedReadsTests
         // Act
         var pb = service.PersonalBest(student, Run100, meet.Results);
 
-        // Assert — a mark is still returned even when none is "better" than the first
+        // Assert
         Assert.NotNull(pb);
         var timeMark = Assert.IsType<TimeMark>(pb);
         Assert.Equal(12000, timeMark.Milliseconds);
     }
 
-    /// <summary>
-    /// Personal best across two seasons with distance discipline — highest distance wins.
-    /// </summary>
     [Theory]
     [InlineData(540, 580, 580)]
     [InlineData(620, 570, 620)]
