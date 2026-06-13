@@ -21,6 +21,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 
 ## Code conventions
 
+- One type per file — never define multiple top-level types in the same `.cs` file. The file name must match the type name.
 - Target **net10.0**; use latest C# language features where they improve clarity.
 - Types are **`sealed` by default**; unseal only when inheritance is intended and designed for.
 - Use `sealed record` (or `readonly record struct`) only when the type is a pure data carrier with no validation logic and no custom equality semantics. Domain value objects that enforce invariants in their constructor must be `sealed class`, not `record`, and must implement `IEquatable<T>` with a matching `Equals`/`GetHashCode` override **and** `==`/`!=` operator overloads. Exception: a `readonly record struct` is acceptable when (a) it wraps a single primitive value, (b) the only invariant is a range/null check on that value, and (c) the auto-generated structural equality is semantically correct for the domain. **Every type that implements `IEquatable<T>` must expose `==`/`!=` operator overloads — no exceptions.**
