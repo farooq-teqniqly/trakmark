@@ -32,7 +32,7 @@ public sealed class CompetitionLevelMatchService
     /// the enrollment's school cannot be found in <paramref name="schools"/>, or the
     /// school's competition level differs from the meet's level.
     /// </returns>
-    public bool IsLevelMatch(
+    public static bool IsLevelMatch(
         Student student,
         Meet meet,
         IReadOnlyDictionary<SchoolId, School> schools)

@@ -31,7 +31,13 @@ public sealed class StudentVisibilityService
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(allStudents);
+        return IterateVisible(user, allStudents);
+    }
 
+    private static IEnumerable<Student> IterateVisible(
+        RegisteredUser user,
+        IEnumerable<Student> allStudents)
+    {
         var seen = new HashSet<StudentId>();
         foreach (var student in allStudents)
         {

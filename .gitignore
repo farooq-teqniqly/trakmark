@@ -432,3 +432,6 @@ FodyWeavers.xsd
  **/TestResults/
 # Coverage analysis reports
 docs/coverage-analysis/
+
+# SonarQube analysis reports
+docs/sonarqube*

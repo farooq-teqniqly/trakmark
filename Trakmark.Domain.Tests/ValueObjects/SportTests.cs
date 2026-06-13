@@ -8,8 +8,8 @@ public sealed class SportTests
     [Fact]
     public void Sport_ClosedSet_ContainsExpectedValues()
     {
-        _ = Sport.TrackAndField;
-        _ = Sport.CrossCountry;
+        Assert.NotNull(Sport.TrackAndField);
+        Assert.NotNull(Sport.CrossCountry);
     }
 
     [Theory]

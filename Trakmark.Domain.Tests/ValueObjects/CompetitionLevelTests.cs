@@ -8,9 +8,9 @@ public sealed class CompetitionLevelTests
     [Fact]
     public void CompetitionLevel_ClosedSet_ContainsExpectedValues()
     {
-        _ = CompetitionLevel.HighSchool;
-        _ = CompetitionLevel.MiddleSchool;
-        _ = CompetitionLevel.Elementary;
+        Assert.NotNull(CompetitionLevel.HighSchool);
+        Assert.NotNull(CompetitionLevel.MiddleSchool);
+        Assert.NotNull(CompetitionLevel.Elementary);
     }
 
     [Theory]

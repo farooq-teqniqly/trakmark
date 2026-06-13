@@ -45,10 +45,8 @@ public sealed class SchoolYearHelperTests
 
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
 
-        var service = new SeasonViewService();
-
         // Act
-        var results = service.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
+        var results = SeasonViewService.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
 
         // Assert
         Assert.Single(results);

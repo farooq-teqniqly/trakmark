@@ -9,11 +9,11 @@ public sealed class GradeLevelTests
     public void GradeLevel_ClosedSet_ContainsExpectedValues()
     {
         // Arrange / Act / Assert — smoke-test the closed set
-        _ = GradeLevel.Freshman;
-        _ = GradeLevel.Sophomore;
-        _ = GradeLevel.Junior;
-        _ = GradeLevel.Senior;
-        _ = GradeLevel.MiddleSchool8th;
+        Assert.NotNull(GradeLevel.Freshman);
+        Assert.NotNull(GradeLevel.Sophomore);
+        Assert.NotNull(GradeLevel.Junior);
+        Assert.NotNull(GradeLevel.Senior);
+        Assert.NotNull(GradeLevel.MiddleSchool8th);
     }
 
     [Theory]

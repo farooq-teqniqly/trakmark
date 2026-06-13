@@ -44,12 +44,9 @@ public sealed class SeasonViewServiceTests
     [Fact]
     public void GetSeasonResults_NullStudent_ThrowsArgumentNullException()
     {
-        // Arrange
-        var service = new SeasonViewService();
-
         // Act / Assert
         Assert.Throws<ArgumentNullException>(() =>
-            service.GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025).ToList());
+            SeasonViewService.GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025).ToList());
     }
 
     [Fact]
@@ -57,11 +54,10 @@ public sealed class SeasonViewServiceTests
     {
         // Arrange
         var student = CreateStudentWithEnrollments(Season2025);
-        var service = new SeasonViewService();
 
         // Act / Assert
         Assert.Throws<ArgumentNullException>(() =>
-            service.GetSeasonResults(student, null!, Season2025).ToList());
+            SeasonViewService.GetSeasonResults(student, null!, Season2025).ToList());
     }
 
     [Theory]
@@ -83,10 +79,8 @@ public sealed class SeasonViewServiceTests
 
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
 
-        var service = new SeasonViewService();
-
         // Act
-        var results = service.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
+        var results = SeasonViewService.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
 
         // Assert
         Assert.Single(results);
@@ -103,10 +97,8 @@ public sealed class SeasonViewServiceTests
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
         meet.RecordResult(otherStudent.Id, E100, ResultStatus.Finished, new TimeMark(11000), Place1, null);
 
-        var service = new SeasonViewService();
-
         // Act
-        var results = service.GetSeasonResults(student, meet.Results, Season2025).ToList();
+        var results = SeasonViewService.GetSeasonResults(student, meet.Results, Season2025).ToList();
 
         // Assert
         Assert.Single(results);
@@ -151,10 +143,8 @@ public sealed class SeasonViewServiceTests
         meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
         meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place2, null);
 
-        var service = new SeasonViewService();
-
         // Act
-        var results = service.GetSeasonResults(student, meet.Results, Season2025).ToList();
+        var results = SeasonViewService.GetSeasonResults(student, meet.Results, Season2025).ToList();
 
         // Assert
         Assert.Equal(2, results.Count);
@@ -174,10 +164,9 @@ public sealed class SeasonViewServiceTests
         meetCurrent.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11900), Place1, null);
 
         var allResults = meetPast.Results.Concat(meetCurrent.Results);
-        var service = new SeasonViewService();
 
         // Act
-        var past = service.GetSeasonResults(student, allResults, Season2024).ToList();
+        var past = SeasonViewService.GetSeasonResults(student, allResults, Season2024).ToList();
 
         // Assert
         Assert.Single(past);

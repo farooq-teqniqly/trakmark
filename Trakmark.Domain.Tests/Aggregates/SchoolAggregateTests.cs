@@ -82,8 +82,6 @@ public sealed class SchoolAggregateTests
         // Arrange
         var school = School.Create(new SchoolName("Riverside Elementary"), CompetitionLevel.Elementary);
         school.AddTeam(Sport.CrossCountry);
-        var team = school.Teams.Single();
-
         // Act
         var publicPropertyNames = typeof(Team)
             .GetProperties()

@@ -25,7 +25,7 @@ public sealed class SeasonViewService
     /// <returns>
     /// The student's results in the given season, ordered by entry order.
     /// </returns>
-    public IEnumerable<Result> GetSeasonResults(
+    public static IEnumerable<Result> GetSeasonResults(
         Student student,
         IEnumerable<Result> allResults,
         SchoolYear season)

@@ -47,10 +47,8 @@ public sealed class CompetitionLevelMatchServiceTests
         var student = StudentEnrolledAt(hsSchool, new SchoolYear(2025));
         var msMeet = MiddleSchoolMeet2025();
         var schools = SchoolMap(hsSchool);
-        var service = new CompetitionLevelMatchService();
-
         // Act
-        var isValid = service.IsLevelMatch(student, msMeet, schools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, msMeet, schools);
 
         // Assert
         Assert.False(isValid);
@@ -64,10 +62,8 @@ public sealed class CompetitionLevelMatchServiceTests
         var student = StudentEnrolledAt(hsSchool, new SchoolYear(2025));
         var hsMeet = HighSchoolMeet2025();
         var schools = SchoolMap(hsSchool);
-        var service = new CompetitionLevelMatchService();
-
         // Act
-        var isValid = service.IsLevelMatch(student, hsMeet, schools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, hsMeet, schools);
 
         // Assert
         Assert.True(isValid);
@@ -91,10 +87,9 @@ public sealed class CompetitionLevelMatchServiceTests
             Sport.TrackAndField);
 
         var schools = SchoolMap(msSchool, hsSchool);
-        var service = new CompetitionLevelMatchService();
 
         // Act
-        var isValid = service.IsLevelMatch(student, historicalMsMeet, schools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, historicalMsMeet, schools);
 
         // Assert
         Assert.True(isValid);
@@ -118,10 +113,9 @@ public sealed class CompetitionLevelMatchServiceTests
             Sport.TrackAndField);
 
         var schools = SchoolMap(msSchool, hsSchool);
-        var service = new CompetitionLevelMatchService();
 
         // Act
-        var isValid = service.IsLevelMatch(student, historicalHsMeet, schools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, historicalHsMeet, schools);
 
         // Assert
         Assert.False(isValid);
@@ -135,10 +129,9 @@ public sealed class CompetitionLevelMatchServiceTests
         var student = StudentEnrolledAt(hsSchool, new SchoolYear(2025));
         var hsMeet = HighSchoolMeet2025();
         var emptySchools = new Dictionary<SchoolId, School>();
-        var service = new CompetitionLevelMatchService();
 
         // Act
-        var isValid = service.IsLevelMatch(student, hsMeet, emptySchools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, hsMeet, emptySchools);
 
         // Assert
         Assert.False(isValid);
@@ -150,10 +143,9 @@ public sealed class CompetitionLevelMatchServiceTests
         // Arrange
         var student = new Student(StudentId.NewId(), new PersonName("Eve Thomas"));
         var meet = HighSchoolMeet2025();
-        var service = new CompetitionLevelMatchService();
 
         // Act
-        var isValid = service.IsLevelMatch(student, meet, new Dictionary<SchoolId, School>());
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, meet, new Dictionary<SchoolId, School>());
 
         // Assert
         Assert.False(isValid);
