@@ -30,21 +30,21 @@ public sealed class Discipline : IEquatable<Discipline>
     /// <summary>
     /// Creates a plain running discipline (no setup parameters beyond distance).
     /// </summary>
-    /// <param name="distanceMeters">The race distance in metres.</param>
+    /// <param name="distanceMeters">The race distance in meters.</param>
     public static Discipline Run(int distanceMeters) =>
         new($"{distanceMeters}m", MarkKind.Time, false, $"run:{distanceMeters}");
 
     /// <summary>
     /// Creates a relay running discipline.
     /// </summary>
-    /// <param name="distanceMeters">The relay distance in metres.</param>
+    /// <param name="distanceMeters">The relay distance in meters.</param>
     public static Discipline RelayRun(int distanceMeters) =>
         new($"{distanceMeters}m Relay", MarkKind.Time, true, $"relay:{distanceMeters}");
 
     /// <summary>
     /// Creates a hurdle-run discipline. Hurdle height is part of identity.
     /// </summary>
-    /// <param name="distanceMeters">The race distance in metres.</param>
+    /// <param name="distanceMeters">The race distance in meters.</param>
     /// <param name="height">The hurdle height setup parameter.</param>
     public static Discipline HurdleRun(int distanceMeters, HurdleHeight height)
     {

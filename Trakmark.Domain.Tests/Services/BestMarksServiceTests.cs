@@ -88,7 +88,7 @@ public sealed class BestMarksServiceTests
         // Assert
         Assert.NotNull(best);
         var distanceMark = Assert.IsType<DistanceMark>(best);
-        Assert.Equal(expectedCm, distanceMark.Centimetres);
+        Assert.Equal(expectedCm, distanceMark.Centimeters);
     }
 
     [Theory]
@@ -328,6 +328,6 @@ public sealed class BestMarksServiceTests
         // Assert
         Assert.NotNull(pb);
         var distanceMark = Assert.IsType<DistanceMark>(pb);
-        Assert.Equal(expectedCm, distanceMark.Centimetres);
+        Assert.Equal(expectedCm, distanceMark.Centimeters);
     }
 }
