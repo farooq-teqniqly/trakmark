@@ -1,5 +1,4 @@
 using Trakmark.Domain.Aggregates;
-using Trakmark.Domain.Catalog;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.Services;
 using Trakmark.Domain.ValueObjects;
