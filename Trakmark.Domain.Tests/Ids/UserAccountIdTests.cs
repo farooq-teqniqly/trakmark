@@ -45,20 +45,4 @@ public sealed class UserAccountIdTests
         Assert.Equal(key, result);
         Assert.NotEmpty(result);
     }
-
-    [Fact]
-    public void AllDomainIds_RoundTrip()
-    {
-        // Arrange
-        var meetId = MeetId.NewId();
-        var schoolId = SchoolId.NewId();
-        var teamId = TeamId.NewId();
-        var userId = RegisteredUserId.NewId();
-
-        // Act / Assert
-        Assert.Equal(meetId, MeetId.Parse(meetId.ToString()));
-        Assert.Equal(schoolId, SchoolId.Parse(schoolId.ToString()));
-        Assert.Equal(teamId, TeamId.Parse(teamId.ToString()));
-        Assert.Equal(userId, RegisteredUserId.Parse(userId.ToString()));
-    }
 }

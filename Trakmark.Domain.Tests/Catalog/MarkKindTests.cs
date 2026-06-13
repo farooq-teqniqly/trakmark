@@ -39,10 +39,18 @@ public sealed class MarkKindTests
     }
 
     [Fact]
-    public void MarkKind_GetHashCode_EqualInstances_SameHash()
+    public void MarkKind_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
-        // Arrange / Act / Assert
-        Assert.Equal(MarkKind.Time.GetHashCode(), MarkKind.Time.GetHashCode());
+        // Arrange
+        var set = new HashSet<MarkKind>
+        {
+            MarkKind.Time,
+            MarkKind.Time,
+            MarkKind.Distance
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
     }
 
     [Fact]

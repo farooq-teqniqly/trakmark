@@ -39,10 +39,18 @@ public sealed class ImplementWeightTests
     }
 
     [Fact]
-    public void ImplementWeight_GetHashCode_EqualInstances_SameHash()
+    public void ImplementWeight_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
-        // Arrange / Act / Assert
-        Assert.Equal(ImplementWeight.Kg4.GetHashCode(), ImplementWeight.Kg4.GetHashCode());
+        // Arrange
+        var set = new HashSet<ImplementWeight>
+        {
+            ImplementWeight.Kg4,
+            ImplementWeight.Kg4,
+            ImplementWeight.Kg6
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
     }
 
     [Fact]

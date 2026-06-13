@@ -82,7 +82,7 @@ public sealed class DistanceMarkTests
     }
 
     [Fact]
-    public void DistanceMark_ToString_IsNonEmpty()
+    public void DistanceMark_ToString_FormatsWithCmSuffix()
     {
         // Arrange
         var d = new DistanceMark(600);
@@ -91,6 +91,6 @@ public sealed class DistanceMarkTests
         var result = d.ToString();
 
         // Assert
-        Assert.NotEmpty(result);
+        Assert.Equal("600cm", result);
     }
 }

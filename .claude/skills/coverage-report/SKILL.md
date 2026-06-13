@@ -21,8 +21,9 @@ Defaults:
 Run `Run-Coverage.ps1` (co-located with this SKILL.md) with `-Clean` to get a fresh Cobertura XML:
 
 ```powershell
-$skillDir = "C:\src\my\trakmark\.claude\skills\coverage-report"
-& "$skillDir\Run-Coverage.ps1" -Clean
+$repoRoot = & git rev-parse --show-toplevel
+$skillDir = Join-Path $repoRoot ".claude" "skills" "coverage-report"
+& (Join-Path $skillDir "Run-Coverage.ps1") -Clean
 ```
 
 Capture the line starting with `COBERTURA_PATH:` from stdout. That path is `$coberturaXml`.
@@ -64,9 +65,11 @@ Parse JSON output → `$gaps`.
 ### Step 4 — Write the doc
 
 Resolve output path. If `--output` not supplied use:
-`C:\src\my\trakmark\docs\coverage-analysis\COVERAGE_ANALYSIS_<YYYY-MM-DD>.md`
+`<repo-root>/docs/coverage-analysis/COVERAGE_ANALYSIS_<YYYY-MM-DD>.md`
 
-Get today's date via `(Get-Date -Format 'yyyy-MM-dd')` and current branch via `git -C C:\src\my\trakmark rev-parse --abbrev-ref HEAD`.
+where `<repo-root>` is `& git rev-parse --show-toplevel`.
+
+Get today's date via `(Get-Date -Format 'yyyy-MM-dd')` and current branch via `git rev-parse --abbrev-ref HEAD`.
 
 Write the file using this template (fill every placeholder from collected data):
 

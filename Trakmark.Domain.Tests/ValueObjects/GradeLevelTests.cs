@@ -50,6 +50,21 @@ public sealed class GradeLevelTests
     }
 
     [Fact]
+    public void GradeLevel_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
+    {
+        // Arrange
+        var set = new HashSet<GradeLevel>
+        {
+            GradeLevel.Freshman,
+            GradeLevel.Freshman,
+            GradeLevel.Senior
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
+    }
+
+    [Fact]
     public void GradeLevel_ToString_ReturnsName()
     {
         // Arrange / Act / Assert

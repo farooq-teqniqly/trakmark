@@ -39,10 +39,18 @@ public sealed class HurdleHeightTests
     }
 
     [Fact]
-    public void HurdleHeight_GetHashCode_EqualInstances_SameHash()
+    public void HurdleHeight_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
-        // Arrange / Act / Assert
-        Assert.Equal(HurdleHeight.Inches39.GetHashCode(), HurdleHeight.Inches39.GetHashCode());
+        // Arrange
+        var set = new HashSet<HurdleHeight>
+        {
+            HurdleHeight.Inches39,
+            HurdleHeight.Inches39,
+            HurdleHeight.Inches33
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
     }
 
     [Fact]

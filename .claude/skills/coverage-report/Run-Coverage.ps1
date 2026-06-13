@@ -25,7 +25,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Split-Path $PSScriptRoot -Parent
+$repoRoot = & git -C $PSScriptRoot rev-parse --show-toplevel
 
 if (-not $SolutionPath) {
     $SolutionPath = Join-Path $repoRoot "Trakmark" "Trakmark.slnx"
@@ -71,5 +71,5 @@ if (-not $xml) {
     exit 3
 }
 
-Write-Host "COBERTURA_PATH:$($xml.FullName)"
+Write-Output "COBERTURA_PATH:$($xml.FullName)"
 exit $testExitCode

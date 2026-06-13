@@ -60,32 +60,6 @@ public sealed class SeasonViewServiceTests
             SeasonViewService.GetSeasonResults(student, null!, Season2025).ToList());
     }
 
-    [Theory]
-    [InlineData(8,  2025, 2025)]
-    [InlineData(9,  2025, 2025)]
-    [InlineData(12, 2025, 2025)]
-    [InlineData(4,  2026, 2025)]
-    public void SchoolYearHelper_ToSchoolYear_CorrectlyResolvesSeasonFromMeetDate(
-        int month, int calendarYear, int expectedStartYear)
-    {
-        // Arrange
-        var student = CreateStudentWithEnrollments(new SchoolYear(expectedStartYear));
-        var meetDate = new MeetDate(new DateOnly(calendarYear, month, 15));
-        var meet = Meet.Create(
-            new MeetName("Test Meet"),
-            meetDate,
-            CompetitionLevel.HighSchool,
-            Tf);
-
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-
-        // Act
-        var results = SeasonViewService.GetSeasonResults(student, meet.Results, new SchoolYear(expectedStartYear)).ToList();
-
-        // Assert
-        Assert.Single(results);
-    }
-
     [Fact]
     public void GetSeasonResults_OtherStudentResults_AreExcluded()
     {
@@ -171,5 +145,31 @@ public sealed class SeasonViewServiceTests
         // Assert
         Assert.Single(past);
         Assert.Equal(new TimeMark(12500), past[0].Mark as TimeMark);
+    }
+
+    [Theory]
+    [InlineData(8,  2025, 2025)]  // August — fall start of season
+    [InlineData(9,  2025, 2025)]  // September — fall start of season
+    [InlineData(12, 2025, 2025)]  // December — still same season
+    [InlineData(4,  2026, 2025)]  // April — spring end of season, season started 2025
+    public void SeasonBoundaries_CorrectlyResolveSchoolYearFromMeetDate(
+        int month, int calendarYear, int expectedStartYear)
+    {
+        // Arrange
+        var season = new SchoolYear(expectedStartYear);
+        var student = CreateStudentWithEnrollments(season);
+        var meet = Meet.Create(
+            new MeetName("Test Meet"),
+            new MeetDate(new DateOnly(calendarYear, month, 15)),
+            CompetitionLevel.HighSchool,
+            Tf);
+
+        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+
+        // Act
+        var results = SeasonViewService.GetSeasonResults(student, meet.Results, season).ToList();
+
+        // Assert
+        Assert.Single(results);
     }
 }

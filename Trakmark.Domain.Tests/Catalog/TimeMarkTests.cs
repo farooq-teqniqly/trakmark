@@ -82,7 +82,7 @@ public sealed class TimeMarkTests
     }
 
     [Fact]
-    public void TimeMark_ToString_IsNonEmpty()
+    public void TimeMark_ToString_FormatsWithMsSuffix()
     {
         // Arrange
         var t = new TimeMark(11500);
@@ -91,6 +91,6 @@ public sealed class TimeMarkTests
         var result = t.ToString();
 
         // Assert
-        Assert.NotEmpty(result);
+        Assert.Equal("11500ms", result);
     }
 }

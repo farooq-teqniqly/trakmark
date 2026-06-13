@@ -47,15 +47,6 @@ public sealed class CompetitionLevelTests
     }
 
     [Fact]
-    public void CompetitionLevel_GetHashCode_EqualInstances_SameHash()
-    {
-        // Arrange / Act / Assert
-        Assert.Equal(
-            CompetitionLevel.HighSchool.GetHashCode(),
-            CompetitionLevel.HighSchool.GetHashCode());
-    }
-
-    [Fact]
     public void CompetitionLevel_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
         // Arrange

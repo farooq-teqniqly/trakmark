@@ -39,10 +39,18 @@ public sealed class TierTests
     }
 
     [Fact]
-    public void Tier_GetHashCode_EqualInstances_SameHash()
+    public void Tier_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
-        // Arrange / Act / Assert
-        Assert.Equal(Tier.Varsity.GetHashCode(), Tier.Varsity.GetHashCode());
+        // Arrange
+        var set = new HashSet<Tier>
+        {
+            Tier.Varsity,
+            Tier.Varsity,
+            Tier.JV
+        };
+
+        // Act / Assert
+        Assert.Equal(2, set.Count);
     }
 
     [Fact]
