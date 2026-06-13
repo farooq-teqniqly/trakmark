@@ -15,7 +15,7 @@ namespace Trakmark.Domain.Services;
 /// to the meet's date. Historical meets validate against the then-current enrollment,
 /// not the student's current enrollment.
 /// </remarks>
-public sealed class CompetitionLevelMatchService
+public static class CompetitionLevelMatchService
 {
     /// <summary>
     /// Returns <see langword="true"/> when the meet's <see cref="CompetitionLevel"/>
@@ -32,7 +32,7 @@ public sealed class CompetitionLevelMatchService
     /// the enrollment's school cannot be found in <paramref name="schools"/>, or the
     /// school's competition level differs from the meet's level.
     /// </returns>
-    public bool IsLevelMatch(
+    public static bool IsLevelMatch(
         Student student,
         Meet meet,
         IReadOnlyDictionary<SchoolId, School> schools)

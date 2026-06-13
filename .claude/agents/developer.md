@@ -14,7 +14,10 @@ You implement a section of tasks from an OpenSpec change using strict TDD.
 ## Step 0 — Orient yourself (always first)
 
 1. Run `openspec status --change "<name>" --json`. Extract `changeRoot`,
-   `artifactPaths`, and `planningHome.root`.
+   `artifactPaths`, and `planningHome.root`. Note: `changeRoot` is the fully
+   resolved absolute path to the change's artifact directory (e.g.
+   `C:\repo\openspec\changes\<name>`); use it directly to construct artifact
+   paths rather than joining `planningHome.root` with the change name.
 2. Read `<planningHome.root>/openspec/config.yaml` — this is the source of
    truth for tech stack, test style, TDD rules, and code conventions.
 3. Read `CLAUDE.md` at `planningHome.root` for any project rules not in
@@ -50,6 +53,8 @@ Before staging files, run through this list:
 - **[Fact] vs [Theory] redundancy**: if a `[Theory]` already covers a case via `[InlineData]`, delete any `[Fact]` that tests the same scenario. Redundant facts diverge over time.
 - **Null guards**: every public constructor and method that accepts a reference-type parameter must call `ArgumentNullException.ThrowIfNull(param)` as its first line. Exception: DI-injected dependencies.
 - **Equals/GetHashCode comparer parity**: if `Equals` uses `StringComparison.Ordinal` (or any explicit comparer), `GetHashCode` must use the same — e.g. `Value.GetHashCode(StringComparison.Ordinal)`. Mismatches silently break dictionary lookups.
+- **Testing internal members**: never create a test that calls an `internal` method or property directly. Reach it through its public API caller instead (e.g. cover `DomainId.IsValid` by calling `TryParse`, not by invoking `IsValid` directly). If a task says "or a new `XTests.cs`" but the target is `internal`, use the existing test class and test via the public caller.
+- **Null-left operator assertions and `readonly record struct`**: when a task asks for `Assert.False(null == x)` coverage across "all types with `==`/`!=`", skip every `readonly record struct` — the compiler will not accept a typed null as a value-type operand, so that branch is unreachable. Apply null-left assertions only to reference-type (`sealed class`) value objects.
 - **Shared private helpers across services**: if a private static helper (e.g. `ToSchoolYear`) appears in more than one service, extract it to a dedicated `internal static class` (e.g. `SchoolYearHelper`) rather than duplicating it. Duplicated logic diverges silently when the rule changes.
 - **Denormalized date on child entities**: when a read projection needs a date from the owning aggregate to resolve context (e.g. school year), add a denormalized date field to the child entity at construction time (e.g. `Result.MeetDate` set from `Meet.Date`). Do not require callers to join back to the owning aggregate to resolve the date.
 
@@ -62,6 +67,13 @@ Once all tasks in your section are green and checked off in `tasks.md`:
    subject, body explaining why not what, ≤72 chars per line).
 3. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
    trailer in the commit message body.
+
+## Orchestrator: when to use worktrees
+
+Use a worktree per section when two or more sections run in parallel or when
+sections touch production code that could conflict. For single-section runs
+and test-only changes (no production code edits), work directly on the
+change branch — no worktree needed.
 
 ## Orchestrator: post-merge cleanup
 

@@ -12,7 +12,7 @@ namespace Trakmark.Domain.Services;
 /// This is a cross-aggregate rule because <see cref="RegisteredUser"/> and
 /// <see cref="Student"/> are separate aggregate roots.
 /// </remarks>
-public sealed class StudentVisibilityService
+public static class StudentVisibilityService
 {
     /// <summary>
     /// Returns the subset of <paramref name="allStudents"/> that <paramref name="user"/>
@@ -25,13 +25,19 @@ public sealed class StudentVisibilityService
     /// or whose <see cref="Student.UserAccountId"/> equals the user's account.
     /// Each student appears at most once in the result.
     /// </returns>
-    public IEnumerable<Student> GetVisibleStudents(
+    public static IEnumerable<Student> GetVisibleStudents(
         RegisteredUser user,
         IEnumerable<Student> allStudents)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(allStudents);
+        return IterateVisible(user, allStudents);
+    }
 
+    private static IEnumerable<Student> IterateVisible(
+        RegisteredUser user,
+        IEnumerable<Student> allStudents)
+    {
         var seen = new HashSet<StudentId>();
         foreach (var student in allStudents)
         {

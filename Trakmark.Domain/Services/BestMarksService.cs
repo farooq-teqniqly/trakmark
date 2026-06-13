@@ -19,7 +19,7 @@ namespace Trakmark.Domain.Services;
 ///   <item><description>Tier is ignored — marks from any tier are eligible.</description></item>
 /// </list>
 /// </remarks>
-public sealed class BestMarksService
+public static class BestMarksService
 {
     /// <summary>
     /// Computes the season best for <paramref name="student"/> in
@@ -37,7 +37,7 @@ public sealed class BestMarksService
     /// <see langword="null"/> when no eligible results exist or the discipline
     /// is place-only or a relay.
     /// </returns>
-    public Performance? SeasonBest(
+    public static Performance? SeasonBest(
         Student student,
         Discipline discipline,
         SchoolYear season,
@@ -78,7 +78,7 @@ public sealed class BestMarksService
     /// <see langword="null"/> when no eligible results exist or the discipline
     /// is place-only or a relay.
     /// </returns>
-    public Performance? PersonalBest(
+    public static Performance? PersonalBest(
         Student student,
         Discipline discipline,
         IEnumerable<Result> allResults)
@@ -119,6 +119,8 @@ public sealed class BestMarksService
     {
         Performance? best = null;
 
+        // S3267: cannot simplify with Where — requires running-best accumulation via IsBetterThan.
+#pragma warning disable S3267
         foreach (var result in eligible)
         {
             if (best is null || result.Mark!.IsBetterThan(best))
@@ -126,6 +128,7 @@ public sealed class BestMarksService
                 best = result.Mark;
             }
         }
+#pragma warning restore S3267
 
         return best;
     }

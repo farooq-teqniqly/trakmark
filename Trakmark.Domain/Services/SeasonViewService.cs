@@ -9,7 +9,7 @@ namespace Trakmark.Domain.Services;
 /// result's <see cref="Result.MeetDate"/>. Results are returned in entry
 /// <see cref="Result.Order"/> ascending.
 /// </summary>
-public sealed class SeasonViewService
+public static class SeasonViewService
 {
     /// <summary>
     /// Returns the subset of <paramref name="allResults"/> that belong to
@@ -25,7 +25,7 @@ public sealed class SeasonViewService
     /// <returns>
     /// The student's results in the given season, ordered by entry order.
     /// </returns>
-    public IEnumerable<Result> GetSeasonResults(
+    public static IEnumerable<Result> GetSeasonResults(
         Student student,
         IEnumerable<Result> allResults,
         SchoolYear season)

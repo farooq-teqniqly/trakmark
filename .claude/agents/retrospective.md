@@ -52,7 +52,7 @@ For each identified improvement:
 
 1. Determine the right file:
    - Coding convention → `CLAUDE.md` **and** `openspec/config.yaml` (keep in sync)
-   - Agent workflow step → `.claude/agents/openspec-developer.md`
+   - Agent workflow step → `.claude/agents/developer.md`
    - Both convention and workflow → update all three
 
 2. Make the edit. Be surgical — add one rule at a time, don't rewrite sections.

@@ -2,7 +2,7 @@ using Trakmark.Domain.Aggregates;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Aggregates;
 
 /// <summary>
 /// Tests for the School aggregate: creation, name validation,
@@ -82,8 +82,6 @@ public sealed class SchoolAggregateTests
         // Arrange
         var school = School.Create(new SchoolName("Riverside Elementary"), CompetitionLevel.Elementary);
         school.AddTeam(Sport.CrossCountry);
-        var team = school.Teams.Single();
-
         // Act
         var publicPropertyNames = typeof(Team)
             .GetProperties()

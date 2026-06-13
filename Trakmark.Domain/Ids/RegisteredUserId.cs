@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Trakmark.Domain.Ids;
 
 /// <summary>Strongly-typed identifier for the <c>RegisteredUser</c> aggregate root.</summary>
@@ -12,6 +14,14 @@ public readonly record struct RegisteredUserId
 
     /// <summary>A sentinel empty identifier.</summary>
     public static readonly RegisteredUserId Empty = new(Prefix + new string('A', DomainId.BodyLength));
+
+    /// <summary>
+    /// Static initializer for <see cref="Empty"/>. Excluded from coverage because
+    /// the compiler-generated .cctor for a <c>readonly record struct</c> with a
+    /// static field is not reliably instrumented by coverage tools.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    static RegisteredUserId() { }
 
     /// <summary>Generates a new, effectively unique <see cref="RegisteredUserId"/>.</summary>
     public static RegisteredUserId NewId() => new(DomainId.NewValue(Prefix));

@@ -3,7 +3,7 @@ using Trakmark.Domain.Catalog;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
-namespace Trakmark.Domain.Tests;
+namespace Trakmark.Domain.Tests.Aggregates;
 
 /// <summary>
 /// Tests for section 6: Meet aggregate and result recording.
@@ -216,6 +216,19 @@ public sealed class MeetResultTests
             meet.RecordResult(StudentId.NewId(), TfJumpEvent, ResultStatus.Finished, new TimeMark(11500), new Placement(1), null));
     }
 
+    // ── A finished result for a distance discipline requires a mark ───────────
+
+    [Fact]
+    public void RecordResult_Finished_DistanceDiscipline_NoMark_Throws()
+    {
+        // Arrange
+        var meet = CreateTrackMeet();
+
+        // Act / Assert
+        Assert.Throws<InvalidOperationException>(() =>
+            meet.RecordResult(StudentId.NewId(), TfJumpEvent, ResultStatus.Finished, mark: null, new Placement(1), null));
+    }
+
     // ── A place-only discipline takes a place and no mark ─────────────────────
 
     [Fact]
@@ -242,6 +255,17 @@ public sealed class MeetResultTests
         // Act / Assert
         Assert.Throws<InvalidOperationException>(() =>
             meet.RecordResult(StudentId.NewId(), TfPlaceOnlyEvent, ResultStatus.Finished, new TimeMark(11500), new Placement(1), null));
+    }
+
+    [Fact]
+    public void RecordResult_PlaceOnly_Finished_WithNoPlace_Throws()
+    {
+        // Arrange
+        var meet = CreateTrackMeet();
+
+        // Act / Assert
+        Assert.Throws<InvalidOperationException>(() =>
+            meet.RecordResult(StudentId.NewId(), TfPlaceOnlyEvent, ResultStatus.Finished, mark: null, place: null, null));
     }
 
     // ── Reject a cross-sport event ─────────────────────────────────────────────
