@@ -19,7 +19,7 @@ namespace Trakmark.Domain.Services;
 ///   <item><description>Tier is ignored — marks from any tier are eligible.</description></item>
 /// </list>
 /// </remarks>
-public sealed class BestMarksService
+public static class BestMarksService
 {
     /// <summary>
     /// Computes the season best for <paramref name="student"/> in

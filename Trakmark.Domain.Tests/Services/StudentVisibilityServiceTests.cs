@@ -17,10 +17,8 @@ public sealed class StudentVisibilityServiceTests
         user.Follow(student.Id);
 
         var allStudents = new[] { student };
-        var service = new StudentVisibilityService();
-
         // Act
-        var visible = service.GetVisibleStudents(user, allStudents).ToList();
+        var visible = StudentVisibilityService.GetVisibleStudents(user, allStudents).ToList();
 
         // Assert
         Assert.Contains(student, visible);
@@ -34,10 +32,8 @@ public sealed class StudentVisibilityServiceTests
         var unrelated = new Student(StudentId.NewId(), new PersonName("Bob Smith"));
 
         var allStudents = new[] { unrelated };
-        var service = new StudentVisibilityService();
-
         // Act
-        var visible = service.GetVisibleStudents(user, allStudents).ToList();
+        var visible = StudentVisibilityService.GetVisibleStudents(user, allStudents).ToList();
 
         // Assert
         Assert.DoesNotContain(unrelated, visible);
@@ -52,10 +48,8 @@ public sealed class StudentVisibilityServiceTests
         var linkedStudent = new Student(StudentId.NewId(), new PersonName("Carol Davis"), accountId);
 
         var allStudents = new[] { linkedStudent };
-        var service = new StudentVisibilityService();
-
         // Act
-        var visible = service.GetVisibleStudents(user, allStudents).ToList();
+        var visible = StudentVisibilityService.GetVisibleStudents(user, allStudents).ToList();
 
         // Assert
         Assert.Contains(linkedStudent, visible);
@@ -71,10 +65,8 @@ public sealed class StudentVisibilityServiceTests
         user.Follow(linkedStudent.Id);
 
         var allStudents = new[] { linkedStudent };
-        var service = new StudentVisibilityService();
-
         // Act
-        var visible = service.GetVisibleStudents(user, allStudents).ToList();
+        var visible = StudentVisibilityService.GetVisibleStudents(user, allStudents).ToList();
 
         // Assert
         Assert.Single(visible);
@@ -97,10 +89,8 @@ public sealed class StudentVisibilityServiceTests
         user.Follow(s2.Id);
 
         var allStudents = new[] { s1, s2, linked, unrelated };
-        var service = new StudentVisibilityService();
-
         // Act
-        var visible = service.GetVisibleStudents(user, allStudents).ToList();
+        var visible = StudentVisibilityService.GetVisibleStudents(user, allStudents).ToList();
 
         // Assert
         Assert.Equal(3, visible.Count);

@@ -146,9 +146,7 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    // S2325: Blazor component methods cannot be static — runtime requires instance members.
-#pragma warning disable S2325
-    private ApplicationUser CreateUser()
+    private static ApplicationUser CreateUser()
     {
         try
         {
@@ -160,7 +158,6 @@
                 $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor");
         }
     }
-#pragma warning restore S2325
 
     private IUserEmailStore<ApplicationUser> GetEmailStore()
     {

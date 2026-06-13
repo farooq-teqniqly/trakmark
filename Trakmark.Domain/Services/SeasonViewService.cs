@@ -9,7 +9,7 @@ namespace Trakmark.Domain.Services;
 /// result's <see cref="Result.MeetDate"/>. Results are returned in entry
 /// <see cref="Result.Order"/> ascending.
 /// </summary>
-public sealed class SeasonViewService
+public static class SeasonViewService
 {
     /// <summary>
     /// Returns the subset of <paramref name="allResults"/> that belong to

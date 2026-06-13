@@ -15,7 +15,7 @@ namespace Trakmark.Domain.Services;
 /// to the meet's date. Historical meets validate against the then-current enrollment,
 /// not the student's current enrollment.
 /// </remarks>
-public sealed class CompetitionLevelMatchService
+public static class CompetitionLevelMatchService
 {
     /// <summary>
     /// Returns <see langword="true"/> when the meet's <see cref="CompetitionLevel"/>
