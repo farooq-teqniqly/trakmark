@@ -69,6 +69,28 @@ public sealed class BestMarksServiceTests
         Assert.Equal(expectedMs, timeMark.Milliseconds);
     }
 
+    [Fact]
+    public void SeasonBest_TimeDiscipline_AcrossMultipleMeets_LowestTimeWins()
+    {
+        // Arrange
+        var student = CreateStudentWithEnrollments(Season2025);
+        var meet1 = CreateMeet(new MeetDate(new DateOnly(2025, 9, 10)));
+        var meet2 = CreateMeet(new MeetDate(new DateOnly(2025, 11, 10)));
+
+        meet1.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+        meet2.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
+
+        var allResults = meet1.Results.Union(meet2.Results);
+
+        // Act
+        var best = BestMarksService.SeasonBest(student, Run100, Season2025, allResults);
+
+        // Assert
+        Assert.NotNull(best);
+        var timeMark = Assert.IsType<TimeMark>(best);
+        Assert.Equal(11500, timeMark.Milliseconds);
+    }
+
     [Theory]
     [InlineData(540, 580, 580)]
     [InlineData(580, 540, 580)]
