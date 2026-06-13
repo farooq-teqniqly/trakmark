@@ -18,3 +18,5 @@ rules:
     - "After implementing each public/internal type, verify every public constructor and method: every reference-type parameter must have `ArgumentNullException.ThrowIfNull` as its first line (except DI-injected deps). Do this before marking the task done."
     - Every type that implements IEquatable<T> must also expose == and != operator overloads. Check this before marking the task done.
     - "When writing a task that targets an internal method or property, do not suggest a new test file. Instead, instruct the agent to test via the public API caller (e.g. 'cover via TryParse' rather than 'test IsValid directly or in a new file')."
+  pre_merge:
+    - "Run dotnet clean then dotnet build on Trakmark.slnx and resolve all SonarQube warnings (filter: 'warning S\\d+', exclude 'Microsoft.Common' lines). Attempt fix or justified suppression in up to 3 rounds. If warnings remain after 3 rounds, block the merge and append the outstanding items (branch, date, warning list, reason unresolved) to docs/sonarqube-warnings-triage.md."

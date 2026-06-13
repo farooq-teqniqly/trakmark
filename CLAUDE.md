@@ -58,3 +58,18 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - **Under 200 words.**
 - Include: what changed, why, and a short test/verification note.
 - No filler phrases ("this PR...", "in this change...").
+
+## Pre-merge checklist
+
+Before merging any branch, resolve all SonarQube warnings using a clean build:
+
+```powershell
+dotnet clean .\Trakmark\Trakmark.slnx
+dotnet build .\Trakmark\Trakmark.slnx 2>&1 |
+    Select-String "warning S\d+" |
+    Where-Object { $_.Line -notmatch "Microsoft\.Common" } |
+    ForEach-Object { $_.Line.Trim() }
+```
+
+- Attempt to fix or suppress each warning. Repeat for up to **3 rounds**.
+- If warnings remain after 3 rounds, **block the merge** and write the outstanding items to `docs/sonarqube-warnings-triage.md` (date-stamped entry, branch name, remaining warning list, reason each could not be resolved).
