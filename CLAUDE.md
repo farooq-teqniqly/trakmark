@@ -10,6 +10,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Each project's unit tests live in a sibling project named `<Project>.Tests` (e.g. `Trakmark.Domain.Tests`).
 - Test projects use **xUnit** and reference the project under test.
 - Use **NSubstitute** for mocking in tests.
+- One test class per production type, one file per test class — never group multiple unrelated types in a single test file.
 - Each test has `// Arrange`, `// Act`, `// Assert` comments.
 - Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
