@@ -1,20 +1,20 @@
 namespace Trakmark.Domain.Catalog;
 
 /// <summary>
-/// A distance performance mark stored as an integer number of centimetres.
+/// A distance performance mark stored as an integer number of centimeters.
 /// Higher is better (max wins).
 /// </summary>
 public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
 {
-    /// <summary>The distance in centimetres.</summary>
-    public int Centimetres { get; }
+    /// <summary>The distance in centimeters.</summary>
+    public int Centimeters { get; }
 
     /// <summary>Initializes a new <see cref="DistanceMark"/>.</summary>
-    /// <param name="centimetres">Must be a positive value.</param>
-    public DistanceMark(int centimetres)
+    /// <param name="centimeters">Must be a positive value.</param>
+    public DistanceMark(int centimeters)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(centimetres);
-        Centimetres = centimetres;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(centimeters);
+        Centimeters = centimeters;
     }
 
     /// <inheritdoc/>
@@ -22,17 +22,17 @@ public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
     {
         if (other is not DistanceMark otherDist) { return false; }
 
-        return Centimetres > otherDist.Centimetres;
+        return Centimeters > otherDist.Centimeters;
     }
 
     /// <inheritdoc/>
-    public bool Equals(DistanceMark? other) => other is not null && Centimetres == other.Centimetres;
+    public bool Equals(DistanceMark? other) => other is not null && Centimeters == other.Centimeters;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as DistanceMark);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Centimetres.GetHashCode();
+    public override int GetHashCode() => Centimeters.GetHashCode();
 
     /// <summary>Returns <see langword="true"/> when both marks are equal.</summary>
     public static bool operator ==(DistanceMark? left, DistanceMark? right) => left?.Equals(right) ?? right is null;
@@ -41,5 +41,5 @@ public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
     public static bool operator !=(DistanceMark? left, DistanceMark? right) => !(left == right);
 
     /// <inheritdoc/>
-    public override string ToString() => $"{Centimetres}cm";
+    public override string ToString() => $"{Centimeters}cm";
 }
