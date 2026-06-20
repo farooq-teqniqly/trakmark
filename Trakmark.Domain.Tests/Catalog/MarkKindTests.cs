@@ -35,7 +35,8 @@ public sealed class MarkKindTests
     public void MarkKind_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(MarkKind.Time.Equals("Time"));
+        object wrongType = "Time";
+        Assert.False(MarkKind.Time.Equals(wrongType));
     }
 
     [Fact]

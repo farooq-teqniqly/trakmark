@@ -62,7 +62,8 @@ public sealed class EnrollmentTests
         var e = new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman);
 
         // Act / Assert
-        Assert.False(e.Equals("not an enrollment"));
+        object wrongType = "not an enrollment";
+        Assert.False(e.Equals(wrongType));
     }
 
     [Fact]

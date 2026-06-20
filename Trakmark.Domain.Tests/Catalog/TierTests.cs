@@ -35,7 +35,8 @@ public sealed class TierTests
     public void Tier_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Tier.Varsity.Equals("Varsity"));
+        object wrongType = "Varsity";
+        Assert.False(Tier.Varsity.Equals(wrongType));
     }
 
     [Fact]

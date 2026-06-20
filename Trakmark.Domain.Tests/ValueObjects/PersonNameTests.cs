@@ -64,7 +64,8 @@ public sealed class PersonNameTests
         var n = new PersonName("Alice");
 
         // Act / Assert
-        Assert.False(n.Equals("Alice"));
+        object wrongType = "Alice";
+        Assert.False(n.Equals(wrongType));
     }
 
     [Fact]

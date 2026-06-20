@@ -63,7 +63,8 @@ public sealed class MeetNameTests
         var n = new MeetName("Spring Classic");
 
         // Act / Assert
-        Assert.False(n.Equals("Spring Classic"));
+        object wrongType = "Spring Classic";
+        Assert.False(n.Equals(wrongType));
     }
 
     [Fact]

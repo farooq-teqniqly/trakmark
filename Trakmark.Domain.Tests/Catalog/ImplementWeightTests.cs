@@ -35,7 +35,8 @@ public sealed class ImplementWeightTests
     public void ImplementWeight_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(ImplementWeight.Kg4.Equals("4 kg"));
+        object wrongType = "4 kg";
+        Assert.False(ImplementWeight.Kg4.Equals(wrongType));
     }
 
     [Fact]

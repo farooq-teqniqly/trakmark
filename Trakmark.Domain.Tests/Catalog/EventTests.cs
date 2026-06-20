@@ -52,7 +52,8 @@ public sealed class EventTests
         var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
 
         // Act / Assert
-        Assert.False(ev.Equals("not an event"));
+        object wrongType = "not an event";
+        Assert.False(ev.Equals(wrongType));
     }
 
     [Fact]

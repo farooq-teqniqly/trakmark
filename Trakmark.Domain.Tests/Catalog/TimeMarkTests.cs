@@ -71,7 +71,8 @@ public sealed class TimeMarkTests
         var t = new TimeMark(5000);
 
         // Act / Assert
-        Assert.False(t.Equals("5000ms"));
+        object wrongType = "5000ms";
+        Assert.False(t.Equals(wrongType));
     }
 
     [Fact]

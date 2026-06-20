@@ -63,7 +63,8 @@ public sealed class TeamNameTests
         var n = new TeamName("Varsity Boys");
 
         // Act / Assert
-        Assert.False(n.Equals("Varsity Boys"));
+        object wrongType = "Varsity Boys";
+        Assert.False(n.Equals(wrongType));
     }
 
     [Fact]

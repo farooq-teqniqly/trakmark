@@ -63,7 +63,8 @@ public sealed class SchoolNameTests
         var n = new SchoolName("Springfield High");
 
         // Act / Assert
-        Assert.False(n.Equals("Springfield High"));
+        object wrongType = "Springfield High";
+        Assert.False(n.Equals(wrongType));
     }
 
     [Fact]

@@ -71,7 +71,8 @@ public sealed class DistanceMarkTests
         var d = new DistanceMark(500);
 
         // Act / Assert
-        Assert.False(d.Equals("500cm"));
+        object wrongType = "500cm";
+        Assert.False(d.Equals(wrongType));
     }
 
     [Fact]

@@ -41,7 +41,8 @@ public sealed class PlacementTests
         var p = new Placement(1);
 
         // Act / Assert
-        Assert.False(p.Equals("1"));
+        object wrongType = "1";
+        Assert.False(p.Equals(wrongType));
     }
 
     [Fact]

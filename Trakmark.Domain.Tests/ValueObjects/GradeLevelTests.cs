@@ -46,7 +46,8 @@ public sealed class GradeLevelTests
     public void GradeLevel_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(GradeLevel.Freshman.Equals("Freshman"));
+        object wrongType = "Freshman";
+        Assert.False(GradeLevel.Freshman.Equals(wrongType));
     }
 
     [Fact]

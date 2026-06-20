@@ -42,7 +42,8 @@ public sealed class SportTests
     public void Sport_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Sport.TrackAndField.Equals("Track & Field"));
+        object wrongType = "Track & Field";
+        Assert.False(Sport.TrackAndField.Equals(wrongType));
     }
 
     [Fact]

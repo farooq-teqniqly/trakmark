@@ -43,7 +43,8 @@ public sealed class CompetitionLevelTests
     public void CompetitionLevel_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(CompetitionLevel.HighSchool.Equals("High School"));
+        object wrongType = "High School";
+        Assert.False(CompetitionLevel.HighSchool.Equals(wrongType));
     }
 
     [Fact]
