@@ -56,9 +56,7 @@ public static class BestMarksService
         var eligible = allResults.Where(r =>
             r.StudentId == student.Id
             && r.Event.Discipline.Equals(discipline)
-            && r.Status == ResultStatus.Finished
-            && !r.Event.IsRelay
-            && r.Mark is not null
+            && r is { Status: ResultStatus.Finished, Event.IsRelay: false, Mark: not null }
             && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season
         );
 
@@ -97,9 +95,7 @@ public static class BestMarksService
         var eligible = allResults.Where(r =>
             r.StudentId == student.Id
             && r.Event.Discipline.Equals(discipline)
-            && r.Status == ResultStatus.Finished
-            && !r.Event.IsRelay
-            && r.Mark is not null
+            && r is { Status: ResultStatus.Finished, Event.IsRelay: false, Mark: not null }
         );
 
         return SelectBest(eligible);
