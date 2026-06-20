@@ -59,12 +59,7 @@ public sealed class PlacementTests
     public void Placement_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
         // Arrange
-        var set = new HashSet<Placement>
-        {
-            new Placement(1),
-            new Placement(1),
-            new Placement(2)
-        };
+        var set = new HashSet<Placement> { new Placement(1), new Placement(1), new Placement(2) };
 
         // Act / Assert
         Assert.Equal(2, set.Count);

@@ -87,7 +87,8 @@ public sealed class Meet
         ResultStatus status,
         Performance? mark,
         Placement? place,
-        Tier? tier)
+        Tier? tier
+    )
     {
         ArgumentNullException.ThrowIfNull(@event);
         EnforceSportMatch(@event);
@@ -95,7 +96,9 @@ public sealed class Meet
 
         var effectiveTier = tier ?? Tier.Open;
         var order = NextOrderFor(studentId);
-        _results.Add(new Result(studentId, @event, status, mark, place, effectiveTier, order, Date));
+        _results.Add(
+            new Result(studentId, @event, status, mark, place, effectiveTier, order, Date)
+        );
     }
 
     private void EnforceSportMatch(Event @event)
@@ -103,11 +106,17 @@ public sealed class Meet
         if (!@event.Sport.Equals(Sport))
         {
             throw new InvalidOperationException(
-                $"Event sport '{@event.Sport}' does not match meet sport '{Sport}'.");
+                $"Event sport '{@event.Sport}' does not match meet sport '{Sport}'."
+            );
         }
     }
 
-    private static void EnforceStatusInvariant(Event @event, ResultStatus status, Performance? mark, Placement? place)
+    private static void EnforceStatusInvariant(
+        Event @event,
+        ResultStatus status,
+        Performance? mark,
+        Placement? place
+    )
     {
         if (status == ResultStatus.Finished)
         {
@@ -133,7 +142,8 @@ public sealed class Meet
             if (mark is not null)
             {
                 throw new InvalidOperationException(
-                    "A place-only discipline must not carry a measured mark.");
+                    "A place-only discipline must not carry a measured mark."
+                );
             }
 
             return;
@@ -142,7 +152,8 @@ public sealed class Meet
         if (mark is null)
         {
             throw new InvalidOperationException(
-                "A finished result for a timed or distance discipline must have a mark.");
+                "A finished result for a timed or distance discipline must have a mark."
+            );
         }
 
         EnforceMarkKindMatch(markKind, mark);
@@ -153,13 +164,15 @@ public sealed class Meet
         if (markKind == MarkKind.Time && mark is not TimeMark)
         {
             throw new InvalidOperationException(
-                $"A time discipline requires a {nameof(TimeMark)}, but received {mark.GetType().Name}.");
+                $"A time discipline requires a {nameof(TimeMark)}, but received {mark.GetType().Name}."
+            );
         }
 
         if (markKind == MarkKind.Distance && mark is not DistanceMark)
         {
             throw new InvalidOperationException(
-                $"A distance discipline requires a {nameof(DistanceMark)}, but received {mark.GetType().Name}.");
+                $"A distance discipline requires a {nameof(DistanceMark)}, but received {mark.GetType().Name}."
+            );
         }
     }
 

@@ -25,7 +25,7 @@ public sealed class MeetDateTests
         var date = new DateOnly(2024, 5, 15);
         var a = new MeetDate(date);
         var b = new MeetDate(date);
-        
+
         // Assert
         Assert.Equal(a, b);
         Assert.True(a == b);

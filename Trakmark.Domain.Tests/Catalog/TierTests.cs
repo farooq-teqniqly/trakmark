@@ -42,12 +42,7 @@ public sealed class TierTests
     public void Tier_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
         // Arrange
-        var set = new HashSet<Tier>
-        {
-            Tier.Varsity,
-            Tier.Varsity,
-            Tier.JV
-        };
+        var set = new HashSet<Tier> { Tier.Varsity, Tier.Varsity, Tier.JV };
 
         // Act / Assert
         Assert.Equal(2, set.Count);

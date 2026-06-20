@@ -37,14 +37,20 @@ public sealed class Student
     /// Adds an enrollment for the specified school, year, and grade.
     /// Fails when the student already has an enrollment for <paramref name="schoolYear"/>.
     /// </summary>
-    public OperationResult AddEnrollment(SchoolId schoolId, SchoolYear schoolYear, GradeLevel gradeLevel)
+    public OperationResult AddEnrollment(
+        SchoolId schoolId,
+        SchoolYear schoolYear,
+        GradeLevel gradeLevel
+    )
     {
         ArgumentNullException.ThrowIfNull(gradeLevel);
         var enrollment = new Enrollment(schoolId, schoolYear, gradeLevel);
 
         if (!Career.TryAddEnrollment(enrollment))
         {
-            return OperationResult.Failure($"An enrollment for school year {schoolYear} already exists.");
+            return OperationResult.Failure(
+                $"An enrollment for school year {schoolYear} already exists."
+            );
         }
 
         return OperationResult.Success();

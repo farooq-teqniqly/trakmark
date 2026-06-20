@@ -7,8 +7,8 @@ namespace Trakmark.Domain.Tests.Catalog;
 public sealed class EventTests
 {
     [Theory]
-    [InlineData("equal",           true)]
-    [InlineData("diff_sport",      false)]
+    [InlineData("equal", true)]
+    [InlineData("diff_sport", false)]
     [InlineData("diff_discipline", false)]
     public void Event_Equality_CoversBothFields(string scenario, bool expectedEqual)
     {
@@ -19,10 +19,10 @@ public sealed class EventTests
         Event a = new(disc100, Sport.TrackAndField);
         Event b = scenario switch
         {
-            "equal"           => new(disc100, Sport.TrackAndField),
-            "diff_sport"      => new(disc100, Sport.CrossCountry),
+            "equal" => new(disc100, Sport.TrackAndField),
+            "diff_sport" => new(disc100, Sport.CrossCountry),
             "diff_discipline" => new(disc200, Sport.TrackAndField),
-            _                 => throw new ArgumentOutOfRangeException(nameof(scenario))
+            _ => throw new ArgumentOutOfRangeException(nameof(scenario)),
         };
 
         // Act / Assert

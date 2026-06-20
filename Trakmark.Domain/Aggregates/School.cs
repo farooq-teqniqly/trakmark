@@ -58,7 +58,8 @@ public sealed class School
         if (_teams.ContainsKey(sport))
         {
             throw new InvalidOperationException(
-                $"School '{Name}' already fields a team for {sport}.");
+                $"School '{Name}' already fields a team for {sport}."
+            );
         }
 
         _teams[sport] = new Team(TeamId.NewId(), sport);

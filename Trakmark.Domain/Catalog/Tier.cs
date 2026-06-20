@@ -22,7 +22,8 @@ public sealed class Tier : IEquatable<Tier>
     public static readonly Tier Open = new("Open");
 
     /// <inheritdoc/>
-    public bool Equals(Tier? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(Tier? other) =>
+        other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as Tier);

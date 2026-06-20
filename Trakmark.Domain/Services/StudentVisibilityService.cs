@@ -27,7 +27,8 @@ public static class StudentVisibilityService
     /// </returns>
     public static IEnumerable<Student> GetVisibleStudents(
         RegisteredUser user,
-        IEnumerable<Student> allStudents)
+        IEnumerable<Student> allStudents
+    )
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(allStudents);
@@ -36,7 +37,8 @@ public static class StudentVisibilityService
 
     private static IEnumerable<Student> IterateVisible(
         RegisteredUser user,
-        IEnumerable<Student> allStudents)
+        IEnumerable<Student> allStudents
+    )
     {
         var seen = new HashSet<StudentId>();
         foreach (var student in allStudents)

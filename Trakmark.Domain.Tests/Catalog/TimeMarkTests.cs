@@ -18,10 +18,14 @@ public sealed class TimeMarkTests
     }
 
     [Theory]
-    [InlineData(3500, 3600, true)]   // 3500ms < 3600ms: candidate is better (lower wins)
-    [InlineData(6100, 6000, false)]  // 6100ms > 6000ms: candidate is NOT better
-    [InlineData(5000, 5000, false)]  // equal — neither is better
-    public void TimeMark_IsBetterThan_RespectsMinDirection(int candidateMs, int currentBestMs, bool expectedResult)
+    [InlineData(3500, 3600, true)] // 3500ms < 3600ms: candidate is better (lower wins)
+    [InlineData(6100, 6000, false)] // 6100ms > 6000ms: candidate is NOT better
+    [InlineData(5000, 5000, false)] // equal — neither is better
+    public void TimeMark_IsBetterThan_RespectsMinDirection(
+        int candidateMs,
+        int currentBestMs,
+        bool expectedResult
+    )
     {
         // Arrange
         var candidate = new TimeMark(candidateMs);
@@ -32,8 +36,8 @@ public sealed class TimeMarkTests
     }
 
     [Theory]
-    [InlineData(5000, 5000, true)]   // same value → equal
-    [InlineData(5000, 6000, false)]  // different value → not equal
+    [InlineData(5000, 5000, true)] // same value → equal
+    [InlineData(5000, 6000, false)] // different value → not equal
     public void TimeMark_Equality_ByValue(int msA, int msB, bool expectedEqual)
     {
         // Arrange

@@ -49,8 +49,12 @@ public sealed class Discipline : IEquatable<Discipline>
     public static Discipline HurdleRun(int distanceMeters, HurdleHeight height)
     {
         ArgumentNullException.ThrowIfNull(height);
-        return new($"{distanceMeters}m Hurdles @ {height}", MarkKind.Time, false,
-            $"hurdle:{distanceMeters}:{height.Name}");
+        return new(
+            $"{distanceMeters}m Hurdles @ {height}",
+            MarkKind.Time,
+            false,
+            $"hurdle:{distanceMeters}:{height.Name}"
+        );
     }
 
     /// <summary>
@@ -62,8 +66,12 @@ public sealed class Discipline : IEquatable<Discipline>
     {
         ArgumentNullException.ThrowIfNull(eventName);
         ArgumentNullException.ThrowIfNull(weight);
-        return new($"{eventName} @ {weight}", MarkKind.Distance, false,
-            $"throw:{eventName}:{weight.Name}");
+        return new(
+            $"{eventName} @ {weight}",
+            MarkKind.Distance,
+            false,
+            $"throw:{eventName}:{weight.Name}"
+        );
     }
 
     /// <summary>
@@ -89,7 +97,10 @@ public sealed class Discipline : IEquatable<Discipline>
     /// <inheritdoc/>
     public bool Equals(Discipline? other)
     {
-        if (other is null) { return false; }
+        if (other is null)
+        {
+            return false;
+        }
 
         return string.Equals(_identityKey, other._identityKey, StringComparison.OrdinalIgnoreCase);
     }
@@ -98,10 +109,12 @@ public sealed class Discipline : IEquatable<Discipline>
     public override bool Equals(object? obj) => Equals(obj as Discipline);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => _identityKey.GetHashCode(StringComparison.OrdinalIgnoreCase);
+    public override int GetHashCode() =>
+        _identityKey.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both disciplines are equal.</summary>
-    public static bool operator ==(Discipline? left, Discipline? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(Discipline? left, Discipline? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the disciplines differ.</summary>
     public static bool operator !=(Discipline? left, Discipline? right) => !(left == right);

@@ -13,8 +13,8 @@ public sealed class SportTests
     }
 
     [Theory]
-    [InlineData("same", true)]   // same singleton → equal
-    [InlineData("diff", false)]  // different singleton → not equal
+    [InlineData("same", true)] // same singleton → equal
+    [InlineData("diff", false)] // different singleton → not equal
     public void Sport_Equality_BySingleton(string scenario, bool expectedEqual)
     {
         // Arrange

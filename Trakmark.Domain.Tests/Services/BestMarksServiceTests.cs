@@ -77,8 +77,22 @@ public sealed class BestMarksServiceTests
         var meet1 = CreateMeet(new MeetDate(new DateOnly(2025, 9, 10)));
         var meet2 = CreateMeet(new MeetDate(new DateOnly(2025, 11, 10)));
 
-        meet1.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet2.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
+        meet1.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
+        meet2.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11500),
+            Place1,
+            null
+        );
 
         var allResults = meet1.Results.Union(meet2.Results);
 
@@ -101,8 +115,22 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, ELongJump, ResultStatus.Finished, new DistanceMark(cm1), Place1, null);
-        meet.RecordResult(student.Id, ELongJump, ResultStatus.Finished, new DistanceMark(cm2), Place2, null);
+        meet.RecordResult(
+            student.Id,
+            ELongJump,
+            ResultStatus.Finished,
+            new DistanceMark(cm1),
+            Place1,
+            null
+        );
+        meet.RecordResult(
+            student.Id,
+            ELongJump,
+            ResultStatus.Finished,
+            new DistanceMark(cm2),
+            Place2,
+            null
+        );
 
         // Act
         var best = BestMarksService.SeasonBest(student, LongJump, Season2025, meet.Results);
@@ -143,7 +171,12 @@ public sealed class BestMarksServiceTests
         meet.RecordResult(student.Id, EPlaceOnly, ResultStatus.Finished, null, Place1, null);
 
         // Act
-        var best = BestMarksService.SeasonBest(student, PlaceOnlyDiscipline, Season2025, meet.Results);
+        var best = BestMarksService.SeasonBest(
+            student,
+            PlaceOnlyDiscipline,
+            Season2025,
+            meet.Results
+        );
 
         // Assert
         Assert.Null(best);
@@ -156,7 +189,14 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, ERelay, ResultStatus.Finished, new TimeMark(50000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            ERelay,
+            ResultStatus.Finished,
+            new TimeMark(50000),
+            Place1,
+            null
+        );
 
         // Act
         var best = BestMarksService.SeasonBest(student, Relay4x100, Season2025, meet.Results);
@@ -174,8 +214,22 @@ public sealed class BestMarksServiceTests
         var meet2024 = CreateMeet(DateInSeason2024);
         var meet2025 = CreateMeet(DateInSeason2025);
 
-        meet2024.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
-        meet2025.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
+        meet2024.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place2,
+            null
+        );
+        meet2025.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11500),
+            Place1,
+            null
+        );
 
         var allResults = meet2024.Results.Concat(meet2025.Results);
 
@@ -195,12 +249,26 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place2,
+            null
+        );
 
         var pbBefore = BestMarksService.PersonalBest(student, Run100, meet.Results);
 
         // Act
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11500), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11500),
+            Place1,
+            null
+        );
         var pbAfter = BestMarksService.PersonalBest(student, Run100, meet.Results);
 
         // Assert
@@ -217,7 +285,14 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11800), Place1, Tier.JV);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11800),
+            Place1,
+            Tier.JV
+        );
 
         // Act
         var pb = BestMarksService.PersonalBest(student, Run100, meet.Results);
@@ -235,8 +310,22 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, Tier.Varsity);
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11700), Place1, Tier.JV);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place2,
+            Tier.Varsity
+        );
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11700),
+            Place1,
+            Tier.JV
+        );
 
         // Act
         var pb = BestMarksService.PersonalBest(student, Run100, meet.Results);
@@ -254,7 +343,14 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, ERelay, ResultStatus.Finished, new TimeMark(48000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            ERelay,
+            ResultStatus.Finished,
+            new TimeMark(48000),
+            Place1,
+            null
+        );
 
         // Act
         var pb = BestMarksService.PersonalBest(student, Relay4x100, meet.Results);
@@ -299,7 +395,14 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            E200,
+            ResultStatus.Finished,
+            new TimeMark(25000),
+            Place1,
+            null
+        );
 
         // Act
         var pb = BestMarksService.PersonalBest(student, Run100, meet.Results);
@@ -315,9 +418,30 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place2, null);
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place2,
+            null
+        );
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
 
         // Act
         var pb = BestMarksService.PersonalBest(student, Run100, meet.Results);
@@ -331,7 +455,11 @@ public sealed class BestMarksServiceTests
     [Theory]
     [InlineData(540, 580, 580)]
     [InlineData(620, 570, 620)]
-    public void PersonalBest_DistanceDiscipline_MultiSeason_HighestWins(int cm2024, int cm2025, int expectedCm)
+    public void PersonalBest_DistanceDiscipline_MultiSeason_HighestWins(
+        int cm2024,
+        int cm2025,
+        int expectedCm
+    )
     {
         // Arrange
         var student = CreateStudentWithEnrollments(Season2024, Season2025);
@@ -339,8 +467,22 @@ public sealed class BestMarksServiceTests
         var meet2024 = CreateMeet(DateInSeason2024);
         var meet2025 = CreateMeet(DateInSeason2025);
 
-        meet2024.RecordResult(student.Id, ELongJump, ResultStatus.Finished, new DistanceMark(cm2024), Place1, null);
-        meet2025.RecordResult(student.Id, ELongJump, ResultStatus.Finished, new DistanceMark(cm2025), Place1, null);
+        meet2024.RecordResult(
+            student.Id,
+            ELongJump,
+            ResultStatus.Finished,
+            new DistanceMark(cm2024),
+            Place1,
+            null
+        );
+        meet2025.RecordResult(
+            student.Id,
+            ELongJump,
+            ResultStatus.Finished,
+            new DistanceMark(cm2025),
+            Place1,
+            null
+        );
 
         var allResults = meet2024.Results.Concat(meet2025.Results);
 

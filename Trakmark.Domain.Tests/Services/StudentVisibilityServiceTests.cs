@@ -45,7 +45,11 @@ public sealed class StudentVisibilityServiceTests
         // Arrange
         var accountId = new UserAccountId("account-1");
         var user = RegisteredUser.Create(accountId);
-        var linkedStudent = new Student(StudentId.NewId(), new PersonName("Carol Davis"), accountId);
+        var linkedStudent = new Student(
+            StudentId.NewId(),
+            new PersonName("Carol Davis"),
+            accountId
+        );
 
         var allStudents = new[] { linkedStudent };
         // Act
@@ -61,7 +65,11 @@ public sealed class StudentVisibilityServiceTests
         // Arrange
         var accountId = new UserAccountId("account-1");
         var user = RegisteredUser.Create(accountId);
-        var linkedStudent = new Student(StudentId.NewId(), new PersonName("Dave Wilson"), accountId);
+        var linkedStudent = new Student(
+            StudentId.NewId(),
+            new PersonName("Dave Wilson"),
+            accountId
+        );
         user.Follow(linkedStudent.Id);
 
         var allStudents = new[] { linkedStudent };

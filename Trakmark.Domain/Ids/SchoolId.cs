@@ -19,7 +19,9 @@ public readonly record struct SchoolId
     /// <summary>Parses <paramref name="value"/> as a <see cref="SchoolId"/>.</summary>
     /// <exception cref="FormatException">Thrown when <paramref name="value"/> is ill-formed.</exception>
     public static SchoolId Parse(string value) =>
-        TryParse(value, out var id) ? id : throw new FormatException($"Invalid SchoolId: '{value}'.");
+        TryParse(value, out var id)
+            ? id
+            : throw new FormatException($"Invalid SchoolId: '{value}'.");
 
     /// <summary>
     /// Attempts to parse <paramref name="value"/> as a <see cref="SchoolId"/>.

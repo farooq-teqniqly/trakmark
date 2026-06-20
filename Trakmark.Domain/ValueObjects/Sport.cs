@@ -17,7 +17,8 @@ public sealed class Sport : IEquatable<Sport>
     public static readonly Sport CrossCountry = new("Cross-Country");
 
     /// <inheritdoc/>
-    public bool Equals(Sport? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(Sport? other) =>
+        other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as Sport);
@@ -26,7 +27,8 @@ public sealed class Sport : IEquatable<Sport>
     public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both sports are equal.</summary>
-    public static bool operator ==(Sport? left, Sport? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(Sport? left, Sport? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the sports differ.</summary>
     public static bool operator !=(Sport? left, Sport? right) => !(left == right);

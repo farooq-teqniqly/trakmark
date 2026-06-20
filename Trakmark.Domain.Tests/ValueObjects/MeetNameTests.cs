@@ -27,9 +27,9 @@ public sealed class MeetNameTests
     }
 
     [Theory]
-    [InlineData("Spring Classic", "Spring Classic", true)]   // same value → equal
-    [InlineData("Spring Classic", "spring classic", true)]   // case-insensitive → equal
-    [InlineData("Spring Classic", "Fall Classic",   false)]  // different value → not equal
+    [InlineData("Spring Classic", "Spring Classic", true)] // same value → equal
+    [InlineData("Spring Classic", "spring classic", true)] // case-insensitive → equal
+    [InlineData("Spring Classic", "Fall Classic", false)] // different value → not equal
     public void MeetName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
     {
         // Arrange

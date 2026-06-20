@@ -15,7 +15,10 @@ public readonly record struct SchoolYear : IComparable<SchoolYear>
     {
         if (startYear <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(startYear), "School year must be a positive calendar year.");
+            throw new ArgumentOutOfRangeException(
+                nameof(startYear),
+                "School year must be a positive calendar year."
+            );
         }
 
         StartYear = startYear;

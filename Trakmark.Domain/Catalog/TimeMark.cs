@@ -20,7 +20,10 @@ public sealed class TimeMark : Performance, IEquatable<TimeMark>
     /// <inheritdoc/>
     public override bool IsBetterThan(Performance other)
     {
-        if (other is not TimeMark otherTime) { return false; }
+        if (other is not TimeMark otherTime)
+        {
+            return false;
+        }
 
         return Milliseconds < otherTime.Milliseconds;
     }
@@ -35,7 +38,8 @@ public sealed class TimeMark : Performance, IEquatable<TimeMark>
     public override int GetHashCode() => Milliseconds.GetHashCode();
 
     /// <summary>Returns <see langword="true"/> when both marks are equal.</summary>
-    public static bool operator ==(TimeMark? left, TimeMark? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(TimeMark? left, TimeMark? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the marks differ.</summary>
     public static bool operator !=(TimeMark? left, TimeMark? right) => !(left == right);

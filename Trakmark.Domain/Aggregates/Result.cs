@@ -65,7 +65,8 @@ public sealed class Result
         Placement? place,
         Tier tier,
         int order,
-        MeetDate meetDate)
+        MeetDate meetDate
+    )
     {
         ArgumentNullException.ThrowIfNull(@event);
         ArgumentNullException.ThrowIfNull(tier);

@@ -17,8 +17,8 @@ public sealed class GradeLevelTests
     }
 
     [Theory]
-    [InlineData("same", true)]   // same singleton → equal
-    [InlineData("diff", false)]  // different singleton → not equal
+    [InlineData("same", true)] // same singleton → equal
+    [InlineData("diff", false)] // different singleton → not equal
     public void GradeLevel_Equality_BySingleton(string scenario, bool expectedEqual)
     {
         // Arrange
@@ -57,7 +57,7 @@ public sealed class GradeLevelTests
         {
             GradeLevel.Freshman,
             GradeLevel.Freshman,
-            GradeLevel.Senior
+            GradeLevel.Senior,
         };
 
         // Act / Assert

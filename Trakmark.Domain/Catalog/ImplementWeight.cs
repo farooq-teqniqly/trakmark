@@ -22,7 +22,8 @@ public sealed class ImplementWeight : IEquatable<ImplementWeight>
     public static readonly ImplementWeight Kg7_26 = new("7.26 kg");
 
     /// <inheritdoc/>
-    public bool Equals(ImplementWeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(ImplementWeight? other) =>
+        other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as ImplementWeight);
@@ -31,10 +32,12 @@ public sealed class ImplementWeight : IEquatable<ImplementWeight>
     public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both implement weights are equal.</summary>
-    public static bool operator ==(ImplementWeight? left, ImplementWeight? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(ImplementWeight? left, ImplementWeight? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the implement weights differ.</summary>
-    public static bool operator !=(ImplementWeight? left, ImplementWeight? right) => !(left == right);
+    public static bool operator !=(ImplementWeight? left, ImplementWeight? right) =>
+        !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Name;
