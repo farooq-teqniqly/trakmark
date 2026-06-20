@@ -91,14 +91,14 @@ public sealed class Discipline : IEquatable<Discipline>
     {
         if (other is null) { return false; }
 
-        return string.Equals(_identityKey, other._identityKey, StringComparison.Ordinal);
+        return string.Equals(_identityKey, other._identityKey, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as Discipline);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => _identityKey.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => _identityKey.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both disciplines are equal.</summary>
     public static bool operator ==(Discipline? left, Discipline? right) => left?.Equals(right) ?? right is null;

@@ -22,7 +22,7 @@ internal static class DomainId
             return false;
         }
 
-        if (!value.StartsWith(prefix, StringComparison.Ordinal))
+        if (!value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }

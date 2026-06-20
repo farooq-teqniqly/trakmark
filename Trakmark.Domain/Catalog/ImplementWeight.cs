@@ -22,13 +22,13 @@ public sealed class ImplementWeight : IEquatable<ImplementWeight>
     public static readonly ImplementWeight Kg7_26 = new("7.26 kg");
 
     /// <inheritdoc/>
-    public bool Equals(ImplementWeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
+    public bool Equals(ImplementWeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as ImplementWeight);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both implement weights are equal.</summary>
     public static bool operator ==(ImplementWeight? left, ImplementWeight? right) => left?.Equals(right) ?? right is null;

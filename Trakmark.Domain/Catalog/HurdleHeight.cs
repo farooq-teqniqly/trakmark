@@ -24,13 +24,13 @@ public sealed class HurdleHeight : IEquatable<HurdleHeight>
     public static readonly HurdleHeight Inches30 = new("30\"");
 
     /// <inheritdoc/>
-    public bool Equals(HurdleHeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
+    public bool Equals(HurdleHeight? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as HurdleHeight);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both hurdle heights are equal.</summary>
     public static bool operator ==(HurdleHeight? left, HurdleHeight? right) => left?.Equals(right) ?? right is null;
