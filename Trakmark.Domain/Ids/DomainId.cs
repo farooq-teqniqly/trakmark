@@ -12,7 +12,7 @@ internal static class DomainId
     /// Validates that <paramref name="value"/> matches <c>PREFIX-BODY</c> where BODY
     /// is exactly <see cref="BodyLength"/> valid Crockford base32 characters.
     /// </summary>
-    internal static bool IsValid(string value, string prefix)
+    internal static bool IsValid(string? value, string prefix)
     {
         if (value is null)
         {

@@ -49,7 +49,7 @@ public sealed class MeetNameTests
         var n = new MeetName("Spring Classic");
 
         // Act / Assert
-        Assert.False(n.Equals((MeetName?)null));
+        Assert.False(n.Equals(null));
         Assert.False(n == null);
         Assert.True(n != null);
         Assert.False(null == n);
@@ -63,7 +63,8 @@ public sealed class MeetNameTests
         var n = new MeetName("Spring Classic");
 
         // Act / Assert
-        Assert.False(n.Equals((object)"Spring Classic"));
+        object wrongType = "Spring Classic";
+        Assert.False(n.Equals(wrongType));
     }
 
     [Fact]

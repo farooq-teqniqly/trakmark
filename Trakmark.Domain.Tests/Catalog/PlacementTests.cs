@@ -27,7 +27,7 @@ public sealed class PlacementTests
         var p = new Placement(1);
 
         // Act / Assert
-        Assert.False(p.Equals((Placement?)null));
+        Assert.False(p.Equals(null));
         Assert.False(p == null);
         Assert.True(p != null);
         Assert.False(null == p);
@@ -41,7 +41,8 @@ public sealed class PlacementTests
         var p = new Placement(1);
 
         // Act / Assert
-        Assert.False(p.Equals((object)"1"));
+        object wrongType = "1";
+        Assert.False(p.Equals(wrongType));
     }
 
     [Fact]
@@ -59,7 +60,7 @@ public sealed class PlacementTests
     public void Placement_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
         // Arrange
-        var set = new HashSet<Placement> { new Placement(1), new Placement(1), new Placement(2) };
+        var set = new HashSet<Placement> { new(1), new(1), new(2) };
 
         // Act / Assert
         Assert.Equal(2, set.Count);

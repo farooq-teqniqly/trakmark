@@ -35,7 +35,7 @@ public sealed class GradeLevelTests
     public void GradeLevel_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(GradeLevel.Freshman.Equals((GradeLevel?)null));
+        Assert.False(GradeLevel.Freshman.Equals(null));
         Assert.False(GradeLevel.Freshman == null);
         Assert.True(GradeLevel.Freshman != null);
         Assert.False(null == GradeLevel.Freshman);
@@ -46,7 +46,8 @@ public sealed class GradeLevelTests
     public void GradeLevel_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(GradeLevel.Freshman.Equals((object)"Freshman"));
+        object wrongType = "Freshman";
+        Assert.False(GradeLevel.Freshman.Equals(wrongType));
     }
 
     [Fact]

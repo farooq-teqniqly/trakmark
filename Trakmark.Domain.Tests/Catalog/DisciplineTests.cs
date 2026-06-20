@@ -110,7 +110,7 @@ public sealed class DisciplineTests
         var d = Discipline.Run(100);
 
         // Act / Assert
-        Assert.False(d.Equals((Discipline?)null));
+        Assert.False(d.Equals(null));
         Assert.False(d == null);
         Assert.True(d != null);
         Assert.False(null == d);
@@ -124,7 +124,8 @@ public sealed class DisciplineTests
         var d = Discipline.Run(100);
 
         // Act / Assert
-        Assert.False(d.Equals((object)"not a discipline"));
+        object wrongType = "not a discipline";
+        Assert.False(d.Equals(wrongType));
     }
 
     [Fact]

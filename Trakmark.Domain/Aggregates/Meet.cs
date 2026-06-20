@@ -120,7 +120,12 @@ public sealed class Meet
     {
         if (status == ResultStatus.Finished)
         {
-            EnforceFinishedInvariant(@event, mark, place);
+            if (place is null)
+            {
+                throw new InvalidOperationException("A finished result must have a place.");
+            }
+
+            EnforceFinishedInvariant(@event, mark);
         }
         else
         {
@@ -128,13 +133,8 @@ public sealed class Meet
         }
     }
 
-    private static void EnforceFinishedInvariant(Event @event, Performance? mark, Placement? place)
+    private static void EnforceFinishedInvariant(Event @event, Performance? mark)
     {
-        if (place is null)
-        {
-            throw new InvalidOperationException("A finished result must have a place.");
-        }
-
         var markKind = @event.Discipline.MarkKind;
 
         if (markKind == MarkKind.PlaceOnly)

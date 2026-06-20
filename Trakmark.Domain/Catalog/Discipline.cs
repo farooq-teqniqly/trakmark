@@ -8,7 +8,7 @@ namespace Trakmark.Domain.Catalog;
 /// </summary>
 public sealed class Discipline : IEquatable<Discipline>
 {
-    /// <summary>The human-readable name of this discipline (e.g., "100m Hurdles @ 39\"").</summary>
+    /// <summary>The human-readable name of this discipline (e.g., ""100m Hurdles @ 39"").</summary>
     public string Name { get; }
 
     /// <summary>The kind of mark this discipline produces.</summary>

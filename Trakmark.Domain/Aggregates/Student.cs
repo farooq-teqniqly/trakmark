@@ -22,7 +22,7 @@ public sealed class Student
     public UserAccountId? UserAccountId { get; }
 
     /// <summary>The student's career (set of yearly enrollments).</summary>
-    public Career Career { get; } = new Career();
+    public Career Career { get; } = new();
 
     /// <summary>Initializes a <see cref="Student"/>, optionally linking an account.</summary>
     public Student(StudentId id, PersonName name, UserAccountId? accountId = null)
