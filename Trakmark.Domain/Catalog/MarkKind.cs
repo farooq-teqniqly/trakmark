@@ -28,13 +28,13 @@ public sealed class MarkKind : IEquatable<MarkKind>
     public static readonly MarkKind PlaceOnly = new("PlaceOnly", ComparisonDirection.None);
 
     /// <inheritdoc/>
-    public bool Equals(MarkKind? other) => other is not null && string.Equals(Name, other.Name, StringComparison.Ordinal);
+    public bool Equals(MarkKind? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as MarkKind);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
+    public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both mark kinds are equal.</summary>
     public static bool operator ==(MarkKind? left, MarkKind? right) => left?.Equals(right) ?? right is null;
