@@ -29,14 +29,16 @@ public sealed class CompetitionLevelMatchServiceTests
             new MeetName("HS Spring Invitational"),
             new MeetDate(new DateOnly(2026, 4, 10)),
             CompetitionLevel.HighSchool,
-            Sport.TrackAndField);
+            Sport.TrackAndField
+        );
 
     private static Meet MiddleSchoolMeet2025() =>
         Meet.Create(
             new MeetName("MS Spring Invitational"),
             new MeetDate(new DateOnly(2026, 4, 10)),
             CompetitionLevel.MiddleSchool,
-            Sport.TrackAndField);
+            Sport.TrackAndField
+        );
 
     [Fact]
     public void LevelMatch_Validate_MismatchedLevel_ReturnsFalse()
@@ -83,7 +85,8 @@ public sealed class CompetitionLevelMatchServiceTests
             new MeetName("MS Regional 2023"),
             new MeetDate(new DateOnly(2024, 3, 15)),
             CompetitionLevel.MiddleSchool,
-            Sport.TrackAndField);
+            Sport.TrackAndField
+        );
 
         var schools = SchoolMap(msSchool, hsSchool);
 
@@ -109,7 +112,8 @@ public sealed class CompetitionLevelMatchServiceTests
             new MeetName("HS Regional 2023"),
             new MeetDate(new DateOnly(2024, 3, 15)),
             CompetitionLevel.HighSchool,
-            Sport.TrackAndField);
+            Sport.TrackAndField
+        );
 
         var schools = SchoolMap(msSchool, hsSchool);
 
@@ -144,7 +148,11 @@ public sealed class CompetitionLevelMatchServiceTests
         var meet = HighSchoolMeet2025();
 
         // Act
-        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, meet, new Dictionary<SchoolId, School>());
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(
+            student,
+            meet,
+            new Dictionary<SchoolId, School>()
+        );
 
         // Assert
         Assert.False(isValid);

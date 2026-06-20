@@ -20,13 +20,17 @@ public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
     /// <inheritdoc/>
     public override bool IsBetterThan(Performance other)
     {
-        if (other is not DistanceMark otherDist) { return false; }
+        if (other is not DistanceMark otherDist)
+        {
+            return false;
+        }
 
         return Centimeters > otherDist.Centimeters;
     }
 
     /// <inheritdoc/>
-    public bool Equals(DistanceMark? other) => other is not null && Centimeters == other.Centimeters;
+    public bool Equals(DistanceMark? other) =>
+        other is not null && Centimeters == other.Centimeters;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as DistanceMark);
@@ -35,7 +39,8 @@ public sealed class DistanceMark : Performance, IEquatable<DistanceMark>
     public override int GetHashCode() => Centimeters.GetHashCode();
 
     /// <summary>Returns <see langword="true"/> when both marks are equal.</summary>
-    public static bool operator ==(DistanceMark? left, DistanceMark? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(DistanceMark? left, DistanceMark? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the marks differ.</summary>
     public static bool operator !=(DistanceMark? left, DistanceMark? right) => !(left == right);

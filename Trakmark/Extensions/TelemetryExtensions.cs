@@ -24,7 +24,8 @@ public static class TelemetryExtensions
         if (!Uri.TryCreate(otlpEndpointRaw, UriKind.Absolute, out var otlpEndpoint))
         {
             throw new InvalidOperationException(
-                $"Invalid OpenTelemetry:Endpoint '{otlpEndpointRaw}'. Must be an absolute URI (e.g. http://localhost:4317).");
+                $"Invalid OpenTelemetry:Endpoint '{otlpEndpointRaw}'. Must be an absolute URI (e.g. http://localhost:4317)."
+            );
         }
 
         services

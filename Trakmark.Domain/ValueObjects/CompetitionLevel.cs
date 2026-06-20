@@ -21,7 +21,8 @@ public sealed class CompetitionLevel : IEquatable<CompetitionLevel>
     public static readonly CompetitionLevel Elementary = new("Elementary");
 
     /// <inheritdoc/>
-    public bool Equals(CompetitionLevel? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(CompetitionLevel? other) =>
+        other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as CompetitionLevel);
@@ -30,10 +31,12 @@ public sealed class CompetitionLevel : IEquatable<CompetitionLevel>
     public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both competition levels are equal.</summary>
-    public static bool operator ==(CompetitionLevel? left, CompetitionLevel? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(CompetitionLevel? left, CompetitionLevel? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the competition levels differ.</summary>
-    public static bool operator !=(CompetitionLevel? left, CompetitionLevel? right) => !(left == right);
+    public static bool operator !=(CompetitionLevel? left, CompetitionLevel? right) =>
+        !(left == right);
 
     /// <inheritdoc/>
     public override string ToString() => Name;

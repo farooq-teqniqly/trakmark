@@ -16,10 +16,10 @@ public sealed class EnrollmentTests
     // ── Enrollment equality ───────────────────────────────────────────────
 
     [Theory]
-    [InlineData("equal",          true)]   // same all-fields → equal
-    [InlineData("diff_school",    false)]  // differ by SchoolId → not equal
-    [InlineData("diff_year",      false)]  // differ by SchoolYear → not equal
-    [InlineData("diff_grade",     false)]  // differ by GradeLevel → not equal
+    [InlineData("equal", true)] // same all-fields → equal
+    [InlineData("diff_school", false)] // differ by SchoolId → not equal
+    [InlineData("diff_year", false)] // differ by SchoolYear → not equal
+    [InlineData("diff_grade", false)] // differ by GradeLevel → not equal
     public void Enrollment_Equality_CoversAllFields(string scenario, bool expectedEqual)
     {
         // Arrange
@@ -27,11 +27,11 @@ public sealed class EnrollmentTests
 
         var b = scenario switch
         {
-            "equal"       => new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman),
+            "equal" => new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman),
             "diff_school" => new Enrollment(SchoolB, new SchoolYear(2024), GradeLevel.Freshman),
-            "diff_year"   => new Enrollment(SchoolA, new SchoolYear(2023), GradeLevel.Freshman),
-            "diff_grade"  => new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Senior),
-            _             => throw new ArgumentOutOfRangeException(nameof(scenario))
+            "diff_year" => new Enrollment(SchoolA, new SchoolYear(2023), GradeLevel.Freshman),
+            "diff_grade" => new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Senior),
+            _ => throw new ArgumentOutOfRangeException(nameof(scenario)),
         };
 
         // Act / Assert

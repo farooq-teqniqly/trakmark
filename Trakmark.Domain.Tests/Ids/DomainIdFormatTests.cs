@@ -31,10 +31,10 @@ public sealed class DomainIdFormatTests
         var text = expectedPrefix switch
         {
             "MEET-" => MeetId.NewId().ToString(),
-            "SCH-"  => SchoolId.NewId().ToString(),
+            "SCH-" => SchoolId.NewId().ToString(),
             "TEAM-" => TeamId.NewId().ToString(),
-            "USR-"  => RegisteredUserId.NewId().ToString(),
-            _       => throw new InvalidOperationException()
+            "USR-" => RegisteredUserId.NewId().ToString(),
+            _ => throw new InvalidOperationException(),
         };
 
         // Assert

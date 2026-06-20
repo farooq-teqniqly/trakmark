@@ -35,7 +35,8 @@ public static class CompetitionLevelMatchService
     public static bool IsLevelMatch(
         Student student,
         Meet meet,
-        IReadOnlyDictionary<SchoolId, School> schools)
+        IReadOnlyDictionary<SchoolId, School> schools
+    )
     {
         ArgumentNullException.ThrowIfNull(student);
         ArgumentNullException.ThrowIfNull(meet);
@@ -43,8 +44,7 @@ public static class CompetitionLevelMatchService
 
         var season = SchoolYearHelper.ToSchoolYear(meet.Date.Value);
 
-        var enrollment = student.Career.Enrollments
-            .FirstOrDefault(e => e.SchoolYear == season);
+        var enrollment = student.Career.Enrollments.FirstOrDefault(e => e.SchoolYear == season);
 
         if (enrollment is null)
         {

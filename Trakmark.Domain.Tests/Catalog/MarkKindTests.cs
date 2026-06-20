@@ -6,8 +6,8 @@ namespace Trakmark.Domain.Tests.Catalog;
 public sealed class MarkKindTests
 {
     [Theory]
-    [InlineData("same", true)]   // same singleton → equal
-    [InlineData("diff", false)]  // different singleton → not equal
+    [InlineData("same", true)] // same singleton → equal
+    [InlineData("diff", false)] // different singleton → not equal
     public void MarkKind_Equality_BySingleton(string scenario, bool expectedEqual)
     {
         // Arrange
@@ -42,12 +42,7 @@ public sealed class MarkKindTests
     public void MarkKind_GetHashCode_UsedInHashSet_DeduplicatesEqualInstances()
     {
         // Arrange
-        var set = new HashSet<MarkKind>
-        {
-            MarkKind.Time,
-            MarkKind.Time,
-            MarkKind.Distance
-        };
+        var set = new HashSet<MarkKind> { MarkKind.Time, MarkKind.Time, MarkKind.Distance };
 
         // Act / Assert
         Assert.Equal(2, set.Count);
@@ -63,18 +58,18 @@ public sealed class MarkKindTests
     }
 
     [Theory]
-    [InlineData(nameof(MarkKind.Time),      ComparisonDirection.LowerIsBetter)]
-    [InlineData(nameof(MarkKind.Distance),  ComparisonDirection.HigherIsBetter)]
+    [InlineData(nameof(MarkKind.Time), ComparisonDirection.LowerIsBetter)]
+    [InlineData(nameof(MarkKind.Distance), ComparisonDirection.HigherIsBetter)]
     [InlineData(nameof(MarkKind.PlaceOnly), ComparisonDirection.None)]
     public void MarkKind_Direction_MatchesKind(string kindName, ComparisonDirection expected)
     {
         // Arrange
         var kind = kindName switch
         {
-            nameof(MarkKind.Time)      => MarkKind.Time,
-            nameof(MarkKind.Distance)  => MarkKind.Distance,
+            nameof(MarkKind.Time) => MarkKind.Time,
+            nameof(MarkKind.Distance) => MarkKind.Distance,
             nameof(MarkKind.PlaceOnly) => MarkKind.PlaceOnly,
-            _                          => throw new ArgumentOutOfRangeException(nameof(kindName))
+            _ => throw new ArgumentOutOfRangeException(nameof(kindName)),
         };
 
         // Act / Assert

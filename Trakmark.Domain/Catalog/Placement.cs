@@ -28,7 +28,8 @@ public sealed class Placement : IEquatable<Placement>
     public override int GetHashCode() => Rank.GetHashCode();
 
     /// <summary>Returns <see langword="true"/> when both placements are equal.</summary>
-    public static bool operator ==(Placement? left, Placement? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(Placement? left, Placement? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the placements differ.</summary>
     public static bool operator !=(Placement? left, Placement? right) => !(left == right);

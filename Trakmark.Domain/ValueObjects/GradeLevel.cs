@@ -33,7 +33,8 @@ public sealed class GradeLevel : IEquatable<GradeLevel>
     public static readonly GradeLevel Grade6 = new("6th Grade");
 
     /// <inheritdoc/>
-    public bool Equals(GradeLevel? other) => other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(GradeLevel? other) =>
+        other is not null && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as GradeLevel);
@@ -42,7 +43,8 @@ public sealed class GradeLevel : IEquatable<GradeLevel>
     public override int GetHashCode() => Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both grade levels are equal.</summary>
-    public static bool operator ==(GradeLevel? left, GradeLevel? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(GradeLevel? left, GradeLevel? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns <see langword="true"/> when the grade levels differ.</summary>
     public static bool operator !=(GradeLevel? left, GradeLevel? right) => !(left == right);

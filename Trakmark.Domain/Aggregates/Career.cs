@@ -11,8 +11,9 @@ public sealed class Career
     private readonly List<Enrollment> _enrollments = [];
 
     /// <summary>Comparer that orders enrollments by SchoolYear ascending.</summary>
-    private static readonly IComparer<Enrollment> BySchoolYear =
-        Comparer<Enrollment>.Create((a, b) => a.SchoolYear.CompareTo(b.SchoolYear));
+    private static readonly IComparer<Enrollment> BySchoolYear = Comparer<Enrollment>.Create(
+        (a, b) => a.SchoolYear.CompareTo(b.SchoolYear)
+    );
 
     /// <summary>All enrollments in the career, ordered by school year ascending.</summary>
     public IReadOnlyList<Enrollment> Enrollments => _enrollments.AsReadOnly();
@@ -21,17 +22,14 @@ public sealed class Career
     /// The enrollment with the latest school year, or <see langword="null"/> when the
     /// career is empty.
     /// </summary>
-    public Enrollment? Current => _enrollments.Count > 0
-        ? _enrollments[^1]
-        : null;
+    public Enrollment? Current => _enrollments.Count > 0 ? _enrollments[^1] : null;
 
     /// <summary>
     /// All enrollments except the current (latest) one, ordered by school year ascending.
     /// Returns an empty sequence when fewer than two enrollments exist.
     /// </summary>
-    public IEnumerable<Enrollment> PastSeasons => _enrollments.Count > 1
-        ? _enrollments.Take(_enrollments.Count - 1)
-        : [];
+    public IEnumerable<Enrollment> PastSeasons =>
+        _enrollments.Count > 1 ? _enrollments.Take(_enrollments.Count - 1) : [];
 
     /// <summary>
     /// Attempts to add an <paramref name="enrollment"/> to the career.

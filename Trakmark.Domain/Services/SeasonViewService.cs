@@ -28,13 +28,17 @@ public static class SeasonViewService
     public static IEnumerable<Result> GetSeasonResults(
         Student student,
         IEnumerable<Result> allResults,
-        SchoolYear season)
+        SchoolYear season
+    )
     {
         ArgumentNullException.ThrowIfNull(student);
         ArgumentNullException.ThrowIfNull(allResults);
 
         return allResults
-            .Where(r => r.StudentId == student.Id && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season)
+            .Where(r =>
+                r.StudentId == student.Id
+                && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season
+            )
             .OrderBy(r => r.Order);
     }
 }

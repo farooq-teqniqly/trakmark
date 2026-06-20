@@ -27,9 +27,9 @@ public sealed class TeamNameTests
     }
 
     [Theory]
-    [InlineData("Varsity Boys", "Varsity Boys", true)]   // same value → equal
-    [InlineData("Varsity Boys", "varsity boys", true)]   // case-insensitive → equal
-    [InlineData("Varsity Boys", "JV Girls",     false)]  // different value → not equal
+    [InlineData("Varsity Boys", "Varsity Boys", true)] // same value → equal
+    [InlineData("Varsity Boys", "varsity boys", true)] // case-insensitive → equal
+    [InlineData("Varsity Boys", "JV Girls", false)] // different value → not equal
     public void TeamName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
     {
         // Arrange

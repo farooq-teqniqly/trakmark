@@ -46,7 +46,7 @@ public sealed class ImplementWeightTests
         {
             ImplementWeight.Kg4,
             ImplementWeight.Kg4,
-            ImplementWeight.Kg6
+            ImplementWeight.Kg6,
         };
 
         // Act / Assert

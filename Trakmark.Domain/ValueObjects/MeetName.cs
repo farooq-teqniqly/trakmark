@@ -15,7 +15,10 @@ public sealed class MeetName : IEquatable<MeetName>
         var trimmed = value.Trim();
         if (trimmed.Length == 0)
         {
-            throw new ArgumentException("Meet name must not be empty or whitespace.", nameof(value));
+            throw new ArgumentException(
+                "Meet name must not be empty or whitespace.",
+                nameof(value)
+            );
         }
 
         Value = trimmed;
@@ -35,7 +38,8 @@ public sealed class MeetName : IEquatable<MeetName>
     public override string ToString() => Value;
 
     /// <summary>Returns true when both instances are equal.</summary>
-    public static bool operator ==(MeetName? left, MeetName? right) => left?.Equals(right) ?? right is null;
+    public static bool operator ==(MeetName? left, MeetName? right) =>
+        left?.Equals(right) ?? right is null;
 
     /// <summary>Returns true when both instances are not equal.</summary>
     public static bool operator !=(MeetName? left, MeetName? right) => !(left == right);

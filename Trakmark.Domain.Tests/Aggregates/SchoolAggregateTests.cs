@@ -70,7 +70,9 @@ public sealed class SchoolAggregateTests
         school.AddTeam(Sport.TrackAndField);
 
         // Act / Assert
-        var ex = Assert.Throws<InvalidOperationException>(() => school.AddTeam(Sport.TrackAndField));
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            school.AddTeam(Sport.TrackAndField)
+        );
         Assert.Contains("already", ex.Message);
     }
 
@@ -80,7 +82,10 @@ public sealed class SchoolAggregateTests
     public void Team_HasNoStoredRosterCollection()
     {
         // Arrange
-        var school = School.Create(new SchoolName("Riverside Elementary"), CompetitionLevel.Elementary);
+        var school = School.Create(
+            new SchoolName("Riverside Elementary"),
+            CompetitionLevel.Elementary
+        );
         school.AddTeam(Sport.CrossCountry);
         // Act
         var publicPropertyNames = typeof(Team)
@@ -89,6 +94,9 @@ public sealed class SchoolAggregateTests
             .ToHashSet(StringComparer.Ordinal);
 
         // Assert — Team must expose exactly Id and Sport; no roster collection
-        Assert.Equal(new HashSet<string>(StringComparer.Ordinal) { "Id", "Sport" }, publicPropertyNames);
+        Assert.Equal(
+            new HashSet<string>(StringComparer.Ordinal) { "Id", "Sport" },
+            publicPropertyNames
+        );
     }
 }

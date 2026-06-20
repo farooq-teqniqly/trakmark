@@ -41,7 +41,8 @@ public static class BestMarksService
         Student student,
         Discipline discipline,
         SchoolYear season,
-        IEnumerable<Result> allResults)
+        IEnumerable<Result> allResults
+    )
     {
         ArgumentNullException.ThrowIfNull(student);
         ArgumentNullException.ThrowIfNull(discipline);
@@ -52,14 +53,14 @@ public static class BestMarksService
             return null;
         }
 
-        var eligible = allResults
-            .Where(r =>
-                r.StudentId == student.Id
-                && r.Event.Discipline.Equals(discipline)
-                && r.Status == ResultStatus.Finished
-                && !r.Event.IsRelay
-                && r.Mark is not null
-                && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season);
+        var eligible = allResults.Where(r =>
+            r.StudentId == student.Id
+            && r.Event.Discipline.Equals(discipline)
+            && r.Status == ResultStatus.Finished
+            && !r.Event.IsRelay
+            && r.Mark is not null
+            && SchoolYearHelper.ToSchoolYear(r.MeetDate.Value) == season
+        );
 
         return SelectBest(eligible);
     }
@@ -81,7 +82,8 @@ public static class BestMarksService
     public static Performance? PersonalBest(
         Student student,
         Discipline discipline,
-        IEnumerable<Result> allResults)
+        IEnumerable<Result> allResults
+    )
     {
         ArgumentNullException.ThrowIfNull(student);
         ArgumentNullException.ThrowIfNull(discipline);
@@ -92,13 +94,13 @@ public static class BestMarksService
             return null;
         }
 
-        var eligible = allResults
-            .Where(r =>
-                r.StudentId == student.Id
-                && r.Event.Discipline.Equals(discipline)
-                && r.Status == ResultStatus.Finished
-                && !r.Event.IsRelay
-                && r.Mark is not null);
+        var eligible = allResults.Where(r =>
+            r.StudentId == student.Id
+            && r.Event.Discipline.Equals(discipline)
+            && r.Status == ResultStatus.Finished
+            && !r.Event.IsRelay
+            && r.Mark is not null
+        );
 
         return SelectBest(eligible);
     }

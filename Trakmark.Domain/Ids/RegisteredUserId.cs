@@ -13,7 +13,9 @@ public readonly record struct RegisteredUserId
     private RegisteredUserId(string value) => Value = value;
 
     /// <summary>A sentinel empty identifier.</summary>
-    public static readonly RegisteredUserId Empty = new(Prefix + new string('A', DomainId.BodyLength));
+    public static readonly RegisteredUserId Empty = new(
+        Prefix + new string('A', DomainId.BodyLength)
+    );
 
     /// <summary>
     /// Static initializer for <see cref="Empty"/>. Excluded from coverage because
@@ -29,7 +31,9 @@ public readonly record struct RegisteredUserId
     /// <summary>Parses <paramref name="value"/> as a <see cref="RegisteredUserId"/>.</summary>
     /// <exception cref="FormatException">Thrown when <paramref name="value"/> is ill-formed.</exception>
     public static RegisteredUserId Parse(string value) =>
-        TryParse(value, out var id) ? id : throw new FormatException($"Invalid RegisteredUserId: '{value}'.");
+        TryParse(value, out var id)
+            ? id
+            : throw new FormatException($"Invalid RegisteredUserId: '{value}'.");
 
     /// <summary>
     /// Attempts to parse <paramref name="value"/> as a <see cref="RegisteredUserId"/>.

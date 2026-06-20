@@ -14,7 +14,10 @@ public sealed class PerformanceTests
 
     [Theory]
     [MemberData(nameof(WrongTypeMarkPairs))]
-    public void Performance_IsBetterThan_WrongType_ReturnsFalse(Performance mark, Performance wrongType)
+    public void Performance_IsBetterThan_WrongType_ReturnsFalse(
+        Performance mark,
+        Performance wrongType
+    )
     {
         // Arrange / Act
         var result = mark.IsBetterThan(wrongType);

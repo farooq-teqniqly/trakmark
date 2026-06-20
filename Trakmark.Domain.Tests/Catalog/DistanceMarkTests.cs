@@ -18,10 +18,14 @@ public sealed class DistanceMarkTests
     }
 
     [Theory]
-    [InlineData(1100, 1000, true)]   // 1100cm > 1000cm: 1100 is better
-    [InlineData(900,  1000, false)]  // 900cm < 1000cm: 900 is NOT better
-    [InlineData(1200, 1200, false)]  // equal — neither is better
-    public void DistanceMark_IsBetterThan_RespectsMaxDirection(int candidateCm, int currentBestCm, bool expectedResult)
+    [InlineData(1100, 1000, true)] // 1100cm > 1000cm: 1100 is better
+    [InlineData(900, 1000, false)] // 900cm < 1000cm: 900 is NOT better
+    [InlineData(1200, 1200, false)] // equal — neither is better
+    public void DistanceMark_IsBetterThan_RespectsMaxDirection(
+        int candidateCm,
+        int currentBestCm,
+        bool expectedResult
+    )
     {
         // Arrange
         var candidate = new DistanceMark(candidateCm);
@@ -32,8 +36,8 @@ public sealed class DistanceMarkTests
     }
 
     [Theory]
-    [InlineData(1000, 1000, true)]   // same value → equal
-    [InlineData(1000, 1100, false)]  // different value → not equal
+    [InlineData(1000, 1000, true)] // same value → equal
+    [InlineData(1000, 1100, false)] // different value → not equal
     public void DistanceMark_Equality_ByValue(int cmA, int cmB, bool expectedEqual)
     {
         // Arrange

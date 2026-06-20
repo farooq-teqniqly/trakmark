@@ -46,7 +46,7 @@ public sealed class HurdleHeightTests
         {
             HurdleHeight.Inches39,
             HurdleHeight.Inches39,
-            HurdleHeight.Inches33
+            HurdleHeight.Inches33,
         };
 
         // Act / Assert

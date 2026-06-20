@@ -8,7 +8,7 @@ public sealed class PersonNameTests
     [Theory]
     [InlineData("Alice")]
     [InlineData("Bob Smith")]
-    [InlineData("  Alice  ")]  // trimmed to non-empty
+    [InlineData("  Alice  ")] // trimmed to non-empty
     public void PersonName_AcceptsValidName(string input)
     {
         // Arrange / Act
@@ -28,9 +28,9 @@ public sealed class PersonNameTests
     }
 
     [Theory]
-    [InlineData("Alice", "Alice", true)]   // same value → equal
-    [InlineData("Alice", "alice", true)]   // case-insensitive → equal
-    [InlineData("Alice", "Bob",   false)]  // different value → not equal
+    [InlineData("Alice", "Alice", true)] // same value → equal
+    [InlineData("Alice", "alice", true)] // case-insensitive → equal
+    [InlineData("Alice", "Bob", false)] // different value → not equal
     public void PersonName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
     {
         // Arrange

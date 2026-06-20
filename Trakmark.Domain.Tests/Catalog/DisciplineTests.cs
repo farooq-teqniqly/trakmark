@@ -52,7 +52,10 @@ public sealed class DisciplineTests
     [Theory]
     [InlineData(100, 200)]
     [InlineData(200, 400)]
-    public void Discipline_PlainRun_DifferentDistances_YieldDistinctDisciplines(int distanceA, int distanceB)
+    public void Discipline_PlainRun_DifferentDistances_YieldDistinctDisciplines(
+        int distanceA,
+        int distanceB
+    )
     {
         // Arrange
         var a = Discipline.Run(distanceA);
@@ -74,8 +77,8 @@ public sealed class DisciplineTests
     }
 
     [Theory]
-    [InlineData(true)]   // RelayRun → IsRelay = true
-    [InlineData(false)]  // Run → IsRelay = false
+    [InlineData(true)] // RelayRun → IsRelay = true
+    [InlineData(false)] // Run → IsRelay = false
     public void Discipline_IsRelay_MatchesDisciplineFactory(bool expectRelay)
     {
         // Arrange
@@ -86,8 +89,8 @@ public sealed class DisciplineTests
     }
 
     [Theory]
-    [InlineData("same_key", true)]   // same identity key → equal
-    [InlineData("diff_key", false)]  // different factory → not equal
+    [InlineData("same_key", true)] // same identity key → equal
+    [InlineData("diff_key", false)] // different factory → not equal
     public void Discipline_Equality_ByIdentityKey(string scenario, bool expectedEqual)
     {
         // Arrange

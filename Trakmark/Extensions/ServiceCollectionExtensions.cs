@@ -39,11 +39,13 @@ public static class ServiceCollectionExtensions
         }
 
         /// <summary>Registers the EF Core <see cref="ApplicationDbContext"/> backed by SQL Server, with detailed errors enabled in development.</summary>
-        public IServiceCollection AddAppDatabase(IConfiguration config,
-            IWebHostEnvironment env)
+        public IServiceCollection AddAppDatabase(IConfiguration config, IWebHostEnvironment env)
         {
-            var connectionString = config.GetConnectionString("DefaultConnection")
-                                   ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString =
+                config.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException(
+                    "Connection string 'DefaultConnection' not found."
+                );
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

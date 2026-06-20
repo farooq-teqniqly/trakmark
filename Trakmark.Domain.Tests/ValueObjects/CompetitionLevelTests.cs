@@ -14,8 +14,8 @@ public sealed class CompetitionLevelTests
     }
 
     [Theory]
-    [InlineData("same", true)]   // same singleton → equal
-    [InlineData("diff", false)]  // different singleton → not equal
+    [InlineData("same", true)] // same singleton → equal
+    [InlineData("diff", false)] // different singleton → not equal
     public void CompetitionLevel_Equality_BySingleton(string scenario, bool expectedEqual)
     {
         // Arrange
@@ -54,7 +54,7 @@ public sealed class CompetitionLevelTests
         {
             CompetitionLevel.HighSchool,
             CompetitionLevel.HighSchool,
-            CompetitionLevel.MiddleSchool
+            CompetitionLevel.MiddleSchool,
         };
 
         // Act / Assert

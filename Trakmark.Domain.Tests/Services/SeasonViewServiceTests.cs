@@ -46,7 +46,10 @@ public sealed class SeasonViewServiceTests
     {
         // Act / Assert
         Assert.Throws<ArgumentNullException>(() =>
-            SeasonViewService.GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025).ToList());
+            SeasonViewService
+                .GetSeasonResults(null!, Enumerable.Empty<Result>(), Season2025)
+                .ToList()
+        );
     }
 
     [Fact]
@@ -57,7 +60,8 @@ public sealed class SeasonViewServiceTests
 
         // Act / Assert
         Assert.Throws<ArgumentNullException>(() =>
-            SeasonViewService.GetSeasonResults(student, null!, Season2025).ToList());
+            SeasonViewService.GetSeasonResults(student, null!, Season2025).ToList()
+        );
     }
 
     [Fact]
@@ -68,11 +72,27 @@ public sealed class SeasonViewServiceTests
         var otherStudent = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet.RecordResult(otherStudent.Id, E100, ResultStatus.Finished, new TimeMark(11000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
+        meet.RecordResult(
+            otherStudent.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11000),
+            Place1,
+            null
+        );
 
         // Act
-        var results = SeasonViewService.GetSeasonResults(student, meet.Results, Season2025).ToList();
+        var results = SeasonViewService
+            .GetSeasonResults(student, meet.Results, Season2025)
+            .ToList();
 
         // Assert
         Assert.Single(results);
@@ -114,11 +134,27 @@ public sealed class SeasonViewServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
         var meet = CreateMeet(DateInSeason2025);
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
-        meet.RecordResult(student.Id, E200, ResultStatus.Finished, new TimeMark(25000), Place2, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
+        meet.RecordResult(
+            student.Id,
+            E200,
+            ResultStatus.Finished,
+            new TimeMark(25000),
+            Place2,
+            null
+        );
 
         // Act
-        var results = SeasonViewService.GetSeasonResults(student, meet.Results, Season2025).ToList();
+        var results = SeasonViewService
+            .GetSeasonResults(student, meet.Results, Season2025)
+            .ToList();
 
         // Assert
         Assert.Equal(2, results.Count);
@@ -134,8 +170,22 @@ public sealed class SeasonViewServiceTests
         var meetPast = CreateMeet(DateInSeason2024);
         var meetCurrent = CreateMeet(DateInSeason2025);
 
-        meetPast.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12500), Place1, null);
-        meetCurrent.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(11900), Place1, null);
+        meetPast.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12500),
+            Place1,
+            null
+        );
+        meetCurrent.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(11900),
+            Place1,
+            null
+        );
 
         var allResults = meetPast.Results.Concat(meetCurrent.Results);
 
@@ -148,12 +198,15 @@ public sealed class SeasonViewServiceTests
     }
 
     [Theory]
-    [InlineData(8,  2025, 2025)]  // August — fall start of season
-    [InlineData(9,  2025, 2025)]  // September — fall start of season
-    [InlineData(12, 2025, 2025)]  // December — still same season
-    [InlineData(4,  2026, 2025)]  // April — spring end of season, season started 2025
+    [InlineData(8, 2025, 2025)] // August — fall start of season
+    [InlineData(9, 2025, 2025)] // September — fall start of season
+    [InlineData(12, 2025, 2025)] // December — still same season
+    [InlineData(4, 2026, 2025)] // April — spring end of season, season started 2025
     public void SeasonBoundaries_CorrectlyResolveSchoolYearFromMeetDate(
-        int month, int calendarYear, int expectedStartYear)
+        int month,
+        int calendarYear,
+        int expectedStartYear
+    )
     {
         // Arrange
         var season = new SchoolYear(expectedStartYear);
@@ -162,9 +215,17 @@ public sealed class SeasonViewServiceTests
             new MeetName("Test Meet"),
             new MeetDate(new DateOnly(calendarYear, month, 15)),
             CompetitionLevel.HighSchool,
-            Tf);
+            Tf
+        );
 
-        meet.RecordResult(student.Id, E100, ResultStatus.Finished, new TimeMark(12000), Place1, null);
+        meet.RecordResult(
+            student.Id,
+            E100,
+            ResultStatus.Finished,
+            new TimeMark(12000),
+            Place1,
+            null
+        );
 
         // Act
         var results = SeasonViewService.GetSeasonResults(student, meet.Results, season).ToList();

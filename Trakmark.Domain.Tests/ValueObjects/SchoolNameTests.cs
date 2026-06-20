@@ -27,9 +27,9 @@ public sealed class SchoolNameTests
     }
 
     [Theory]
-    [InlineData("Springfield High", "Springfield High", true)]   // same value → equal
-    [InlineData("Springfield High", "springfield high", true)]   // case-insensitive → equal
-    [InlineData("Springfield High", "Central High",     false)]  // different value → not equal
+    [InlineData("Springfield High", "Springfield High", true)] // same value → equal
+    [InlineData("Springfield High", "springfield high", true)] // case-insensitive → equal
+    [InlineData("Springfield High", "Central High", false)] // different value → not equal
     public void SchoolName_Equality_CaseInsensitive(string valA, string valB, bool expectedEqual)
     {
         // Arrange

@@ -13,7 +13,9 @@ public sealed class StudentCareerTests
     // ── Shared helpers ─────────────────────────────────────────────────────
 
     private static StudentId NewStudentId() => StudentId.NewId();
+
     private static SchoolId NewSchoolId() => SchoolId.NewId();
+
     private static PersonName AnyName() => new("Jane Doe");
 
     // ── Empty career until enrollment ──────────────────────────────────────

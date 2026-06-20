@@ -14,7 +14,10 @@ internal static class DomainId
     /// </summary>
     internal static bool IsValid(string value, string prefix)
     {
-        if (value is null) { return false; }
+        if (value is null)
+        {
+            return false;
+        }
 
         var expectedLength = prefix.Length + BodyLength;
         if (value.Length != expectedLength)
