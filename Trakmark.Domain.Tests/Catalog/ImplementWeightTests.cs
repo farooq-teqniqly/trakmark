@@ -24,7 +24,7 @@ public sealed class ImplementWeightTests
     public void ImplementWeight_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(ImplementWeight.Kg4.Equals((ImplementWeight?)null));
+        Assert.False(ImplementWeight.Kg4.Equals(null));
         Assert.False(ImplementWeight.Kg4 == null);
         Assert.True(ImplementWeight.Kg4 != null);
         Assert.False(null == ImplementWeight.Kg4);
@@ -35,7 +35,7 @@ public sealed class ImplementWeightTests
     public void ImplementWeight_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(ImplementWeight.Kg4.Equals((object)"4 kg"));
+        Assert.False(ImplementWeight.Kg4.Equals("4 kg"));
     }
 
     [Fact]

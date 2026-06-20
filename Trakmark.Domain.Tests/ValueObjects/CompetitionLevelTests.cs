@@ -32,7 +32,7 @@ public sealed class CompetitionLevelTests
     public void CompetitionLevel_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(CompetitionLevel.HighSchool.Equals((CompetitionLevel?)null));
+        Assert.False(CompetitionLevel.HighSchool.Equals(null));
         Assert.False(CompetitionLevel.HighSchool == null);
         Assert.True(CompetitionLevel.HighSchool != null);
         Assert.False(null == CompetitionLevel.HighSchool);
@@ -43,7 +43,7 @@ public sealed class CompetitionLevelTests
     public void CompetitionLevel_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(CompetitionLevel.HighSchool.Equals((object)"High School"));
+        Assert.False(CompetitionLevel.HighSchool.Equals("High School"));
     }
 
     [Fact]

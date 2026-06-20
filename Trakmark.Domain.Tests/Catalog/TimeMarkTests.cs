@@ -57,7 +57,7 @@ public sealed class TimeMarkTests
         var t = new TimeMark(5000);
 
         // Act / Assert
-        Assert.False(t.Equals((TimeMark?)null));
+        Assert.False(t.Equals(null));
         Assert.False(t == null);
         Assert.True(t != null);
         Assert.False(null == t);
@@ -71,7 +71,7 @@ public sealed class TimeMarkTests
         var t = new TimeMark(5000);
 
         // Act / Assert
-        Assert.False(t.Equals((object)"5000ms"));
+        Assert.False(t.Equals("5000ms"));
     }
 
     [Fact]

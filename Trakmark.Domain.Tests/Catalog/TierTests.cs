@@ -24,7 +24,7 @@ public sealed class TierTests
     public void Tier_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Tier.Varsity.Equals((Tier?)null));
+        Assert.False(Tier.Varsity.Equals(null));
         Assert.False(Tier.Varsity == null);
         Assert.True(Tier.Varsity != null);
         Assert.False(null == Tier.Varsity);
@@ -35,7 +35,7 @@ public sealed class TierTests
     public void Tier_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Tier.Varsity.Equals((object)"Varsity"));
+        Assert.False(Tier.Varsity.Equals("Varsity"));
     }
 
     [Fact]

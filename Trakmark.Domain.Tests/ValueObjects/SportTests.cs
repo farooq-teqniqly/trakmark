@@ -31,7 +31,7 @@ public sealed class SportTests
     public void Sport_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Sport.TrackAndField.Equals((Sport?)null));
+        Assert.False(Sport.TrackAndField.Equals(null));
         Assert.False(Sport.TrackAndField == null);
         Assert.True(Sport.TrackAndField != null);
         Assert.False(null == Sport.TrackAndField);
@@ -42,7 +42,7 @@ public sealed class SportTests
     public void Sport_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(Sport.TrackAndField.Equals((object)"Track & Field"));
+        Assert.False(Sport.TrackAndField.Equals("Track & Field"));
     }
 
     [Fact]

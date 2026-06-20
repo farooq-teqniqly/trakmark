@@ -27,7 +27,7 @@ public sealed class PlacementTests
         var p = new Placement(1);
 
         // Act / Assert
-        Assert.False(p.Equals((Placement?)null));
+        Assert.False(p.Equals(null));
         Assert.False(p == null);
         Assert.True(p != null);
         Assert.False(null == p);
@@ -41,7 +41,7 @@ public sealed class PlacementTests
         var p = new Placement(1);
 
         // Act / Assert
-        Assert.False(p.Equals((object)"1"));
+        Assert.False(p.Equals("1"));
     }
 
     [Fact]

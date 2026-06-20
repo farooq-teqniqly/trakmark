@@ -50,7 +50,7 @@ public sealed class PersonNameTests
         var n = new PersonName("Alice");
 
         // Act / Assert
-        Assert.False(n.Equals((PersonName?)null));
+        Assert.False(n.Equals(null));
         Assert.False(n == null);
         Assert.True(n != null);
         Assert.False(null == n);
@@ -64,7 +64,7 @@ public sealed class PersonNameTests
         var n = new PersonName("Alice");
 
         // Act / Assert
-        Assert.False(n.Equals((object)"Alice"));
+        Assert.False(n.Equals("Alice"));
     }
 
     [Fact]

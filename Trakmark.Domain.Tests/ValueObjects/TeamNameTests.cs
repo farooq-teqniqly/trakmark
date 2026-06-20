@@ -49,7 +49,7 @@ public sealed class TeamNameTests
         var n = new TeamName("Varsity Boys");
 
         // Act / Assert
-        Assert.False(n.Equals((TeamName?)null));
+        Assert.False(n.Equals(null));
         Assert.False(n == null);
         Assert.True(n != null);
         Assert.False(null == n);
@@ -63,7 +63,7 @@ public sealed class TeamNameTests
         var n = new TeamName("Varsity Boys");
 
         // Act / Assert
-        Assert.False(n.Equals((object)"Varsity Boys"));
+        Assert.False(n.Equals("Varsity Boys"));
     }
 
     [Fact]

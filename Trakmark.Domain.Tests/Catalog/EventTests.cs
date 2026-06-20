@@ -38,7 +38,7 @@ public sealed class EventTests
         var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
 
         // Act / Assert
-        Assert.False(ev.Equals((Event?)null));
+        Assert.False(ev.Equals(null));
         Assert.False(ev == null);
         Assert.True(ev != null);
         Assert.False(null == ev);
@@ -52,7 +52,7 @@ public sealed class EventTests
         var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
 
         // Act / Assert
-        Assert.False(ev.Equals((object)"not an event"));
+        Assert.False(ev.Equals("not an event"));
     }
 
     [Fact]

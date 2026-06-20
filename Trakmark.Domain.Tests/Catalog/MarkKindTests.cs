@@ -24,7 +24,7 @@ public sealed class MarkKindTests
     public void MarkKind_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(MarkKind.Time.Equals((MarkKind?)null));
+        Assert.False(MarkKind.Time.Equals(null));
         Assert.False(MarkKind.Time == null);
         Assert.True(MarkKind.Time != null);
         Assert.False(null == MarkKind.Time);
@@ -35,7 +35,7 @@ public sealed class MarkKindTests
     public void MarkKind_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(MarkKind.Time.Equals((object)"Time"));
+        Assert.False(MarkKind.Time.Equals("Time"));
     }
 
     [Fact]

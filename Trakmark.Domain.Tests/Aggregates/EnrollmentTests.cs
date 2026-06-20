@@ -47,7 +47,7 @@ public sealed class EnrollmentTests
         var e = new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman);
 
         // Act / Assert
-        Assert.False(e.Equals((Enrollment?)null));
+        Assert.False(e.Equals(null));
         Assert.False(e == null);
         Assert.True(e != null);
         // null as left operand — exercises the `?? right is null` branch of op_Equality
@@ -62,7 +62,7 @@ public sealed class EnrollmentTests
         var e = new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman);
 
         // Act / Assert
-        Assert.False(e.Equals((object)"not an enrollment"));
+        Assert.False(e.Equals("not an enrollment"));
     }
 
     [Fact]

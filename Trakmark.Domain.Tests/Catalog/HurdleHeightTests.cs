@@ -24,7 +24,7 @@ public sealed class HurdleHeightTests
     public void HurdleHeight_Equals_Null_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(HurdleHeight.Inches39.Equals((HurdleHeight?)null));
+        Assert.False(HurdleHeight.Inches39.Equals(null));
         Assert.False(HurdleHeight.Inches39 == null);
         Assert.True(HurdleHeight.Inches39 != null);
         Assert.False(null == HurdleHeight.Inches39);
@@ -35,7 +35,7 @@ public sealed class HurdleHeightTests
     public void HurdleHeight_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(HurdleHeight.Inches39.Equals((object)"39\""));
+        Assert.False(HurdleHeight.Inches39.Equals("39\""));
     }
 
     [Fact]

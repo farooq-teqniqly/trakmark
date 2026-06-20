@@ -49,7 +49,7 @@ public sealed class SchoolNameTests
         var n = new SchoolName("Springfield High");
 
         // Act / Assert
-        Assert.False(n.Equals((SchoolName?)null));
+        Assert.False(n.Equals(null));
         Assert.False(n == null);
         Assert.True(n != null);
         Assert.False(null == n);
@@ -63,7 +63,7 @@ public sealed class SchoolNameTests
         var n = new SchoolName("Springfield High");
 
         // Act / Assert
-        Assert.False(n.Equals((object)"Springfield High"));
+        Assert.False(n.Equals("Springfield High"));
     }
 
     [Fact]
