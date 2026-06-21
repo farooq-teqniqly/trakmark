@@ -41,6 +41,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 
 ## Configuration
 
+- EF Core migration scaffolding requires the `dotnet-ef` global tool. Check with `dotnet ef --version` before starting persistence/migration work; if missing, install with `dotnet tool install --global dotnet-ef`. This is a local dev-machine prerequisite, not a project dependency — do not add it to any `.csproj`.
 - Secrets (API keys) and **connection strings** go in **user secrets**, never in `appsettings.json`.
 - Docker Compose **passwords** go in a **`.env` file**, never hardcoded in `docker-compose.yml`.
 - Endpoint overrides go in `appsettings.json` with sensible defaults in code.
@@ -74,4 +75,4 @@ dotnet build .\Trakmark\Trakmark.slnx 2>&1 |
 - Attempt to fix or suppress each warning. Repeat for up to **3 rounds**.
 - If warnings remain after 3 rounds, **block the merge** and write the outstanding items to `docs/sonarqube-warnings-triage.md` (date-stamped entry, branch name, remaining warning list, reason each could not be resolved).
 
-`Trakmark.Domain` line coverage must be **100%** before merging. Run the `coverage-report` skill (or its `Run-Coverage.ps1`) and add tests to close any gap — domain types have no untestable infrastructure dependencies, so an uncovered line means a missing test, not an exemption.
+`Trakmark.Domain` line coverage must be **100%** before merging **any change whose diff touches `Trakmark.Domain`**. Run the `coverage-report` skill (or its `Run-Coverage.ps1`) and add tests to close any gap — domain types have no untestable infrastructure dependencies, so an uncovered line means a missing test, not an exemption. Sections/changes that do not modify `Trakmark.Domain` (e.g. persistence, application-layer, or UI-only work) are exempt from this gate — confirm exemption by checking the diff, not by assumption.

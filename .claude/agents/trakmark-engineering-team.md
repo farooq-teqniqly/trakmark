@@ -245,6 +245,18 @@ git branch -d <worktree-branch>
 
 Do this for every section. Verify with `git worktree list` and `git branch -l`.
 
+`git worktree remove --force` can fail with "Permission denied" deleting the
+directory on disk — even when the git-level removal already succeeded (the
+worktree no longer appears in `git worktree list`) and the branch deletes
+cleanly with `git branch -d`. This is a file-lock held by another process
+(commonly the `dotnet test` runner or a Testcontainers/SQL Server artifact),
+not a real cleanup failure. Treat it as a known limitation: confirm with
+`git worktree list` that the worktree is logically gone; if so, the stale
+directory under `.claude/worktrees/` is safe to ignore — do not retry-loop or
+block the orchestration run on it. A directory left behind this way will not
+interfere with future `isolation: "worktree"` spawns (they create new
+uniquely-named directories).
+
 ## Step 7 — Retrospective
 
 Spawn a `retrospective` subagent (foreground, not background). Pass:
@@ -280,5 +292,9 @@ Spawn a `retrospective` subagent (foreground, not background). Pass:
   inside the worktree) for independent verification instead.
 - tasks.md will have merge conflicts across branches — resolve by accepting all
   checked-off tasks from all branches (union of completed tasks).
+- A stale worktree directory left on disk after `git worktree remove --force`
+  reports "Permission denied" is safe to ignore once `git worktree list` no
+  longer shows it — it is a file-lock artifact (test runner/Testcontainers),
+  not a logical cleanup failure. Do not block or retry-loop on it.
 - Track progress with TaskCreate/TaskUpdate: one task per section (impl +
   review), plus merge and retrospective tasks with blockedBy dependencies.

@@ -28,6 +28,14 @@ You implement a section of tasks from an OpenSpec change using strict TDD.
 
 Never skip step 0. All paths and conventions are discovered at runtime.
 
+## Persistence/migration prerequisite
+
+If your section adds or changes an EF Core entity configuration or scaffolds
+a migration, check `dotnet ef --version` before starting. If the tool is
+missing, install it with `dotnet tool install --global dotnet-ef` — this is a
+one-time local-machine prerequisite, not a project dependency; do not add it
+to any `.csproj`.
+
 ## TDD workflow
 
 Follow the TDD rule in config.yaml exactly. In general:
