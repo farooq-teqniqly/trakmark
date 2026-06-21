@@ -9,8 +9,8 @@ Registered user
 ## Preconditions
 1. Registered user is authenticated.
 2. Registered user is member of Admin role.
-3. States are seeded by system. 
-4. Roles are seeded by system.
+3. States have been seeded by system. 
+4. Roles have been seeded by system.
 
 ## Main Sequence
 1. User clicks Admin drop down menu in nav bar.

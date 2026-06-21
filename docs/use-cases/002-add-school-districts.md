@@ -10,7 +10,7 @@ Registered user
 1. Registered user is authenticated.
 2. Registered user is member of Admin role.
 3. Cities have been added by an Admin. See 001-add-cities.
-4. Roles are seeded by system.
+4. Roles have been seeded by system.
 
 ## Main Sequence
 1. User clicks Admin drop down menu in nav bar.

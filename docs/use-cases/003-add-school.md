@@ -11,7 +11,8 @@ Registered user
 2. Registered user is member of Admin role.
 3. Cities have been added. See 001-add-cities.
 4. School Districts have been added. See 002-add-school-districts.
-4. Roles are seeded by system.
+5. Roles have been seeded by system.
+6. Sports have been seeded by the system.
 
 ## Main Sequence
 1. User clicks Admin drop down menu in nav bar.
@@ -22,6 +23,7 @@ Registered user
     - City (required, drop down)
     - State (required, drop down)
     - School district (required, drop down)
+    - Sports (required, drop-down with checkbox for each sport, Track & Field checked by default)
     > Note: school data is validated as user enters data:<br/>
         - Name max 100 characters <br/>
 5. If form data valid, Save button is enabled.
