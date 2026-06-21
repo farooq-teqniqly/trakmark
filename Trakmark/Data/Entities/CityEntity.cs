@@ -1,4 +1,4 @@
-namespace Trakmark.Data;
+namespace Trakmark.Data.Entities;
 
 /// <summary>
 /// EF Core persistence entity for a <see cref="Domain.ValueObjects.City"/>, carrying

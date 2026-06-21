@@ -242,7 +242,7 @@ namespace Trakmark.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Trakmark.Data.CityEntity", b =>
+            modelBuilder.Entity("Trakmark.Data.Entities.CityEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Trakmark.Data.Entities;
 
-namespace Trakmark.Data;
+namespace Trakmark.Data.Configurations;
 
 /// <summary>
 /// EF Core entity type configuration for <see cref="CityEntity"/>.

@@ -12,7 +12,7 @@ using Trakmark.Data;
 namespace Trakmark.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260621215525_AddCities")]
+    [Migration("20260621220404_AddCities")]
     partial class AddCities
     {
         /// <inheritdoc />
@@ -245,7 +245,7 @@ namespace Trakmark.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Trakmark.Data.CityEntity", b =>
+            modelBuilder.Entity("Trakmark.Data.Entities.CityEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

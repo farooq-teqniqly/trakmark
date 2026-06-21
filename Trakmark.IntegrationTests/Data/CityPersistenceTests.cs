@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 using Trakmark.Data;
+using Trakmark.Data.Entities;
 
 namespace Trakmark.IntegrationTests.Data;
 
