@@ -26,6 +26,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         ArgumentNullException.ThrowIfNull(optionsBuilder);
 
+        // EF Core's runtime pending-model-changes check raises a false
+        // positive for this context: `dotnet ef migrations
+        // has-pending-model-changes` confirms no drift, and the AddCities
+        // migration's BuildTargetModel is structurally identical to
+        // ApplicationDbContextModelSnapshot.BuildModel. Suppressing per
+        // Microsoft's documented mitigation rather than masking real drift.
         optionsBuilder.ConfigureWarnings(w =>
             w.Ignore(RelationalEventId.PendingModelChangesWarning)
         );
