@@ -42,6 +42,28 @@ and retrospective are mandatory regardless of section count.
 For each section (even if only one), spawn a `developer` subagent with
 `isolation: "worktree"` and `run_in_background: true`.
 
+**Do not pre-create a worktree or branch for the agent.** The Agent tool's
+`isolation: "worktree"` parameter always creates its own worktree (under
+`.claude/worktrees/agent-<id>`) and its own branch (`worktree-agent-<id>`,
+based on the current branch) when the subagent spawns — it does not honor or
+even look at any worktree path or branch name you create beforehand or
+mention in the prompt text. A worktree pre-created at a different path (e.g.
+`C:\src\my\trakmark-section<N>`) will sit unused; the agent does its actual
+work in the auto-created one regardless of what the prompt says. Confirmed
+recurring across the pilot (`worktree-agent-a4417bb67ba549d93`) and add-cities
+§3 (`worktree-agent-a4905682645909aa6`) — this is not a one-off.
+
+Instead:
+1. Spawn the subagent with `isolation: "worktree"` directly — do not run any
+   `git worktree add` setup step first.
+2. After the subagent's first response (or completion), read back the
+   worktree path and branch the Agent tool actually assigned — do not invent
+   or assume a path. Treat that as authoritative for every subsequent step
+   (reviewer prompts, coverage checks, merge, cleanup).
+3. Use that discovered path/branch in all later steps (Step 2 reviewer
+   prompt's `Work in:`/`Branch:`, Step 3 fix agents, Step 5 merge, Step 6
+   cleanup) instead of any name you planned in advance.
+
 Prompt template for each developer agent:
 
 ```
@@ -73,32 +95,35 @@ Follow the developer agent instructions exactly:
 Use PowerShell (Bash tool available for dotnet/git). All paths relative to worktree root.
 ```
 
-Before launching any agents, patch every newly created worktree's
-`.claude/settings.local.json` to include:
+You cannot patch a worktree's `.claude/settings.local.json` before spawning —
+the worktree does not exist on disk until the Agent tool creates it as part of
+the `isolation: "worktree"` spawn. Expect the agent's first tool call in that
+fresh worktree to be denied (Bash, Read, Glob, and Grep all included) because
+the isolated settings context does not inherit the project's default-allow
+list. Treat this first denial as expected, not a deeper failure:
 
-```json
-{
-  "permissions": {
-    "allow": ["Read", "Glob", "Grep", "Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
-  }
-}
-```
+1. From the orchestrator, once the worktree path is known (see Step 1),
+   patch `<worktree-path>/.claude/settings.local.json` to include:
 
-`Read`, `Glob`, and `Grep` are normally default-allowed tools, but a freshly
-created worktree's isolated settings context does not inherit that default —
-they must be explicitly listed or every tool call in the worktree (including
-Bash) is denied outright on the agent's first invocation. Patch the file
-**before** spawning the developer/reviewer subagent for that worktree, not
-after — patching after launch risks a race where the first tool call fires
-before the settings file is read.
+   ```json
+   {
+     "permissions": {
+       "allow": ["Read", "Glob", "Grep", "Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
+     }
+   }
+   ```
 
-Read the file first if it exists; merge the entries rather than overwriting if
-it already has content.
-
-If a subagent's very first tool call in a fresh worktree is denied despite the
-settings file being correctly patched, re-verify the file contents, then
-relaunch the same agent/prompt once in the existing worktree (no new
-isolation) before treating it as a deeper failure.
+   Read the file first if it exists; merge the entries rather than
+   overwriting if it already has content. `Read`, `Glob`, and `Grep` are
+   normally default-allowed tools elsewhere, but a fresh worktree's isolated
+   settings context does not inherit that default — they must be explicitly
+   listed.
+2. Relaunch the same agent/prompt once in the existing worktree (no new
+   `isolation` parameter, so the Agent tool reuses the already-created
+   worktree instead of spawning another one) so it picks up the patched
+   settings.
+3. If the relaunch is still denied, re-verify the file contents before
+   treating it as a deeper failure.
 
 ## Step 2 — React to completions: launch per-section reviewers
 
@@ -236,6 +261,12 @@ Spawn a `retrospective` subagent (foreground, not background). Pass:
   argument) instead of `cd <path> && ...` for any git/dotnet command the
   orchestrator runs directly against a worktree or the main repo.
 - Fix agents: always `subagent_type: developer`. Never `cavecrew-builder` (no Bash).
+- Never plan or reference a worktree path/branch name before spawning the
+  `isolation: "worktree"` subagent. Always discover the actual auto-assigned
+  path (`.claude/worktrees/agent-<id>`) and branch (`worktree-agent-<id>`)
+  from the spawn result and use that everywhere downstream (reviewer prompts,
+  fix agents, coverage checks, merge, cleanup). Do not run `git worktree add`
+  yourself for a developer/reviewer subagent.
 - If a developer or reviewer agent cannot write files or read/glob/grep: patch
   the worktree's `.claude/settings.local.json` (add Read, Glob, Grep, Write,
   Edit, Bash(git *), Bash(dotnet *)) and relaunch in the existing worktree (no
