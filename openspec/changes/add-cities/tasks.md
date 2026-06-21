@@ -1,8 +1,8 @@
 ## 1. Domain: State
 
-- [ ] 1.1 Write failing tests in `Trakmark.Domain.Tests/ValueObjects/StateTests.cs` for the scenarios in `specs/manage-cities/spec.md` (equality by abbreviation, case-insensitive, inequality across distinct abbreviations) plus null-left operator coverage.
-- [ ] 1.2 Implement `Trakmark.Domain/ValueObjects/State.cs`: `sealed class State : IEquatable<State>` with 51 static readonly instances (50 states + D.C.), two-letter abbreviation identity, `==`/`!=` operators, `ArgumentNullException.ThrowIfNull` on any reference-type constructor parameters.
-- [ ] 1.3 Run tests to green.
+- [x] 1.1 Write failing tests in `Trakmark.Domain.Tests/ValueObjects/StateTests.cs` for the scenarios in `specs/manage-cities/spec.md` (equality by abbreviation, case-insensitive, inequality across distinct abbreviations) plus null-left operator coverage.
+- [x] 1.2 Implement `Trakmark.Domain/ValueObjects/State.cs`: `sealed class State : IEquatable<State>` with 51 static readonly instances (50 states + D.C.), two-letter abbreviation identity, `==`/`!=` operators, `ArgumentNullException.ThrowIfNull` on any reference-type constructor parameters.
+- [x] 1.3 Run tests to green.
 
 ## 2. Domain: CityId
 
