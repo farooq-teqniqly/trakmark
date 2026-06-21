@@ -117,8 +117,15 @@ Branch: <worktree-branch>
 Context: domain model for a school track & field app (.NET 10, C#, xUnit).
 Section <N> adds: <brief description of what was implemented>.
 
-Run from within the worktree directory.
-git log --oneline -5 and git diff domain-modelling..HEAD to scope the diff.
+Do not `cd` into the worktree — run every git/dotnet command with the
+worktree path as an explicit argument instead, e.g.
+`git -C <worktree-path> log --oneline -5`,
+`git -C <worktree-path> diff domain-modelling..HEAD`,
+`dotnet test <worktree-path>\Trakmark\Trakmark.slnx`.
+A bare `cd <path> && dotnet ...` compound command will not match the
+`Bash(dotnet *)` / `Bash(git *)` allow-list patterns (the command does not
+start with `dotnet`/`git`) and will be denied — always lead with the binary
+name and pass the path as an argument.
 No GitHub PR — skip gh api fetch.
 
 Apply project standards from CLAUDE.md:
@@ -143,8 +150,11 @@ When a reviewer completes:
    `cavecrew-builder` — it has no Bash) with `run_in_background: true` to fix
    them. Give the agent: the worktree path, branch, files to fix, and exact
    findings with line citations.
-2. If the agent cannot commit (git blocked), commit from the main thread:
-   `cd <worktree> && dotnet test ... && git add ... && git commit ...`
+2. If the agent cannot commit (git blocked), commit from the main thread.
+   The orchestrator's Bash `cd` to a path outside its own cwd is denied — use
+   `-C <worktree>` / absolute-path-first-arg forms instead, never `cd &&`:
+   `git -C <worktree> add ... && git -C <worktree> commit ...` and
+   `dotnet test <worktree>\Trakmark\Trakmark.slnx ...`
 3. Spawn a re-reviewer with incremental mode: parse `Reviewed commit:` from the
    existing review file, scope to `git diff <old-hash>..HEAD`.
 4. Repeat up to **3 review rounds total**. After round 3, carry forward any
@@ -181,13 +191,15 @@ Once all sections pass review and tasks.md is pre-consolidated:
 
 1. Determine merge order: most independent sections first; sections that define
    types others depend on before sections that consume them.
-2. For each section in order:
+2. For each section in order, run all git/dotnet commands with `-C <repo-root>`
+   or an absolute path as the first argument — never `cd <repo-root> && ...`.
+   The orchestrator's Bash `cd` to a path outside its own cwd is denied, but
+   `-C`/direct-path invocations work:
    ```bash
-   cd <repo-root>
-   git merge --no-ff <worktree-branch> -m "Merge section <N>: <Title>"
+   git -C <repo-root> merge --no-ff <worktree-branch> -m "Merge section <N>: <Title>"
    # On tasks.md conflict:
-   git checkout --ours openspec/changes/<change>/tasks.md
-   git add openspec/changes/<change>/tasks.md
+   git -C <repo-root> checkout --ours openspec/changes/<change>/tasks.md
+   git -C <repo-root> add openspec/changes/<change>/tasks.md
    ```
 3. On conflict in domain files: keep the authoritative version for shared types
    (prefer the section that owns the type); take the version with more complete
@@ -219,6 +231,10 @@ Spawn a `retrospective` subagent (foreground, not background). Pass:
 
 ## Guardrails
 
+- Bash `cd` to a path outside the orchestrator's own cwd is denied. Always use
+  `git -C <path> ...` / `dotnet test <path>\...` (absolute path as the first
+  argument) instead of `cd <path> && ...` for any git/dotnet command the
+  orchestrator runs directly against a worktree or the main repo.
 - Fix agents: always `subagent_type: developer`. Never `cavecrew-builder` (no Bash).
 - If a developer or reviewer agent cannot write files or read/glob/grep: patch
   the worktree's `.claude/settings.local.json` (add Read, Glob, Grep, Write,

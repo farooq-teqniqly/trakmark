@@ -112,6 +112,18 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 7. For each finding now marked resolved, run the commit → resolve threads → update PR doc sequence from step 13 of the Execution flow.
 9. Reply: "Updated review from `<old>` → `<new>` (N resolved, M new, K outstanding)" + path. List any unresolvable threads.
 
+## Bash invocation style
+
+Never `cd` into the target worktree/repo path before running git or dotnet
+commands — a compound command like `cd <path> && dotnet test ...` does not
+start with `dotnet`/`git`, so it will not match the `Bash(dotnet *)` /
+`Bash(git *)` allow-list patterns and will be denied outright. Always lead
+with the binary and pass the path as an explicit argument instead:
+`git -C <path> log --oneline -5`, `dotnet test <path>\Trakmark\Trakmark.slnx`.
+If a build/test command is denied, retry it in this form before falling back
+to static-only review — do not silently skip `dotnet build`/`dotnet test` and
+report a Bash denial without first attempting the `-C`/direct-path form.
+
 ## Execution flow
 
 1. `git rev-parse --short HEAD` + current branch → `Reviewed commit:` line.
