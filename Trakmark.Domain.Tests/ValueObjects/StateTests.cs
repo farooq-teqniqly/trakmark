@@ -66,6 +66,13 @@ public sealed class StateTests
         Assert.Equal(lower.GetHashCode(), upper.GetHashCode());
     }
 
+    [Fact]
+    public void State_ToString_ReturnsAbbreviation()
+    {
+        // Arrange / Act / Assert
+        Assert.Equal("CA", State.California.ToString());
+    }
+
     private static State StateFromAbbreviation(string abbreviation) =>
         abbreviation.ToUpperInvariant() switch
         {

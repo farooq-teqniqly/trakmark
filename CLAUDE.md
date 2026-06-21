@@ -73,3 +73,5 @@ dotnet build .\Trakmark\Trakmark.slnx 2>&1 |
 
 - Attempt to fix or suppress each warning. Repeat for up to **3 rounds**.
 - If warnings remain after 3 rounds, **block the merge** and write the outstanding items to `docs/sonarqube-warnings-triage.md` (date-stamped entry, branch name, remaining warning list, reason each could not be resolved).
+
+`Trakmark.Domain` line coverage must be **100%** before merging. Run the `coverage-report` skill (or its `Run-Coverage.ps1`) and add tests to close any gap — domain types have no untestable infrastructure dependencies, so an uncovered line means a missing test, not an exemption.

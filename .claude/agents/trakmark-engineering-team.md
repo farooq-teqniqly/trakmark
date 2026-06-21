@@ -150,6 +150,16 @@ When a reviewer completes:
 4. Repeat up to **3 review rounds total**. After round 3, carry forward any
    remaining Low/Info findings — do not block merge for them.
 
+## Step 3.5 — Pre-merge: 100% Trakmark.Domain coverage
+
+Before merging any worktree branch that touches `Trakmark.Domain`, run the
+`coverage-report` skill (or its `Run-Coverage.ps1`) against that worktree. If
+`Trakmark.Domain` line coverage is below 100%, spawn a `developer` agent to add
+the missing tests — domain types have no untestable infrastructure
+dependencies, so a gap means a missing test, not an exemption — and re-run
+coverage until it hits 100%. Do not proceed to Step 4 for a section until its
+coverage is 100%.
+
 ## Step 4 — Pre-merge: consolidate tasks.md
 
 Before merging any branch, collect all checked-off tasks across every worktree
