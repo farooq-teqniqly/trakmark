@@ -12,9 +12,9 @@
 
 ## 3. Domain: City
 
-- [ ] 3.1 Write failing tests in `Trakmark.Domain.Tests/ValueObjects/CityTests.cs` for the scenarios in `specs/manage-cities/spec.md` (valid create, empty/whitespace name rejected, name over 100 chars rejected, null state rejected, equality by name+state, inequality on differing name or state) plus null-left operator coverage.
-- [ ] 3.2 Implement `Trakmark.Domain/ValueObjects/City.cs`: `sealed class City : IEquatable<City>` with `CityId`, `Name` (trimmed, max 100 chars), `State`; `Create(string name, State state)` static factory generating `CityId.NewId()`; `==`/`!=` operators; `ArgumentNullException.ThrowIfNull` on `name`/`state`.
-- [ ] 3.3 Run tests to green.
+- [x] 3.1 Write failing tests in `Trakmark.Domain.Tests/ValueObjects/CityTests.cs` for the scenarios in `specs/manage-cities/spec.md` (valid create, empty/whitespace name rejected, name over 100 chars rejected, null state rejected, equality by name+state, inequality on differing name or state) plus null-left operator coverage.
+- [x] 3.2 Implement `Trakmark.Domain/ValueObjects/City.cs`: `sealed class City : IEquatable<City>` with `CityId`, `Name` (trimmed, max 100 chars), `State`; `Create(string name, State state)` static factory generating `CityId.NewId()`; `==`/`!=` operators; `ArgumentNullException.ThrowIfNull` on `name`/`state`.
+- [x] 3.3 Run tests to green.
 
 ## 4. Persistence
 
