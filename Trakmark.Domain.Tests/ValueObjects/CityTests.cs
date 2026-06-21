@@ -60,6 +60,20 @@ public sealed class CityTests
     }
 
     [Fact]
+    public void Create_NameWithSurroundingWhitespace_TrimsName()
+    {
+        // Arrange
+        const string name = "  Springfield  ";
+        var state = State.Illinois;
+
+        // Act
+        var city = City.Create(name, state);
+
+        // Assert
+        Assert.Equal("Springfield", city.Name);
+    }
+
+    [Fact]
     public void Create_NullName_ThrowsArgumentNullException()
     {
         // Arrange
