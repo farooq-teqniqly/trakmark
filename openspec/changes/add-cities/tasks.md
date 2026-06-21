@@ -6,9 +6,9 @@
 
 ## 2. Domain: CityId
 
-- [ ] 2.1 Write failing tests in `Trakmark.Domain.Tests/Ids/CityIdTests.cs` mirroring `SchoolIdTests.cs` (NewId uniqueness, Parse/TryParse round-trip, invalid format rejection). Cover `DomainId.IsValid` only via `TryParse`, not directly.
-- [ ] 2.2 Implement `Trakmark.Domain/Ids/CityId.cs` following the `SchoolId.cs` pattern (`readonly record struct`, `"CTY-"` prefix, backed by `DomainId`).
-- [ ] 2.3 Run tests to green.
+- [x] 2.1 Write failing tests in `Trakmark.Domain.Tests/Ids/CityIdTests.cs` mirroring `SchoolIdTests.cs` (NewId uniqueness, Parse/TryParse round-trip, invalid format rejection). Cover `DomainId.IsValid` only via `TryParse`, not directly.
+- [x] 2.2 Implement `Trakmark.Domain/Ids/CityId.cs` following the `SchoolId.cs` pattern (`readonly record struct`, `"CTY-"` prefix, backed by `DomainId`).
+- [x] 2.3 Run tests to green.
 
 ## 3. Domain: City
 
