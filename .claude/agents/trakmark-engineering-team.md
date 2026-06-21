@@ -73,19 +73,32 @@ Follow the developer agent instructions exactly:
 Use PowerShell (Bash tool available for dotnet/git). All paths relative to worktree root.
 ```
 
-After launching all agents, immediately patch every newly created worktree's
+Before launching any agents, patch every newly created worktree's
 `.claude/settings.local.json` to include:
 
 ```json
 {
   "permissions": {
-    "allow": ["Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
+    "allow": ["Read", "Glob", "Grep", "Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
   }
 }
 ```
 
+`Read`, `Glob`, and `Grep` are normally default-allowed tools, but a freshly
+created worktree's isolated settings context does not inherit that default —
+they must be explicitly listed or every tool call in the worktree (including
+Bash) is denied outright on the agent's first invocation. Patch the file
+**before** spawning the developer/reviewer subagent for that worktree, not
+after — patching after launch risks a race where the first tool call fires
+before the settings file is read.
+
 Read the file first if it exists; merge the entries rather than overwriting if
 it already has content.
+
+If a subagent's very first tool call in a fresh worktree is denied despite the
+settings file being correctly patched, re-verify the file contents, then
+relaunch the same agent/prompt once in the existing worktree (no new
+isolation) before treating it as a deeper failure.
 
 ## Step 2 — React to completions: launch per-section reviewers
 
@@ -197,10 +210,17 @@ Spawn a `retrospective` subagent (foreground, not background). Pass:
 ## Guardrails
 
 - Fix agents: always `subagent_type: developer`. Never `cavecrew-builder` (no Bash).
-- If a developer agent cannot write files: patch the worktree's
-  `.claude/settings.local.json` (add Write, Edit, Bash(git *), Bash(dotnet *))
-  and relaunch in the existing worktree (no new isolation).
+- If a developer or reviewer agent cannot write files or read/glob/grep: patch
+  the worktree's `.claude/settings.local.json` (add Read, Glob, Grep, Write,
+  Edit, Bash(git *), Bash(dotnet *)) and relaunch in the existing worktree (no
+  new isolation).
 - If a developer agent cannot commit: commit from the main thread.
+- The orchestrator (running in the main repo) does not have direct filesystem
+  or Bash access into a spawned worktree's path beyond its
+  `.claude` subdirectory — do not attempt to `Read`/`Bash` into a worktree
+  to verify a subagent's work directly. Trust the developer agent's self-report
+  and rely on the pr-reviewer subagent (which runs with its own tool grants
+  inside the worktree) for independent verification instead.
 - tasks.md will have merge conflicts across branches — resolve by accepting all
   checked-off tasks from all branches (union of completed tasks).
 - Track progress with TaskCreate/TaskUpdate: one task per section (impl +
