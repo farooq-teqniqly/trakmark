@@ -46,4 +46,15 @@ public sealed class CityIdTests
         // Assert
         Assert.NotEqual(first, second);
     }
+
+    [Fact]
+    public void CityId_Empty_IsDistinctFromNewId()
+    {
+        // Arrange / Act
+        var empty = CityId.Empty;
+        var newId = CityId.NewId();
+
+        // Assert
+        Assert.NotEqual(empty, newId);
+    }
 }
