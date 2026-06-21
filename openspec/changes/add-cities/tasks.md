@@ -18,9 +18,9 @@
 
 ## 4. Persistence
 
-- [x] 4.1 Add EF Core entity configuration for `City` (table, DB-generated `int IDENTITY` surrogate `Id` as the clustered primary key, `CityId` mapped as a unique non-clustered alternate key column, `Name` max length 100, `State` stored as the two-letter abbreviation, `CreatedAtUtc` column, `CreatedByUserId` column storing the creating `RegisteredUserId` value).
+- [x] 4.1 Add EF Core entity configuration for `City` (table, DB-generated `int IDENTITY` surrogate `Id` as the clustered primary key, `CityId` mapped as a unique non-clustered alternate key column, `Name` max length 100, `State` stored as the two-letter abbreviation, `CreatedAt` column, `CreatedByUserId` column storing the creating `RegisteredUserId` value).
 - [x] 4.2 Add EF Core migration for the new `City` table.
-- [x] 4.3 Write an integration test (Testcontainers) verifying a `City` round-trips through save/load with `CreatedAtUtc` and `CreatedByUserId` set as persisted.
+- [x] 4.3 Write an integration test (Testcontainers) verifying a `City` round-trips through save/load with `CreatedAt` and `CreatedByUserId` set as persisted.
 
 ## 5. Application layer: batch save
 

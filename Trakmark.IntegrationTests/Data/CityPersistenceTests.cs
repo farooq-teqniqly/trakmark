@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 using Trakmark.Data;
@@ -6,7 +7,7 @@ namespace Trakmark.IntegrationTests.Data;
 
 /// <summary>
 /// Integration tests verifying that a city round-trips through the real database,
-/// including persistence-only audit metadata (<c>CreatedAtUtc</c>, <c>CreatedByUserId</c>).
+/// including persistence-only audit metadata (<c>CreatedAt</c>, <c>CreatedByUserId</c>).
 /// </summary>
 public sealed class CityPersistenceTests : IAsyncLifetime
 {
@@ -26,16 +27,16 @@ public sealed class CityPersistenceTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task City_round_trips_with_created_at_utc_and_created_by_user_id()
+    public async Task City_round_trips_with_created_at_and_created_by_user_id()
     {
         // Arrange
-        var createdAtUtc = new DateTime(2026, 6, 21, 12, 30, 0, DateTimeKind.Utc);
+        var createdAt = new DateTimeOffset(2026, 6, 21, 12, 30, 0, TimeSpan.Zero);
         var entity = new CityEntity
         {
             CityId = "CTY-ABCDEF",
             Name = "Springfield",
             State = "IL",
-            CreatedAtUtc = createdAtUtc,
+            CreatedAt = createdAt,
             CreatedByUserId = "USR-ABCDEF",
         };
 
@@ -52,14 +53,19 @@ public sealed class CityPersistenceTests : IAsyncLifetime
         // Assert
         Assert.Equal("Springfield", loaded.Name);
         Assert.Equal("IL", loaded.State);
-        Assert.Equal(createdAtUtc, loaded.CreatedAtUtc);
+        Assert.Equal(createdAt, loaded.CreatedAt);
         Assert.Equal("USR-ABCDEF", loaded.CreatedByUserId);
     }
 
     private ApplicationDbContext CreateContext()
     {
+        var connectionStringBuilder = new SqlConnectionStringBuilder(_container.GetConnectionString())
+        {
+            InitialCatalog = "Trakmark",
+        };
+
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(_container.GetConnectionString())
+            .UseSqlServer(connectionStringBuilder.ConnectionString)
             .Options;
 
         return new ApplicationDbContext(options);

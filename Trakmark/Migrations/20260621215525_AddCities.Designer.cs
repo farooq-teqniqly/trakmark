@@ -12,7 +12,7 @@ using Trakmark.Data;
 namespace Trakmark.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260621212413_AddCities")]
+    [Migration("20260621215525_AddCities")]
     partial class AddCities
     {
         /// <inheritdoc />
@@ -258,8 +258,8 @@ namespace Trakmark.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedByUserId")
                         .IsRequired()

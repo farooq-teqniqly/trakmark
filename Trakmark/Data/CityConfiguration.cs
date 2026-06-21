@@ -33,7 +33,7 @@ public sealed class CityConfiguration : IEntityTypeConfiguration<CityEntity>
 
         builder.Property(c => c.State).IsRequired().HasMaxLength(2);
 
-        builder.Property(c => c.CreatedAtUtc).IsRequired();
+        builder.Property(c => c.CreatedAt).IsRequired();
 
         builder.Property(c => c.CreatedByUserId).IsRequired().HasMaxLength(20);
     }
