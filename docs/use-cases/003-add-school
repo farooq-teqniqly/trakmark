@@ -6,11 +6,12 @@ User adds school
 ## Actor
 Registered user
 
-## Precondition
+## Preconditions
 1. Registered user is authenticated.
 2. Registered user is member of Admin role.
 3. Cities have been added. See 001-add-cities.
 4. School Districts have been added. See 002-add-school-districts.
+4. Roles are seeded by system.
 
 ## Main Sequence
 1. User clicks Admin drop down menu in nav bar.
