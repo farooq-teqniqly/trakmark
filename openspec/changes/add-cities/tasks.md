@@ -24,9 +24,9 @@
 
 ## 5. Application layer: batch save
 
-- [ ] 5.1 Write failing tests for a batch-save operation covering: all-valid batch persists all rows; one invalid row rejects the whole batch; in-batch duplicate rejects the whole batch; duplicate against existing persisted city rejects the whole batch; persisted rows carry the submitting Admin's `RegisteredUserId` as `CreatedByUserId`.
-- [ ] 5.2 Implement the batch-save operation: validate each submitted row via `City.Create`, check for in-batch duplicates via `City` equality, query existing cities for cross-batch duplicates, capture the current Admin's `RegisteredUserId` from the authenticated principal, persist all rows with `CreatedByUserId` set in a single transaction only if every check passes.
-- [ ] 5.3 Run tests to green.
+- [x] 5.1 Write failing tests for a batch-save operation covering: all-valid batch persists all rows; one invalid row rejects the whole batch; in-batch duplicate rejects the whole batch; duplicate against existing persisted city rejects the whole batch; persisted rows carry the submitting Admin's `RegisteredUserId` as `CreatedByUserId`.
+- [x] 5.2 Implement the batch-save operation: validate each submitted row via `City.Create`, check for in-batch duplicates via `City` equality, query existing cities for cross-batch duplicates, capture the current Admin's `RegisteredUserId` from the authenticated principal, persist all rows with `CreatedByUserId` set in a single transaction only if every check passes.
+- [x] 5.3 Run tests to green.
 
 ## 6. UI: Add Cities page
 
