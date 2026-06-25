@@ -1,0 +1,198 @@
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Testcontainers.MsSql;
+using Trakmark.Data;
+using Trakmark.Data.Entities;
+using Trakmark.Domain.Ids;
+using Trakmark.Domain.ValueObjects;
+using Trakmark.Services;
+
+namespace Trakmark.IntegrationTests.Services;
+
+/// <summary>
+/// Integration tests for <see cref="SaveCitiesBatchService"/> covering all batch-save
+/// outcome scenarios: success, validation error, in-batch duplicate, cross-batch
+/// duplicate, and CreatedByUserId propagation.
+/// </summary>
+public sealed class SaveCitiesBatchTests : IAsyncLifetime
+{
+    private readonly MsSqlContainer _container = new MsSqlBuilder().Build();
+
+    /// <inheritdoc/>
+    public async Task InitializeAsync()
+    {
+        await _container.StartAsync();
+
+        await using var context = CreateContext();
+        await context.Database.MigrateAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task DisposeAsync()
+    {
+        await _container.DisposeAsync();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(101)]
+    public async Task Batch_outside_1_to_100_rows_throws(int count)
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = Enumerable
+            .Range(0, count)
+            .Select(i => new SaveCityRow($"City{i}", State.Illinois))
+            .ToList();
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => service.SaveAsync(rows, adminId));
+    }
+
+    [Fact]
+    public async Task All_valid_batch_persists_all_rows()
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow>
+        {
+            new("Springfield", State.Illinois),
+            new("Chicago", State.Illinois),
+        };
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.Success>(result);
+        await using var readContext = CreateContext();
+        var count = await readContext.Cities.CountAsync(c => c.State == "IL");
+        Assert.Equal(2, count);
+    }
+
+    [Fact]
+    public async Task One_invalid_row_rejects_whole_batch()
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow>
+        {
+            new("Springfield", State.Illinois),
+            new("   ", State.Illinois),
+        };
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.ValidationError>(result);
+        await using var readContext = CreateContext();
+        Assert.Equal(0, await readContext.Cities.CountAsync());
+    }
+
+    [Fact]
+    public async Task InBatch_duplicate_rejects_whole_batch()
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow>
+        {
+            new("Springfield", State.Illinois),
+            new("springfield", State.Illinois),
+        };
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.InBatchDuplicate>(result);
+        await using var readContext = CreateContext();
+        Assert.Equal(0, await readContext.Cities.CountAsync());
+    }
+
+    [Fact]
+    public async Task CrossBatch_duplicate_rejects_whole_batch()
+    {
+        // Arrange — pre-seed an existing city
+        await using (var seedContext = CreateContext())
+        {
+            seedContext.Cities.Add(new CityEntity
+            {
+                CityId = "CTY-BATCHSEED1",
+                Name = "Springfield",
+                State = "IL",
+                CreatedAt = DateTimeOffset.UtcNow,
+                CreatedByUserId = "USR-BATCHSEED1",
+            });
+
+            await seedContext.SaveChangesAsync();
+        }
+
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow>
+        {
+            new("Springfield", State.Illinois),
+        };
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.CrossBatchDuplicate>(result);
+        await using var readContext = CreateContext();
+        Assert.Equal(1, await readContext.Cities.CountAsync());
+    }
+
+    [Fact]
+    public async Task Persisted_rows_carry_submitting_admin_registered_user_id_as_created_by_user_id()
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow>
+        {
+            new("Decatur", State.Illinois),
+        };
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.Success>(result);
+        await using var readContext = CreateContext();
+        var city = await readContext.Cities.SingleAsync(c => c.Name == "Decatur");
+        Assert.Equal(adminId.Value, city.CreatedByUserId);
+    }
+
+    private ApplicationDbContext CreateContext()
+    {
+        var connectionStringBuilder = new SqlConnectionStringBuilder(_container.GetConnectionString())
+        {
+            InitialCatalog = "Trakmark",
+        };
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlServer(connectionStringBuilder.ConnectionString)
+            .Options;
+
+        return new ApplicationDbContext(options);
+    }
+}

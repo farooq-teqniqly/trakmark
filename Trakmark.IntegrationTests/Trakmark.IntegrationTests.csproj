@@ -30,5 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Trakmark\Trakmark.csproj" />
+    <ProjectReference Include="..\Trakmark.Domain\Trakmark.Domain.csproj" />
   </ItemGroup>
 </Project>
