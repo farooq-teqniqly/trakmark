@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data;
 using Trakmark.Data.Entities;
@@ -57,8 +58,7 @@ public sealed class SaveCitiesBatchService
             return crossBatchDuplicate;
         }
 
-        await PersistAsync(cities!, createdByUserId);
-        return new SaveCitiesBatchResult.Success(cities!.Count);
+        return await PersistAsync(cities!, createdByUserId);
     }
 
     private static (List<City>? Cities, SaveCitiesBatchResult.ValidationError? Error) BuildAndValidate(
@@ -127,7 +127,9 @@ public sealed class SaveCitiesBatchService
         return null;
     }
 
-    private async Task PersistAsync(List<City> cities, RegisteredUserId createdByUserId)
+    private async Task<SaveCitiesBatchResult> PersistAsync(
+        List<City> cities,
+        RegisteredUserId createdByUserId)
     {
         var now = DateTimeOffset.UtcNow;
 
@@ -143,6 +145,20 @@ public sealed class SaveCitiesBatchService
             });
         }
 
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+            return new SaveCitiesBatchResult.Success(cities.Count);
+        }
+        catch (DbUpdateException ex) when (IsDuplicateKeyException(ex))
+        {
+            return new SaveCitiesBatchResult.CrossBatchDuplicate(string.Empty, string.Empty);
+        }
+    }
+
+    private static bool IsDuplicateKeyException(DbUpdateException ex)
+    {
+        return ex.InnerException is SqlException sqlEx
+            && (sqlEx.Number == 2601 || sqlEx.Number == 2627);
     }
 }

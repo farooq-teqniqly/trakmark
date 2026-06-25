@@ -5,7 +5,7 @@
 namespace Trakmark.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCityNameStateUniqueIndex : Migration
+    public partial class SyncIdentitySchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,21 +58,11 @@ namespace Trakmark.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(128)",
                 oldMaxLength: 128);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cities_Name_State",
-                table: "Cities",
-                columns: new[] { "Name", "State" },
-                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Cities_Name_State",
-                table: "Cities");
-
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "AspNetUserTokens",

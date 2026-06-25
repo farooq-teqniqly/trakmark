@@ -12,7 +12,7 @@ using Trakmark.Data;
 namespace Trakmark.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260625211813_AddCityNameStateUniqueIndex")]
+    [Migration("20260625213526_AddCityNameStateUniqueIndex")]
     partial class AddCityNameStateUniqueIndex
     {
         /// <inheritdoc />
