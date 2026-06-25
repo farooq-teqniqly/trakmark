@@ -26,7 +26,7 @@ public sealed class SaveCitiesBatchService
     /// Returns a <see cref="SaveCitiesBatchResult"/> discriminating between success,
     /// validation failure, in-batch duplicate, and cross-batch (existing) duplicate.
     /// </summary>
-    /// <param name="rows">The city rows to persist. Must not be null.</param>
+    /// <param name="rows">The city rows to persist. Must not be null; must contain 1-100 items.</param>
     /// <param name="createdByUserId">The <see cref="RegisteredUserId"/> of the submitting Admin.</param>
     public async Task<SaveCitiesBatchResult> SaveAsync(
         IReadOnlyList<SaveCityRow> rows,
@@ -34,96 +34,93 @@ public sealed class SaveCitiesBatchService
     {
         ArgumentNullException.ThrowIfNull(rows);
 
-        var validationResult = ValidateRows(rows);
-        if (validationResult is not null)
+        if (rows.Count == 0 || rows.Count > 100)
         {
-            return validationResult;
+            throw new ArgumentOutOfRangeException(nameof(rows), "Batch must contain between 1 and 100 rows.");
         }
 
-        var cities = BuildCities(rows);
+        var (cities, validationError) = BuildAndValidate(rows);
+        if (validationError is not null)
+        {
+            return validationError;
+        }
 
-        var inBatchDuplicate = FindInBatchDuplicate(cities);
+        var inBatchDuplicate = FindInBatchDuplicate(cities!);
         if (inBatchDuplicate is not null)
         {
             return inBatchDuplicate;
         }
 
-        var crossBatchDuplicate = await FindCrossBatchDuplicateAsync(cities);
+        var crossBatchDuplicate = await FindCrossBatchDuplicateAsync(cities!);
         if (crossBatchDuplicate is not null)
         {
             return crossBatchDuplicate;
         }
 
-        await PersistAsync(cities, createdByUserId);
-        return new SaveCitiesBatchResult.Success(cities.Count);
+        await PersistAsync(cities!, createdByUserId);
+        return new SaveCitiesBatchResult.Success(cities!.Count);
     }
 
-    private static SaveCitiesBatchResult.ValidationError? ValidateRows(IReadOnlyList<SaveCityRow> rows)
-    {
-        foreach (var row in rows)
-        {
-            try
-            {
-                City.Create(row.Name, row.State);
-            }
-            catch (ArgumentException ex)
-            {
-                return new SaveCitiesBatchResult.ValidationError(ex.Message);
-            }
-        }
-
-        return null;
-    }
-
-    private static List<City> BuildCities(IReadOnlyList<SaveCityRow> rows)
+    private static (List<City>? Cities, SaveCitiesBatchResult.ValidationError? Error) BuildAndValidate(
+        IReadOnlyList<SaveCityRow> rows)
     {
         var cities = new List<City>(rows.Count);
 
         foreach (var row in rows)
         {
-            cities.Add(City.Create(row.Name, row.State));
+            try
+            {
+                cities.Add(City.Create(row.Name, row.State));
+            }
+            catch (ArgumentException ex)
+            {
+                return (null, new SaveCitiesBatchResult.ValidationError(ex.Message));
+            }
         }
 
-        return cities;
+        return (cities, null);
     }
 
     private static SaveCitiesBatchResult.InBatchDuplicate? FindInBatchDuplicate(List<City> cities)
     {
         var seen = new HashSet<City>();
+        var duplicate = cities.FirstOrDefault(city => !seen.Add(city));
 
-        foreach (var city in cities)
-        {
-            if (!seen.Add(city))
-            {
-                return new SaveCitiesBatchResult.InBatchDuplicate(
-                    city.Name,
-                    city.State.Abbreviation
-                );
-            }
-        }
-
-        return null;
+        return duplicate is null
+            ? null
+            : new SaveCitiesBatchResult.InBatchDuplicate(duplicate.Name, duplicate.State.Abbreviation);
     }
 
     private async Task<SaveCitiesBatchResult.CrossBatchDuplicate?> FindCrossBatchDuplicateAsync(
         List<City> cities)
     {
+        var batchNames = new HashSet<string>(
+            cities.Select(c => c.Name.ToUpperInvariant()),
+            StringComparer.Ordinal);
+
+        var batchAbbrs = new HashSet<string>(
+            cities.Select(c => c.State.Abbreviation.ToUpperInvariant()),
+            StringComparer.Ordinal);
+
+        var existing = await _context.Cities
+            .Where(e => batchNames.Contains(e.Name.ToUpper()) && batchAbbrs.Contains(e.State.ToUpper()))
+            .ToListAsync();
+
+        if (existing.Count == 0)
+        {
+            return null;
+        }
+
         foreach (var city in cities)
         {
             var nameUpper = city.Name.ToUpperInvariant();
-            var abbr = city.State.Abbreviation.ToUpperInvariant();
+            var abbrUpper = city.State.Abbreviation.ToUpperInvariant();
 
-            var exists = await _context.Cities.AnyAsync(e =>
-                e.Name.ToUpper() == nameUpper &&
-                e.State.ToUpper() == abbr
-            );
-
-            if (exists)
+            if (existing.Any(e =>
+                    e.Name.ToUpperInvariant() == nameUpper &&
+                    e.State.ToUpperInvariant() == abbrUpper))
             {
-                return new SaveCitiesBatchResult.CrossBatchDuplicate(
-                    city.Name,
-                    city.State.Abbreviation
-                );
+                return new SaveCitiesBatchResult.CrossBatchDuplicate(city.Name, city.State.Abbreviation);
             }
         }
 

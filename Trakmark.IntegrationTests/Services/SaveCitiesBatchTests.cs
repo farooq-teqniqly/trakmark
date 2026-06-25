@@ -33,6 +33,26 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         await _container.DisposeAsync();
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(101)]
+    public async Task Batch_outside_1_to_100_rows_throws(int count)
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = Enumerable
+            .Range(0, count)
+            .Select(i => new SaveCityRow($"City{i}", State.Illinois))
+            .ToList();
+
+        await using var context = CreateContext();
+        var service = new SaveCitiesBatchService(context);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => service.SaveAsync(rows, adminId));
+    }
+
     [Fact]
     public async Task All_valid_batch_persists_all_rows()
     {

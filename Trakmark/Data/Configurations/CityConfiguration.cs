@@ -37,5 +37,7 @@ public sealed class CityConfiguration : IEntityTypeConfiguration<CityEntity>
         builder.Property(c => c.CreatedAt).IsRequired();
 
         builder.Property(c => c.CreatedByUserId).IsRequired().HasMaxLength(20);
+
+        builder.HasIndex(c => new { c.Name, c.State }).IsUnique();
     }
 }
