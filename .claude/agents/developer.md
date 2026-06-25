@@ -36,6 +36,16 @@ missing, install it with `dotnet tool install --global dotnet-ef` — this is a
 one-time local-machine prerequisite, not a project dependency; do not add it
 to any `.csproj`.
 
+Before running `dotnet ef migrations add <YourMigration> ...`, first run:
+
+    dotnet ef migrations add _check --project <migration-project> --startup-project <web-project>
+
+Open the generated `_check` migration file. If it contains changes unrelated
+to the current section (e.g. Identity schema drift, column-width changes from
+prior work), immediately run `dotnet ef migrations remove` and scaffold a
+dedicated migration for that drift first, then proceed with your own migration.
+Never let pre-existing drift ride in the same migration as intentional changes.
+
 ## TDD workflow
 
 Follow the TDD rule in config.yaml exactly. In general:
@@ -65,6 +75,8 @@ Before staging files, run through this list:
 - **Null-left operator assertions and `readonly record struct`**: when a task asks for `Assert.False(null == x)` coverage across "all types with `==`/`!=`", skip every `readonly record struct` — the compiler will not accept a typed null as a value-type operand, so that branch is unreachable. Apply null-left assertions only to reference-type (`sealed class`) value objects.
 - **Shared private helpers across services**: if a private static helper (e.g. `ToSchoolYear`) appears in more than one service, extract it to a dedicated `internal static class` (e.g. `SchoolYearHelper`) rather than duplicating it. Duplicated logic diverges silently when the rule changes.
 - **Denormalized date on child entities**: when a read projection needs a date from the owning aggregate to resolve context (e.g. school year), add a denormalized date field to the child entity at construction time (e.g. `Result.MeetDate` set from `Meet.Date`). Do not require callers to join back to the owning aggregate to resolve the date.
+- **Factory method called once per entity**: if you have a validate-then-build pattern, do not call `Entity.Create(...)` in both the validate pass and the build pass — each call generates a fresh identity. Validate inputs first, call the factory exactly once, then use the returned instance.
+- **DbUpdateException on unique-index writes**: every service method that saves to a table protected by a unique index must catch `DbUpdateException`, inspect the inner `SqlException` for error numbers 2601 and 2627, and return a domain-level duplicate result rather than propagating the exception to the caller.
 
 ## Before finishing
 

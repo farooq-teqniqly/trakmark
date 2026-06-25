@@ -39,10 +39,14 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
 - Always use braces for control statements (`if`, `else`, `for`, `foreach`, `while`, `do`) — even single-line bodies.
 - No comments that restate what the code already says.
+- Factory methods that generate a new identity (e.g. `Entity.Create(...)`) must be called **exactly once** per entity being constructed. Calling the same factory in separate passes (e.g., a validation pass and a build pass) produces a different identity on each call. Validate inputs first, then call the factory once and use its result throughout.
+- Any service method that saves an entity to a table protected by a unique index must catch `DbUpdateException` and inspect the inner `SqlException` for SQL error numbers **2601** and **2627** (unique-constraint violations). Translate those into a domain-level duplicate result (e.g., a `Conflict` or `DuplicateEntry` discriminated-union case) rather than letting the exception propagate to the caller.
 
 ## Configuration
 
 - EF Core migration scaffolding requires the `dotnet-ef` global tool. Check with `dotnet ef --version` before starting persistence/migration work; if missing, install with `dotnet tool install --global dotnet-ef`. This is a local dev-machine prerequisite, not a project dependency — do not add it to any `.csproj`.
+- Before adding a new EF Core migration, first run `dotnet ef migrations add _check --project <migration-project> --startup-project <web-project>` to detect pending model drift. Inspect the generated file: if it contains changes unrelated to your current work, immediately run `dotnet ef migrations remove` and scaffold a separate migration for that drift alone before continuing. Never let unrelated schema drift ride in the same migration as intentional changes.
+- The EF Core design-time `IDesignTimeDbContextFactory<T>` must not hard-code a connection string. Read it from an environment variable — e.g. `Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") ?? "<localdb-fallback>"`. This is the only place in the codebase where a connection string may live outside user secrets; the env-var-with-fallback pattern is the approved exception.
 - Secrets (API keys) and **connection strings** go in **user secrets**, never in `appsettings.json`.
 - Docker Compose **passwords** go in a **`.env` file**, never hardcoded in `docker-compose.yml`.
 - Endpoint overrides go in `appsettings.json` with sensible defaults in code.
