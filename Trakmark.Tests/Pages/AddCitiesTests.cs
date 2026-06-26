@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using Trakmark.Components.Pages;
 using Trakmark.Domain.Ids;
-using Trakmark.Domain.ValueObjects;
 using Trakmark.Services;
 
 namespace Trakmark.Tests.Pages;
@@ -101,7 +100,8 @@ public sealed class AddCitiesTests : BunitContext
         var cut = Render<AddCities>();
 
         // Act — enter a name but leave state unselected
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
 
         // Assert
         Assert.True(cut.Find("#save-btn").HasAttribute("disabled"));
@@ -116,7 +116,8 @@ public sealed class AddCitiesTests : BunitContext
         var cut = Render<AddCities>();
 
         // Act
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Assert
@@ -126,7 +127,10 @@ public sealed class AddCitiesTests : BunitContext
     [Theory]
     [InlineData("", "Name is required.")]
     [InlineData("   ", "Name is required.")]
-    public async Task Validation_message_appears_when_name_is_empty_or_whitespace(string name, string expectedMessage)
+    public async Task Validation_message_appears_when_name_is_empty_or_whitespace(
+        string name,
+        string expectedMessage
+    )
     {
         // Arrange
         SetupAdminAuth();
@@ -166,7 +170,8 @@ public sealed class AddCitiesTests : BunitContext
         var cut = Render<AddCities>();
 
         // Act — type a name to trigger showing state error
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
 
         // Assert
         Assert.Contains("State is required.", cut.Markup);
@@ -188,16 +193,17 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
         // Assert — service called
-        await mockService.Received(1).SaveAsync(
-            Arg.Any<IReadOnlyList<SaveCityRow>>(),
-            Arg.Any<RegisteredUserId>());
+        await mockService
+            .Received(1)
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>());
 
         // Assert — success alert shown
         Assert.NotEmpty(cut.FindAll("#success-alert"));
@@ -218,7 +224,8 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Act
@@ -242,7 +249,8 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Act
@@ -266,7 +274,8 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Act
@@ -290,7 +299,8 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
-        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
         await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Act
@@ -325,8 +335,8 @@ public sealed class AddCitiesTests : BunitContext
         Assert.EndsWith("/", navManager.History.Last().Uri);
 
         // Assert — service NOT called
-        await mockService.DidNotReceive().SaveAsync(
-            Arg.Any<IReadOnlyList<SaveCityRow>>(),
-            Arg.Any<RegisteredUserId>());
+        await mockService
+            .DidNotReceive()
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>());
     }
 }

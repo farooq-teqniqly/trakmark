@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data.Entities;
-using Trakmark.IntegrationTests;
 
 namespace Trakmark.IntegrationTests.Data;
 

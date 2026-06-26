@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Trakmark.Data.Entities;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
-using Trakmark.IntegrationTests;
 using Trakmark.Services;
 
 namespace Trakmark.IntegrationTests.Services;
@@ -46,8 +45,9 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         var service = new SaveCitiesBatchService(context);
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
-            () => service.SaveAsync(rows, adminId));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            service.SaveAsync(rows, adminId)
+        );
     }
 
     [Fact]
@@ -126,23 +126,22 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         // Arrange — pre-seed an existing city
         await using (var seedContext = _fixture.CreateContext())
         {
-            seedContext.Cities.Add(new CityEntity
-            {
-                CityId = "CTY-BATCHSEED1",
-                Name = "Springfield",
-                State = "IL",
-                CreatedAt = DateTimeOffset.UtcNow,
-                CreatedByUserId = "USR-BATCHSEED1",
-            });
+            seedContext.Cities.Add(
+                new CityEntity
+                {
+                    CityId = "CTY-BATCHSEED1",
+                    Name = "Springfield",
+                    State = "IL",
+                    CreatedAt = DateTimeOffset.UtcNow,
+                    CreatedByUserId = "USR-BATCHSEED1",
+                }
+            );
 
             await seedContext.SaveChangesAsync();
         }
 
         var adminId = RegisteredUserId.NewId();
-        var rows = new List<SaveCityRow>
-        {
-            new("Springfield", State.Illinois),
-        };
+        var rows = new List<SaveCityRow> { new("Springfield", State.Illinois) };
 
         await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
@@ -161,10 +160,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     {
         // Arrange
         var adminId = RegisteredUserId.NewId();
-        var rows = new List<SaveCityRow>
-        {
-            new("Decatur", State.Illinois),
-        };
+        var rows = new List<SaveCityRow> { new("Decatur", State.Illinois) };
 
         await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
@@ -193,14 +189,16 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         // the database (sees nothing — the staged entity is only in the local change
         // tracker), but SaveChangesAsync flushes both the staged entity and the
         // service's entity and hits the (Name, State) unique index.
-        context.Cities.Add(new CityEntity
-        {
-            CityId = "CTY-RACE1",
-            Name = "Springfield",
-            State = "IL",
-            CreatedAt = DateTimeOffset.UtcNow,
-            CreatedByUserId = adminId.Value,
-        });
+        context.Cities.Add(
+            new CityEntity
+            {
+                CityId = "CTY-RACE1",
+                Name = "Springfield",
+                State = "IL",
+                CreatedAt = DateTimeOffset.UtcNow,
+                CreatedByUserId = adminId.Value,
+            }
+        );
 
         var service = new SaveCitiesBatchService(context);
 
