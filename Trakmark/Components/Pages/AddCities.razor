@@ -97,13 +97,13 @@
 
     private bool IsFormValid => _rows.All(r => r.IsValid);
 
-    private void OnNameChanged(CityRow row, string value)
+    private static void OnNameChanged(CityRow row, string value)
     {
         row.Name = value;
         row.Touched = true;
     }
 
-    private void OnStateChanged(CityRow row, string value)
+    private static void OnStateChanged(CityRow row, string value)
     {
         row.StateAbbreviation = value;
         row.Touched = true;
