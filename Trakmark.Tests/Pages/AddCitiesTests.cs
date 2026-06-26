@@ -24,6 +24,12 @@ public sealed class AddCitiesTests : BunitContext
             .SetClaims(new Claim(ClaimTypes.NameIdentifier, TestUserId.Value));
     }
 
+    /// <summary>Initializes a new instance of <see cref="AddCitiesTests"/>.</summary>
+    public AddCitiesTests()
+    {
+        SetupAdminAuth();
+    }
+
     // -----------------------------------------------------------------------
     // Task 6.3 — form shape and validation
     // -----------------------------------------------------------------------
@@ -32,7 +38,6 @@ public sealed class AddCitiesTests : BunitContext
     public void Initial_render_shows_one_row_with_name_input_and_state_dropdown()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
 
         // Act
@@ -47,7 +52,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Add_row_button_increases_row_count()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -62,7 +66,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Add_row_button_is_disabled_when_100_rows_exist()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -81,7 +84,6 @@ public sealed class AddCitiesTests : BunitContext
     public void Save_button_is_disabled_when_name_is_empty()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
 
         // Act
@@ -95,7 +97,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_button_is_disabled_when_no_state_selected()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -111,7 +112,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_button_is_enabled_when_all_rows_have_name_and_state()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -133,7 +133,6 @@ public sealed class AddCitiesTests : BunitContext
     )
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -149,7 +148,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Validation_message_appears_when_name_exceeds_100_characters()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
         var longName = new string('A', 101);
@@ -165,7 +163,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Validation_message_appears_when_no_state_selected()
     {
         // Arrange
-        SetupAdminAuth();
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
@@ -185,7 +182,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_calls_service_and_shows_success_toast_then_clears_form()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         mockService
             .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
@@ -216,7 +212,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_shows_error_alert_on_validation_failure()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         mockService
             .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
@@ -241,7 +236,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_shows_error_alert_on_duplicate_failure()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         mockService
             .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
@@ -266,7 +260,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_shows_error_alert_on_in_batch_duplicate()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         mockService
             .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
@@ -291,7 +284,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_shows_error_alert_on_concurrent_duplicate()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         mockService
             .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
@@ -320,7 +312,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Cancel_navigates_to_home_without_calling_save_service()
     {
         // Arrange
-        SetupAdminAuth();
         var mockService = Substitute.For<ISaveCitiesBatchService>();
         Services.AddSingleton(mockService);
 
