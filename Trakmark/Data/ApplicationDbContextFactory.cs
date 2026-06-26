@@ -18,6 +18,8 @@ internal sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<
     /// </summary>
     public ApplicationDbContext CreateDbContext(string[] args)
     {
+        ArgumentNullException.ThrowIfNull(args);
+
         var connectionString = Environment.GetEnvironmentVariable("TRAKMARK_DESIGN_TIME_CONNSTR")
             ?? @"Server=(localdb)\mssqllocaldb;Database=Trakmark;Trusted_Connection=True;";
 
