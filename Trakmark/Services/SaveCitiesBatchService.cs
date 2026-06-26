@@ -12,7 +12,7 @@ namespace Trakmark.Services;
 /// Accepts the submitting Admin's <see cref="RegisteredUserId"/> as a parameter to
 /// keep the service testable without an HTTP context dependency.
 /// </summary>
-public sealed class SaveCitiesBatchService
+public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
 {
     private readonly ApplicationDbContext _context;
 
