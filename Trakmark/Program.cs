@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Trakmark.Components;
 using Trakmark.Components.Account;
 using Trakmark.Extensions;
+using Trakmark.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddAppDatabase(builder.Configuration, builder.Environment);
 builder.Services.AddAppIdentity();
 builder.Services.AddAppTelemetry(builder.Configuration);
+builder.Services.AddScoped<ISaveCitiesBatchService, SaveCitiesBatchService>();
 
 var app = builder.Build();
 

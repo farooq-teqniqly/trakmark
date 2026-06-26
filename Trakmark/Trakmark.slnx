@@ -3,4 +3,5 @@
   <Project Path="..\Trakmark.Domain\Trakmark.Domain.csproj" />
   <Project Path="..\Trakmark.Domain.Tests\Trakmark.Domain.Tests.csproj" />
   <Project Path="..\Trakmark.IntegrationTests\Trakmark.IntegrationTests.csproj" />
+  <Project Path="..\Trakmark.Tests\Trakmark.Tests.csproj" />
 </Solution>
