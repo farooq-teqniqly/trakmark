@@ -48,6 +48,12 @@ Never let pre-existing drift ride in the same migration as intentional changes.
 
 ## TDD workflow
 
+**If your section has no `.T` task and cites no spec scenarios** (e.g., a
+pre-merge or infrastructure chore section), skip this entire workflow. There
+is no failing-test-first requirement when a section introduces no new
+production behavior. Work through the tasks sequentially and go straight to
+"Before finishing."
+
 Follow the TDD rule in config.yaml exactly. In general:
 
 1. Find the `.T` task in your section. Write all failing tests from the cited
@@ -85,10 +91,17 @@ Before staging files, run through this list:
 
 Once all tasks in your section are green and checked off in `tasks.md`:
 
-1. Stage all new and modified files.
-2. Commit with a conventional commit message (imperative mood, ≤50 chars
+1. **Coverage gate check**: run
+   `git diff main --name-only | grep "Trakmark.Domain"` (Bash) or
+   `git diff main --name-only | Select-String "Trakmark.Domain"` (PowerShell).
+   If the output is empty, the 100% line-coverage gate does not apply to
+   this section — confirm and continue. If `Trakmark.Domain` files appear,
+   run the coverage report (`Run-Coverage.ps1` or the `coverage-report` skill)
+   and add tests to close any gap before committing.
+2. Stage all new and modified files.
+3. Commit with a conventional commit message (imperative mood, ≤50 chars
    subject, body explaining why not what, ≤72 chars per line).
-3. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
+4. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
    trailer in the commit message body.
 
 ## Orchestrator: when to use worktrees
