@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Trakmark.Extensions;
 
 namespace Trakmark.Tests.Extensions;
@@ -7,7 +9,7 @@ namespace Trakmark.Tests.Extensions;
 /// <summary>Tests for <see cref="ServiceCollectionExtensions"/>.</summary>
 public sealed class ServiceCollectionExtensionsTests
 {
-    private static IConfiguration BuildConfig(string? clientId, string? clientSecret)
+    private static IConfiguration BuildAuthConfig(string? clientId, string? clientSecret)
     {
         var values = new Dictionary<string, string?>();
 
@@ -24,9 +26,32 @@ public sealed class ServiceCollectionExtensionsTests
         return new ConfigurationBuilder().AddInMemoryCollection(values).Build();
     }
 
+    private static IConfiguration BuildDbConfig(string? connectionString)
+    {
+        var values = new Dictionary<string, string?>();
+
+        if (connectionString is not null)
+        {
+            values["ConnectionStrings:DefaultConnection"] = connectionString;
+        }
+
+        return new ConfigurationBuilder().AddInMemoryCollection(values).Build();
+    }
+
+    private static IWebHostEnvironment BuildEnv(string environmentName = "Production")
+    {
+        var env = Substitute.For<IWebHostEnvironment>();
+        env.EnvironmentName.Returns(environmentName);
+        return env;
+    }
+
     [Theory]
     [InlineData(null, "secret")]
+    [InlineData("", "secret")]
+    [InlineData("   ", "secret")]
     [InlineData("id", null)]
+    [InlineData("id", "")]
+    [InlineData("id", "   ")]
     [InlineData(null, null)]
     public void AddAppAuthentication_throws_when_google_credentials_missing(
         string? clientId,
@@ -35,7 +60,7 @@ public sealed class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
-        var config = BuildConfig(clientId, clientSecret);
+        var config = BuildAuthConfig(clientId, clientSecret);
 
         // Act / Assert
         Assert.Throws<InvalidOperationException>(() => services.AddAppAuthentication(config));
@@ -46,10 +71,36 @@ public sealed class ServiceCollectionExtensionsTests
     {
         // Arrange
         var services = new ServiceCollection();
-        var config = BuildConfig("test-client-id", "test-client-secret");
+        var config = BuildAuthConfig("test-client-id", "test-client-secret");
 
         // Act / Assert
-        var result = services.AddAppAuthentication(config);
-        Assert.NotNull(result);
+        Assert.NotNull(services.AddAppAuthentication(config));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void AddAppDatabase_throws_when_connection_string_missing(string? connectionString)
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var config = BuildDbConfig(connectionString);
+        var env = BuildEnv();
+
+        // Act / Assert
+        Assert.Throws<InvalidOperationException>(() => services.AddAppDatabase(config, env));
+    }
+
+    [Fact]
+    public void AddAppDatabase_succeeds_when_connection_string_present()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var config = BuildDbConfig("Server=localhost;Database=Trakmark;Trusted_Connection=True;");
+        var env = BuildEnv();
+
+        // Act / Assert
+        Assert.NotNull(services.AddAppDatabase(config, env));
     }
 }

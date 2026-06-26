@@ -9,9 +9,11 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
-        /// <summary>Registers authentication with Identity cookies and optionally Google OAuth when credentials are configured.</summary>
+        /// <summary>Registers authentication with Identity cookies and Google OAuth. Throws <see cref="InvalidOperationException"/> at startup when Google credentials are missing or empty.</summary>
         public IServiceCollection AddAppAuthentication(IConfiguration config)
         {
+            ArgumentNullException.ThrowIfNull(config);
+
             var auth = services.AddAuthentication(options =>
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -21,20 +23,24 @@ public static class ServiceCollectionExtensions
             auth.AddIdentityCookies();
             services.AddAuthorization();
 
-            // Set credentials via user secrets (dev) or environment variables (prod):
+            // Required — set via user secrets (dev) or environment variables (prod):
             //   dotnet user-secrets set "Authentication:Google:ClientId" "<id>"
             //   dotnet user-secrets set "Authentication:Google:ClientSecret" "<secret>"
-            var clientId =
-                config["Authentication:Google:ClientId"]
-                ?? throw new InvalidOperationException(
+            var clientId = config["Authentication:Google:ClientId"];
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                throw new InvalidOperationException(
                     "Google OAuth ClientId is not configured. Set 'Authentication:Google:ClientId' in user secrets or environment variables."
                 );
+            }
 
-            var clientSecret =
-                config["Authentication:Google:ClientSecret"]
-                ?? throw new InvalidOperationException(
+            var clientSecret = config["Authentication:Google:ClientSecret"];
+            if (string.IsNullOrWhiteSpace(clientSecret))
+            {
+                throw new InvalidOperationException(
                     "Google OAuth ClientSecret is not configured. Set 'Authentication:Google:ClientSecret' in user secrets or environment variables."
                 );
+            }
 
             auth.AddGoogle(options =>
             {
@@ -48,11 +54,16 @@ public static class ServiceCollectionExtensions
         /// <summary>Registers the EF Core <see cref="ApplicationDbContext"/> backed by SQL Server, with detailed errors enabled in development.</summary>
         public IServiceCollection AddAppDatabase(IConfiguration config, IWebHostEnvironment env)
         {
-            var connectionString =
-                config.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException(
+            ArgumentNullException.ThrowIfNull(config);
+            ArgumentNullException.ThrowIfNull(env);
+
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
                     "Connection string 'DefaultConnection' not found."
                 );
+            }
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
