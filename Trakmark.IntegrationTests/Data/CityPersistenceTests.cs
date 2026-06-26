@@ -1,8 +1,6 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Testcontainers.MsSql;
-using Trakmark.Data;
 using Trakmark.Data.Entities;
+using Trakmark.IntegrationTests;
 
 namespace Trakmark.IntegrationTests.Data;
 
@@ -10,22 +8,23 @@ namespace Trakmark.IntegrationTests.Data;
 /// Integration tests verifying that a city round-trips through the real database,
 /// including persistence-only audit metadata (<c>CreatedAt</c>, <c>CreatedByUserId</c>).
 /// </summary>
+[Collection(IntegrationTestCollection.Name)]
 public sealed class CityPersistenceTests : IAsyncLifetime
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder().Build();
+    private readonly DatabaseFixture _fixture;
 
-    public async Task InitializeAsync()
+    /// <summary>Initializes a new instance of <see cref="CityPersistenceTests"/>.</summary>
+    public CityPersistenceTests(DatabaseFixture fixture)
     {
-        await _container.StartAsync();
-
-        await using var context = CreateContext();
-        await context.Database.MigrateAsync();
+        ArgumentNullException.ThrowIfNull(fixture);
+        _fixture = fixture;
     }
 
-    public async Task DisposeAsync()
-    {
-        await _container.DisposeAsync();
-    }
+    /// <inheritdoc/>
+    public async Task InitializeAsync() => await _fixture.ResetAsync();
+
+    /// <inheritdoc/>
+    public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
     public async Task City_round_trips_with_created_at_and_created_by_user_id()
@@ -41,14 +40,14 @@ public sealed class CityPersistenceTests : IAsyncLifetime
             CreatedByUserId = "USR-ABCDEF",
         };
 
-        await using (var writeContext = CreateContext())
+        await using (var writeContext = _fixture.CreateContext())
         {
             writeContext.Cities.Add(entity);
             await writeContext.SaveChangesAsync();
         }
 
         // Act
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         var loaded = await readContext.Cities.SingleAsync(c => c.CityId == "CTY-ABCDEF");
 
         // Assert
@@ -56,19 +55,5 @@ public sealed class CityPersistenceTests : IAsyncLifetime
         Assert.Equal("IL", loaded.State);
         Assert.Equal(createdAt, loaded.CreatedAt);
         Assert.Equal("USR-ABCDEF", loaded.CreatedByUserId);
-    }
-
-    private ApplicationDbContext CreateContext()
-    {
-        var connectionStringBuilder = new SqlConnectionStringBuilder(_container.GetConnectionString())
-        {
-            InitialCatalog = "Trakmark",
-        };
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(connectionStringBuilder.ConnectionString)
-            .Options;
-
-        return new ApplicationDbContext(options);
     }
 }

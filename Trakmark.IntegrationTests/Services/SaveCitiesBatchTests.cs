@@ -1,10 +1,8 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Testcontainers.MsSql;
-using Trakmark.Data;
 using Trakmark.Data.Entities;
 using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
+using Trakmark.IntegrationTests;
 using Trakmark.Services;
 
 namespace Trakmark.IntegrationTests.Services;
@@ -14,24 +12,23 @@ namespace Trakmark.IntegrationTests.Services;
 /// outcome scenarios: success, validation error, in-batch duplicate, cross-batch
 /// duplicate, and CreatedByUserId propagation.
 /// </summary>
+[Collection(IntegrationTestCollection.Name)]
 public sealed class SaveCitiesBatchTests : IAsyncLifetime
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder().Build();
+    private readonly DatabaseFixture _fixture;
 
-    /// <inheritdoc/>
-    public async Task InitializeAsync()
+    /// <summary>Initializes a new instance of <see cref="SaveCitiesBatchTests"/>.</summary>
+    public SaveCitiesBatchTests(DatabaseFixture fixture)
     {
-        await _container.StartAsync();
-
-        await using var context = CreateContext();
-        await context.Database.MigrateAsync();
+        ArgumentNullException.ThrowIfNull(fixture);
+        _fixture = fixture;
     }
 
     /// <inheritdoc/>
-    public async Task DisposeAsync()
-    {
-        await _container.DisposeAsync();
-    }
+    public async Task InitializeAsync() => await _fixture.ResetAsync();
+
+    /// <inheritdoc/>
+    public Task DisposeAsync() => Task.CompletedTask;
 
     [Theory]
     [InlineData(0)]
@@ -45,7 +42,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             .Select(i => new SaveCityRow($"City{i}", State.Illinois))
             .ToList();
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act & Assert
@@ -64,7 +61,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             new("Chicago", State.Illinois),
         };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act
@@ -72,7 +69,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.Success>(result);
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         var count = await readContext.Cities.CountAsync(c => c.State == "IL");
         Assert.Equal(2, count);
     }
@@ -88,7 +85,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             new("   ", State.Illinois),
         };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act
@@ -96,7 +93,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.ValidationError>(result);
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         Assert.Equal(0, await readContext.Cities.CountAsync());
     }
 
@@ -111,7 +108,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             new("springfield", State.Illinois),
         };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act
@@ -119,7 +116,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.InBatchDuplicate>(result);
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         Assert.Equal(0, await readContext.Cities.CountAsync());
     }
 
@@ -127,7 +124,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     public async Task CrossBatch_duplicate_rejects_whole_batch()
     {
         // Arrange — pre-seed an existing city
-        await using (var seedContext = CreateContext())
+        await using (var seedContext = _fixture.CreateContext())
         {
             seedContext.Cities.Add(new CityEntity
             {
@@ -147,7 +144,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             new("Springfield", State.Illinois),
         };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act
@@ -155,7 +152,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.CrossBatchDuplicate>(result);
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         Assert.Equal(1, await readContext.Cities.CountAsync());
     }
 
@@ -169,7 +166,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             new("Decatur", State.Illinois),
         };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
         var service = new SaveCitiesBatchService(context);
 
         // Act
@@ -177,7 +174,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.Success>(result);
-        await using var readContext = CreateContext();
+        await using var readContext = _fixture.CreateContext();
         var city = await readContext.Cities.SingleAsync(c => c.Name == "Decatur");
         Assert.Equal(adminId.Value, city.CreatedByUserId);
     }
@@ -189,7 +186,7 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow> { new("Springfield", State.Illinois) };
 
-        await using var context = CreateContext();
+        await using var context = _fixture.CreateContext();
 
         // Pre-stage a city entity that duplicates the batch row, but do NOT save it.
         // This simulates a concurrent insert: FindCrossBatchDuplicateAsync queries
@@ -212,19 +209,5 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.ConcurrentDuplicate>(result);
-    }
-
-    private ApplicationDbContext CreateContext()
-    {
-        var connectionStringBuilder = new SqlConnectionStringBuilder(_container.GetConnectionString())
-        {
-            InitialCatalog = "Trakmark",
-        };
-
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(connectionStringBuilder.ConnectionString)
-            .Options;
-
-        return new ApplicationDbContext(options);
     }
 }
