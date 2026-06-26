@@ -30,11 +30,14 @@
 }
 
 <div class="mb-3">
-    @for (var i = 0; i < _rows.Count; i++)
+    @foreach (var row in _rows)
     {
-        var row = _rows[i];
         <div @key="row" class="row g-2 mb-2 align-items-start">
             <div class="col-md-5">
+
+                @{
+                    var row1 = row;
+                }
                 <input type="text"
                        class="form-control @(row.ShowNameError ? "is-invalid" : "")"
                        placeholder="City name"
