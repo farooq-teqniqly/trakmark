@@ -32,6 +32,23 @@ Mirrors `Sport`: `sealed class State : IEquatable<State>` with 51 static readonl
 ### `CreatedByUserId` is persistence metadata, not a `City` constructor parameter
 Like `CreatedAt`, the creating user is recorded by the persistence layer at save time, not passed into `City.Create(...)`. `City`'s domain invariants (name, state) don't depend on who created it, so adding a user parameter to the constructor would conflate domain validity with audit metadata. The application layer's batch-save operation captures the current Admin's `RegisteredUserId` (from the authenticated principal) and passes it to the persistence layer alongside each `City`, where the EF Core entity configuration maps it to a `CreatedByUserId` column (`nvarchar`, FK-shaped reference to `RegisteredUserId.Value`, not a DB FK constraint since `RegisteredUser` persistence is out of scope for this change).
 
+### UI testing approach for section 6 (Blazor components)
+
+Use **bUnit + xUnit** in a new `Trakmark.Tests` project. Playwright and Cypress were considered and rejected.
+
+| Criterion        | bUnit         | Playwright    | Cypress       |
+|------------------|---------------|---------------|---------------|
+| Speed            | Fast (ms)     | Slow (sec)    | Slow (sec)    |
+| App must run     | No            | Yes           | Yes           |
+| Real browser     | No            | Yes           | Yes           |
+| .NET / xUnit     | Yes           | Yes           | No (JS)       |
+| NSubstitute mock | Yes           | No            | No            |
+| Auth simulation  | Easy          | Hard          | Hard          |
+| JS interop       | No            | Yes           | Yes           |
+| Setup cost       | Low           | High          | High          |
+
+Rationale: all four task-6 behaviors (role-restricted nav item, form validation/state, service wiring, cancel navigation) are component-level concerns testable in-process. Auth simulation via `TestAuthorizationContext` is trivial in bUnit and painful in browser-based tools. The service layer is already covered by integration tests — no need to re-prove the DB through E2E. bUnit's gap (real browser rendering, JS interop) does not apply to any task-6 requirement. Playwright can be added later as a smoke-test layer if full E2E coverage is needed.
+
 ### Duplicate detection is an application-layer concern
 `City.Equals` provides the means to compare two `City` instances, but the domain has no repository access. The application/persistence layer is responsible for: (1) validating each row in the submitted batch using `City`'s constructor (catching invariant violations), (2) checking the batch for in-batch duplicates via `City` equality, and (3) querying existing persisted cities for cross-batch duplicates. All three failure modes reject the entire batch (all-or-nothing).
 
