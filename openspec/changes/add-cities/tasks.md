@@ -30,10 +30,15 @@
 
 ## 6. UI: Add Cities page
 
-- [ ] 6.1 Add "Add Cities" item to the Admin dropdown in the nav bar, restricted to the Admin role.
-- [ ] 6.2 Build the Add Cities Blazor form: repeatable rows (1-100) with Name (text, max 100 chars) and State (dropdown), client-side validation as the user types, Save disabled until valid.
-- [ ] 6.3 Wire Save to the batch-save operation; on success show a success toast and clear the form; on server validation/duplicate failure show the error and a save-failed toast.
-- [ ] 6.4 Wire Cancel to navigate back to Home without modifying data.
+- [ ] 6.0 Create `Trakmark.Tests` project with bUnit + xUnit (`bunit.web` package); register in `Trakmark.slnx`.
+- [ ] 6.1 Write failing bUnit tests for the nav bar: "Add Cities" renders in the Admin dropdown when the authenticated user is in the Admin role; does not render otherwise. Use `TestAuthorizationContext` for auth simulation.
+- [ ] 6.2 Add "Add Cities" item to the Admin dropdown in the nav bar, restricted to the Admin role. Run tests to green.
+- [ ] 6.3 Write failing bUnit tests for the form: initial row renders; rows can be added up to 100; Save button is disabled when any row is invalid; Save button is enabled when all rows are valid; validation messages appear on invalid input (empty name, name over 100 chars, no state selected).
+- [ ] 6.4 Build the Add Cities Blazor form: repeatable rows (1–100) with Name (text, max 100 chars) and State (dropdown), client-side validation as the user types, Save disabled until valid. Run tests to green.
+- [ ] 6.5 Write failing bUnit tests for Save wiring: success → batch-save service called, success toast shown, form cleared; server validation failure → error displayed, save-failed toast shown; duplicate failure → error displayed, save-failed toast shown. Mock `SaveCitiesBatchService` via NSubstitute.
+- [ ] 6.6 Wire Save to the batch-save operation; on success show a success toast and clear the form; on server validation/duplicate failure show the error and a save-failed toast. Run tests to green.
+- [ ] 6.7 Write failing bUnit test for Cancel: Home navigation is triggered, batch-save service is not called.
+- [ ] 6.8 Wire Cancel to navigate back to Home without modifying data. Run test to green.
 
 ## 7. Pre-merge
 
