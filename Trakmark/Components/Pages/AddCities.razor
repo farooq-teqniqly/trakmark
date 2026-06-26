@@ -1,0 +1,244 @@
+@page "/admin/cities/add"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@using System.Security.Claims
+@using Trakmark.Domain.Ids
+@using Trakmark.Helpers
+@using Trakmark.Services
+
+@inject ISaveCitiesBatchService BatchSaveService
+@inject NavigationManager Navigation
+
+<PageTitle>Add Cities</PageTitle>
+
+<h1 class="mb-4">Add Cities</h1>
+
+@if (_successMessage is not null)
+{
+    <div id="success-alert" class="alert alert-success" role="alert">
+        @_successMessage
+    </div>
+}
+
+@if (_errorMessage is not null)
+{
+    <div id="error-alert" class="alert alert-danger" role="alert">
+        @_errorMessage
+    </div>
+}
+
+<div class="mb-3">
+    @foreach (var row in _rows)
+    {
+        <div @key="row" class="row g-2 mb-2 align-items-start">
+            <div class="col-md-5">
+                <input type="text"
+                       class="form-control @(row.ShowNameError ? "is-invalid" : "")"
+                       placeholder="City name"
+                       value="@row.Name"
+                       @onchange="@(e => OnNameChanged(row, e.Value?.ToString() ?? string.Empty))"
+                       maxlength="100" />
+                @if (row.ShowNameError)
+                {
+                    <div class="invalid-feedback">@row.NameError</div>
+                }
+            </div>
+            <div class="col-md-4">
+                <select class="form-select @(row.ShowStateError ? "is-invalid" : "")"
+                        value="@row.StateAbbreviation"
+                        @onchange="@(e => OnStateChanged(row, e.Value?.ToString() ?? string.Empty))">
+                    <option value="">-- Select state --</option>
+                    @foreach (var state in StateHelper.AllStates)
+                    {
+                        <option value="@state.Abbreviation">@state.Name (@state.Abbreviation)</option>
+                    }
+                </select>
+                @if (row.ShowStateError)
+                {
+                    <div class="invalid-feedback">@row.StateError</div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<div class="d-flex gap-2">
+    <button id="add-row-btn"
+            class="btn btn-secondary"
+            @onclick="AddRow"
+            disabled="@(_rows.Count >= MaxRows)">
+        Add Row
+    </button>
+    <button id="save-btn"
+            class="btn btn-primary"
+            @onclick="SaveAsync"
+            disabled="@(!IsFormValid)">
+        Save
+    </button>
+    <button id="cancel-btn"
+            class="btn btn-outline-secondary"
+            @onclick="Cancel">
+        Cancel
+    </button>
+</div>
+
+@code {
+    private const int MaxRows = 100;
+
+    private readonly List<CityRow> _rows = [new()];
+    private string? _successMessage;
+    private string? _errorMessage;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    private bool IsFormValid => _rows.All(r => r.IsValid);
+
+    private static void OnNameChanged(CityRow row, string value)
+    {
+        row.Name = value;
+        row.Touched = true;
+    }
+
+    private static void OnStateChanged(CityRow row, string value)
+    {
+        row.StateAbbreviation = value;
+        row.Touched = true;
+    }
+
+    private void AddRow()
+    {
+        if (_rows.Count < MaxRows)
+        {
+            _rows.Add(new CityRow());
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        _successMessage = null;
+        _errorMessage = null;
+
+        var userId = await GetCurrentUserIdAsync();
+        var rows = BuildSaveRows();
+        var result = await BatchSaveService.SaveAsync(rows, userId);
+        HandleSaveResult(result);
+    }
+
+    private void HandleSaveResult(SaveCitiesBatchResult result)
+    {
+        switch (result)
+        {
+            case SaveCitiesBatchResult.Success s:
+                _successMessage = $"Successfully saved {s.Count} {(s.Count == 1 ? "city" : "cities")}.";
+                ClearForm();
+                break;
+            case SaveCitiesBatchResult.ValidationError ve:
+                _errorMessage = ve.Message;
+                break;
+            case SaveCitiesBatchResult.InBatchDuplicate ib:
+                _errorMessage = $"Duplicate in batch: {ib.CityName}, {ib.StateAbbreviation}.";
+                break;
+            case SaveCitiesBatchResult.CrossBatchDuplicate cb:
+                _errorMessage = $"City already exists: {cb.CityName}, {cb.StateAbbreviation}.";
+                break;
+            case SaveCitiesBatchResult.ConcurrentDuplicate:
+                _errorMessage = "A duplicate was detected during save. Please try again.";
+                break;
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/");
+
+    private void ClearForm()
+    {
+        _rows.Clear();
+        _rows.Add(new CityRow());
+    }
+
+    private IReadOnlyList<SaveCityRow> BuildSaveRows()
+    {
+        var result = new List<SaveCityRow>(_rows.Count);
+        foreach (var row in _rows)
+        {
+            var state = StateHelper.GetByAbbreviation(row.StateAbbreviation)
+                ?? throw new InvalidOperationException(
+                    $"BuildSaveRows called with unresolved state '{row.StateAbbreviation}'. Call only when IsFormValid is true.");
+            result.Add(new SaveCityRow(row.Name, state));
+        }
+
+        return result;
+    }
+
+    private async Task<RegisteredUserId> GetCurrentUserIdAsync()
+    {
+        if (AuthenticationStateTask is null)
+        {
+            return RegisteredUserId.Empty;
+        }
+
+        var authState = await AuthenticationStateTask;
+        var nameId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (nameId is not null && RegisteredUserId.TryParse(nameId, out var id))
+        {
+            return id;
+        }
+
+        return RegisteredUserId.Empty;
+    }
+
+    /// <summary>A single row in the Add Cities form, holding name, state, and validation state.</summary>
+    private sealed class CityRow
+    {
+        /// <summary>The city name entered by the user.</summary>
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>The two-letter abbreviation of the selected state (empty = none selected).</summary>
+        public string StateAbbreviation { get; set; } = string.Empty;
+
+        /// <summary>Whether any field in this row has been interacted with.</summary>
+        public bool Touched { get; set; }
+
+        /// <summary>Returns <see langword="true"/> when both name and state are valid.</summary>
+        public bool IsValid => IsNameValid && IsStateValid;
+
+        /// <summary>The name validation error message, or <see langword="null"/> when valid.</summary>
+        public string? NameError
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    return "Name is required.";
+                }
+
+                if (Name.Trim().Length > 100)
+                {
+                    return "Name must not exceed 100 characters.";
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>The state validation error message, or <see langword="null"/> when valid.</summary>
+        public string? StateError =>
+            string.IsNullOrEmpty(StateAbbreviation) ? "State is required." : null;
+
+        /// <summary>Returns <see langword="true"/> when the name error should be displayed.</summary>
+        public bool ShowNameError => Touched && NameError is not null;
+
+        /// <summary>Returns <see langword="true"/> when the state error should be displayed.</summary>
+        public bool ShowStateError => Touched && StateError is not null;
+
+        /// <summary>Returns <see langword="true"/> when the name is non-empty and at most 100 characters after trimming.</summary>
+        private bool IsNameValid =>
+            !string.IsNullOrWhiteSpace(Name) && Name.Trim().Length <= 100;
+
+        /// <summary>Returns <see langword="true"/> when a state has been selected.</summary>
+        private bool IsStateValid => !string.IsNullOrEmpty(StateAbbreviation);
+
+    }
+}

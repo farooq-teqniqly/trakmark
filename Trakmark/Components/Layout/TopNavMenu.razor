@@ -25,6 +25,27 @@
                         <span class="ms-1">Home</span>
                     </NavLink>
                 </li>
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                <i class="bi bi-shield-lock"></i>
+                                <span class="ms-1">Admin</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <NavLink class="dropdown-item" href="admin/cities/add">
+                                        Add Cities
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
             </ul>
 
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">

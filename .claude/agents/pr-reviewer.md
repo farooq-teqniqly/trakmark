@@ -88,6 +88,8 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 
 ## Output file
 
+**Override**: if the calling prompt explicitly says "reply in chat only", "do not write a file", or "do not write a docs/PR_REVIEW*.md file", honor that instruction — deliver all findings in the chat reply and skip the file write entirely. The default below applies only when no such override is given.
+
 1. Write complete review to `docs/PR_REVIEW.md` (or `docs/PR_REVIEW_<YYYY-MM-DD>.md`, or `docs/PR_REVIEW_pr-<number>.md` when PR number known). Create `docs/` if missing.
 2. Header **must** include `Reviewed commit:` with short hash and branch:
    ```
@@ -111,6 +113,18 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 7. Refresh `gh api` comments; refresh Summary table (resolved/new/outstanding).
 7. For each finding now marked resolved, run the commit → resolve threads → update PR doc sequence from step 13 of the Execution flow.
 9. Reply: "Updated review from `<old>` → `<new>` (N resolved, M new, K outstanding)" + path. List any unresolvable threads.
+
+## Bash invocation style
+
+Never `cd` into the target worktree/repo path before running git or dotnet
+commands — a compound command like `cd <path> && dotnet test ...` does not
+start with `dotnet`/`git`, so it will not match the `Bash(dotnet *)` /
+`Bash(git *)` allow-list patterns and will be denied outright. Always lead
+with the binary and pass the path as an explicit argument instead:
+`git -C <path> log --oneline -5`, `dotnet test <path>\Trakmark\Trakmark.slnx`.
+If a build/test command is denied, retry it in this form before falling back
+to static-only review — do not silently skip `dotnet build`/`dotnet test` and
+report a Bash denial without first attempting the `-C`/direct-path form.
 
 ## Execution flow
 

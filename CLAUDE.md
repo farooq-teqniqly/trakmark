@@ -11,17 +11,19 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Test projects use **xUnit** and reference the project under test.
 - Use **NSubstitute** for mocking in tests.
 - One test class per production type, one file per test class — never group multiple unrelated types in a single test file.
-- Each test has `// Arrange`, `// Act`, `// Assert` comments.
-- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
+- Each test has `// Arrange`, `// Act`, `// Assert` comments. When all phases collapse to a single expression or lambda (e.g. `Assert.Throws<>(...)` or a one-liner `Assert.False(SomeCall(value))`), combine them as `// Arrange / Act / Assert` or `// Act / Assert` on a single line — do not artificially split. Never annotate AAA markers with inline notes (e.g. `// Assert — some explanation`); use the plain marker only.
+- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. The moment you need a second `[Fact]` that tests the same method with different inputs or expected outputs, stop and write a `[Theory]` instead — do not accumulate `[Fact]`s first and consolidate later. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
+- When writing tests for a type that returns a discriminated union or named result subtypes (e.g. `Success`, `NotFound`, `Conflict`, `Duplicate`), enumerate all subtypes before writing the first test and ensure each subtype has at least one dedicated test case.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
 - For integration and end-to-end tests, prefer the real database via **Testcontainers** over in-memory fakes.
 - Do not test `internal` helpers directly. Cover them through their public API callers (e.g. test `DomainId.IsValid` by calling `TryParse`, not by invoking `IsValid` directly). If the helper is not reachable through any public surface, that is a design signal, not a reason to add a direct test.
-- Practice **TDD**: when a spec defines behavior (e.g. OpenSpec `#### Scenario:` blocks), write the failing tests from those scenarios first, then implement to green. Each scenario maps to a test case. For test-only changes (adding tests against already-complete production code), satisfy the failing-first requirement by writing the test body with `Assert.Fail("not implemented")` as a placeholder, confirming the test fails, then replacing the placeholder with real assertions.
+- Practice **TDD**: when a spec defines behavior (e.g. OpenSpec `#### Scenario:` blocks), write the failing tests from those scenarios first, then implement to green. Each scenario maps to a test case. For test-only changes (adding tests against already-complete production code), satisfy the failing-first requirement by writing the test body with `Assert.Fail("not implemented")` as a placeholder, confirming the test fails, then replacing the placeholder with real assertions. Pre-merge and pure-chore sections that introduce no new production behavior and cite no spec scenarios are exempt from the failing-test-first requirement.
 - Register every new project in `Trakmark.slnx`.
 
 ## Code conventions
 
 - One type per file — never define multiple top-level types in the same `.cs` file. The file name must match the type name.
+- Namespace matches folder structure (IDE0130): a type in `Trakmark/Data/Entities/Foo.cs` is `namespace Trakmark.Data.Entities`. When moving a file into a subfolder, update its namespace and the `using`s of every dependent file to match.
 - Target **net10.0**; use latest C# language features where they improve clarity.
 - Types are **`sealed` by default**; unseal only when inheritance is intended and designed for.
 - Use `sealed record` (or `readonly record struct`) only when the type is a pure data carrier with no validation logic and no custom equality semantics. Domain value objects that enforce invariants in their constructor must be `sealed class`, not `record`, and must implement `IEquatable<T>` with a matching `Equals`/`GetHashCode` override **and** `==`/`!=` operator overloads. Exception: a `readonly record struct` is acceptable when (a) it wraps a single primitive value, (b) the only invariant is a range/null check on that value, and (c) the auto-generated structural equality is semantically correct for the domain. **Every type that implements `IEquatable<T>` must expose `==`/`!=` operator overloads — no exceptions.**
@@ -38,13 +40,26 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
 - Always use braces for control statements (`if`, `else`, `for`, `foreach`, `while`, `do`) — even single-line bodies.
 - No comments that restate what the code already says.
+- Factory methods that generate a new identity (e.g. `Entity.Create(...)`) must be called **exactly once** per entity being constructed. Calling the same factory in separate passes (e.g., a validation pass and a build pass) produces a different identity on each call. Validate inputs first, then call the factory once and use its result throughout.
+- Any service method that saves an entity to a table protected by a unique index must catch `DbUpdateException` and inspect the inner `SqlException` for SQL error numbers **2601** and **2627** (unique-constraint violations). Translate those into a domain-level duplicate result (e.g., a `Conflict` or `DuplicateEntry` discriminated-union case) rather than letting the exception propagate to the caller.
 
 ## Configuration
 
+- EF Core migration scaffolding requires the `dotnet-ef` global tool. Check with `dotnet ef --version` before starting persistence/migration work; if missing, install with `dotnet tool install --global dotnet-ef`. This is a local dev-machine prerequisite, not a project dependency — do not add it to any `.csproj`.
+- Before adding a new EF Core migration, first run `dotnet ef migrations add _check --project <migration-project> --startup-project <web-project>` to detect pending model drift. Inspect the generated file: if it contains changes unrelated to your current work, immediately run `dotnet ef migrations remove` and scaffold a separate migration for that drift alone before continuing. Never let unrelated schema drift ride in the same migration as intentional changes.
+- The EF Core design-time `IDesignTimeDbContextFactory<T>` must not hard-code a connection string. Read it from an environment variable — e.g. `Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") ?? "<localdb-fallback>"`. This is the only place in the codebase where a connection string may live outside user secrets; the env-var-with-fallback pattern is the approved exception.
 - Secrets (API keys) and **connection strings** go in **user secrets**, never in `appsettings.json`.
 - Docker Compose **passwords** go in a **`.env` file**, never hardcoded in `docker-compose.yml`.
 - Endpoint overrides go in `appsettings.json` with sensible defaults in code.
 - `Properties/launchSettings.json` sets `DOTNET_ENVIRONMENT=Development`.
+
+## UI testing
+
+- Use **bUnit + xUnit** in a `Trakmark.Tests` project for all Blazor component tests. Do not use Playwright or Cypress for component-level UI work — they require a running app, cannot mock services via NSubstitute, and make auth simulation difficult.
+- Simulate authentication in bUnit via `TestAuthorizationContext` (from the `bunit.web` package). Do not spin up a real auth server for component tests.
+- Mock the service boundary via NSubstitute in bUnit tests. Do not re-prove database behavior through UI tests — that is covered by integration tests (Testcontainers).
+- Playwright may be introduced later as a separate smoke-test layer for true E2E coverage (login flow, full stack). Keep it in a separate project; do not mix with component tests.
+- Before committing a Blazor form component, verify that every `maxlength`, `min`, and `max` attribute on input elements matches the corresponding domain constraint exactly — look up the domain type's constant or constructor guard; do not rely on memory.
 
 ## Git commits
 
@@ -73,3 +88,5 @@ dotnet build .\Trakmark\Trakmark.slnx 2>&1 |
 
 - Attempt to fix or suppress each warning. Repeat for up to **3 rounds**.
 - If warnings remain after 3 rounds, **block the merge** and write the outstanding items to `docs/sonarqube-warnings-triage.md` (date-stamped entry, branch name, remaining warning list, reason each could not be resolved).
+
+`Trakmark.Domain` line coverage must be **100%** before merging **any change whose diff touches `Trakmark.Domain`**. Run the `coverage-report` skill (or its `Run-Coverage.ps1`) and add tests to close any gap — domain types have no untestable infrastructure dependencies, so an uncovered line means a missing test, not an exemption. Sections/changes that do not modify `Trakmark.Domain` (e.g. persistence, application-layer, or UI-only work) are exempt from this gate — confirm exemption by checking the diff, not by assumption.

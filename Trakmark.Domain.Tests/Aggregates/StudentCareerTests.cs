@@ -65,7 +65,7 @@ public sealed class StudentCareerTests
 
         // Assert
         Assert.NotNull(student.Career.Current);
-        Assert.Equal(year2024, student.Career.Current!.SchoolYear);
+        Assert.Equal(year2024, student.Career.Current.SchoolYear);
     }
 
     // ── Reject a duplicate school year ────────────────────────────────────
@@ -92,7 +92,7 @@ public sealed class StudentCareerTests
 
     /// <summary>Supplies all four grade levels as test cases.</summary>
     public static TheoryData<GradeLevel> AllGradeLevels =>
-        new() { GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior };
+        [GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior];
 
     [Theory]
     [MemberData(nameof(AllGradeLevels))]
@@ -125,7 +125,7 @@ public sealed class StudentCareerTests
 
         // Assert
         Assert.NotNull(current);
-        Assert.Equal(new SchoolYear(2024), current!.SchoolYear);
+        Assert.Equal(new SchoolYear(2024), current.SchoolYear);
     }
 
     [Fact]

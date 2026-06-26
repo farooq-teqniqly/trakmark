@@ -28,7 +28,9 @@ $ErrorActionPreference = "Stop"
 $repoRoot = & git -C $PSScriptRoot rev-parse --show-toplevel
 
 if (-not $SolutionPath) {
-    $SolutionPath = Join-Path $repoRoot "Trakmark" "Trakmark.slnx"
+    # Join-Path in Windows PowerShell 5.1 only accepts two path segments at a
+    # time (the multi-segment overload is PowerShell 7+ only) — chain calls.
+    $SolutionPath = Join-Path (Join-Path $repoRoot "Trakmark") "Trakmark.slnx"
 }
 if (-not (Test-Path $SolutionPath)) {
     Write-Error "Solution not found: $SolutionPath"
@@ -36,7 +38,10 @@ if (-not (Test-Path $SolutionPath)) {
 }
 
 if (-not $OutputDir) {
-    $OutputDir = Join-Path $repoRoot "Trakmark.Domain.Tests" "TestResults" "coverage-analysis" "raw"
+    $OutputDir = Join-Path $repoRoot "Trakmark.Domain.Tests"
+    $OutputDir = Join-Path $OutputDir "TestResults"
+    $OutputDir = Join-Path $OutputDir "coverage-analysis"
+    $OutputDir = Join-Path $OutputDir "raw"
 }
 
 if ($Clean -and (Test-Path $OutputDir)) {

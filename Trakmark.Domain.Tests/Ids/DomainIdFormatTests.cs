@@ -4,9 +4,9 @@ using Trakmark.Domain.Ids;
 namespace Trakmark.Domain.Tests.Ids;
 
 /// <summary>Tests for the shared domain-identity-format spec: prefix + six Crockford base32 chars.</summary>
-public sealed class DomainIdFormatTests
+public sealed partial class DomainIdFormatTests
 {
-    private static readonly Regex CrockfordBody = new(@"^[A-Z2-9]{6}$", RegexOptions.Compiled);
+    private static readonly Regex CrockfordBody = CrockfordBodyRegex();
 
     [Fact]
     public void NewStudentId_MatchesStandardFormat()
@@ -50,4 +50,7 @@ public sealed class DomainIdFormatTests
         // Arrange / Act / Assert
         Assert.False(StudentId.TryParse(value!, out _));
     }
+
+    [GeneratedRegex("^[A-Z2-9]{6}$", RegexOptions.Compiled)]
+    private static partial Regex CrockfordBodyRegex();
 }

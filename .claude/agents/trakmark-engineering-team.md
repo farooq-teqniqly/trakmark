@@ -42,6 +42,28 @@ and retrospective are mandatory regardless of section count.
 For each section (even if only one), spawn a `developer` subagent with
 `isolation: "worktree"` and `run_in_background: true`.
 
+**Do not pre-create a worktree or branch for the agent.** The Agent tool's
+`isolation: "worktree"` parameter always creates its own worktree (under
+`.claude/worktrees/agent-<id>`) and its own branch (`worktree-agent-<id>`,
+based on the current branch) when the subagent spawns — it does not honor or
+even look at any worktree path or branch name you create beforehand or
+mention in the prompt text. A worktree pre-created at a different path (e.g.
+`C:\src\my\trakmark-section<N>`) will sit unused; the agent does its actual
+work in the auto-created one regardless of what the prompt says. Confirmed
+recurring across the pilot (`worktree-agent-a4417bb67ba549d93`) and add-cities
+§3 (`worktree-agent-a4905682645909aa6`) — this is not a one-off.
+
+Instead:
+1. Spawn the subagent with `isolation: "worktree"` directly — do not run any
+   `git worktree add` setup step first.
+2. After the subagent's first response (or completion), read back the
+   worktree path and branch the Agent tool actually assigned — do not invent
+   or assume a path. Treat that as authoritative for every subsequent step
+   (reviewer prompts, coverage checks, merge, cleanup).
+3. Use that discovered path/branch in all later steps (Step 2 reviewer
+   prompt's `Work in:`/`Branch:`, Step 3 fix agents, Step 5 merge, Step 6
+   cleanup) instead of any name you planned in advance.
+
 Prompt template for each developer agent:
 
 ```
@@ -73,19 +95,35 @@ Follow the developer agent instructions exactly:
 Use PowerShell (Bash tool available for dotnet/git). All paths relative to worktree root.
 ```
 
-After launching all agents, immediately patch every newly created worktree's
-`.claude/settings.local.json` to include:
+You cannot patch a worktree's `.claude/settings.local.json` before spawning —
+the worktree does not exist on disk until the Agent tool creates it as part of
+the `isolation: "worktree"` spawn. Expect the agent's first tool call in that
+fresh worktree to be denied (Bash, Read, Glob, and Grep all included) because
+the isolated settings context does not inherit the project's default-allow
+list. Treat this first denial as expected, not a deeper failure:
 
-```json
-{
-  "permissions": {
-    "allow": ["Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
-  }
-}
-```
+1. From the orchestrator, once the worktree path is known (see Step 1),
+   patch `<worktree-path>/.claude/settings.local.json` to include:
 
-Read the file first if it exists; merge the entries rather than overwriting if
-it already has content.
+   ```json
+   {
+     "permissions": {
+       "allow": ["Read", "Glob", "Grep", "Write", "Edit", "Bash(git *)", "Bash(dotnet *)"]
+     }
+   }
+   ```
+
+   Read the file first if it exists; merge the entries rather than
+   overwriting if it already has content. `Read`, `Glob`, and `Grep` are
+   normally default-allowed tools elsewhere, but a fresh worktree's isolated
+   settings context does not inherit that default — they must be explicitly
+   listed.
+2. Relaunch the same agent/prompt once in the existing worktree (no new
+   `isolation` parameter, so the Agent tool reuses the already-created
+   worktree instead of spawning another one) so it picks up the patched
+   settings.
+3. If the relaunch is still denied, re-verify the file contents before
+   treating it as a deeper failure.
 
 ## Step 2 — React to completions: launch per-section reviewers
 
@@ -104,8 +142,15 @@ Branch: <worktree-branch>
 Context: domain model for a school track & field app (.NET 10, C#, xUnit).
 Section <N> adds: <brief description of what was implemented>.
 
-Run from within the worktree directory.
-git log --oneline -5 and git diff domain-modelling..HEAD to scope the diff.
+Do not `cd` into the worktree — run every git/dotnet command with the
+worktree path as an explicit argument instead, e.g.
+`git -C <worktree-path> log --oneline -5`,
+`git -C <worktree-path> diff domain-modelling..HEAD`,
+`dotnet test <worktree-path>\Trakmark\Trakmark.slnx`.
+A bare `cd <path> && dotnet ...` compound command will not match the
+`Bash(dotnet *)` / `Bash(git *)` allow-list patterns (the command does not
+start with `dotnet`/`git`) and will be denied — always lead with the binary
+name and pass the path as an argument.
 No GitHub PR — skip gh api fetch.
 
 Apply project standards from CLAUDE.md:
@@ -130,12 +175,25 @@ When a reviewer completes:
    `cavecrew-builder` — it has no Bash) with `run_in_background: true` to fix
    them. Give the agent: the worktree path, branch, files to fix, and exact
    findings with line citations.
-2. If the agent cannot commit (git blocked), commit from the main thread:
-   `cd <worktree> && dotnet test ... && git add ... && git commit ...`
+2. If the agent cannot commit (git blocked), commit from the main thread.
+   The orchestrator's Bash `cd` to a path outside its own cwd is denied — use
+   `-C <worktree>` / absolute-path-first-arg forms instead, never `cd &&`:
+   `git -C <worktree> add ... && git -C <worktree> commit ...` and
+   `dotnet test <worktree>\Trakmark\Trakmark.slnx ...`
 3. Spawn a re-reviewer with incremental mode: parse `Reviewed commit:` from the
    existing review file, scope to `git diff <old-hash>..HEAD`.
 4. Repeat up to **3 review rounds total**. After round 3, carry forward any
    remaining Low/Info findings — do not block merge for them.
+
+## Step 3.5 — Pre-merge: 100% Trakmark.Domain coverage
+
+Before merging any worktree branch that touches `Trakmark.Domain`, run the
+`coverage-report` skill (or its `Run-Coverage.ps1`) against that worktree. If
+`Trakmark.Domain` line coverage is below 100%, spawn a `developer` agent to add
+the missing tests — domain types have no untestable infrastructure
+dependencies, so a gap means a missing test, not an exemption — and re-run
+coverage until it hits 100%. Do not proceed to Step 4 for a section until its
+coverage is 100%.
 
 ## Step 4 — Pre-merge: consolidate tasks.md
 
@@ -158,13 +216,15 @@ Once all sections pass review and tasks.md is pre-consolidated:
 
 1. Determine merge order: most independent sections first; sections that define
    types others depend on before sections that consume them.
-2. For each section in order:
+2. For each section in order, run all git/dotnet commands with `-C <repo-root>`
+   or an absolute path as the first argument — never `cd <repo-root> && ...`.
+   The orchestrator's Bash `cd` to a path outside its own cwd is denied, but
+   `-C`/direct-path invocations work:
    ```bash
-   cd <repo-root>
-   git merge --no-ff <worktree-branch> -m "Merge section <N>: <Title>"
+   git -C <repo-root> merge --no-ff <worktree-branch> -m "Merge section <N>: <Title>"
    # On tasks.md conflict:
-   git checkout --ours openspec/changes/<change>/tasks.md
-   git add openspec/changes/<change>/tasks.md
+   git -C <repo-root> checkout --ours openspec/changes/<change>/tasks.md
+   git -C <repo-root> add openspec/changes/<change>/tasks.md
    ```
 3. On conflict in domain files: keep the authoritative version for shared types
    (prefer the section that owns the type); take the version with more complete
@@ -185,6 +245,18 @@ git branch -d <worktree-branch>
 
 Do this for every section. Verify with `git worktree list` and `git branch -l`.
 
+`git worktree remove --force` can fail with "Permission denied" deleting the
+directory on disk — even when the git-level removal already succeeded (the
+worktree no longer appears in `git worktree list`) and the branch deletes
+cleanly with `git branch -d`. This is a file-lock held by another process
+(commonly the `dotnet test` runner or a Testcontainers/SQL Server artifact),
+not a real cleanup failure. Treat it as a known limitation: confirm with
+`git worktree list` that the worktree is logically gone; if so, the stale
+directory under `.claude/worktrees/` is safe to ignore — do not retry-loop or
+block the orchestration run on it. A directory left behind this way will not
+interfere with future `isolation: "worktree"` spawns (they create new
+uniquely-named directories).
+
 ## Step 7 — Retrospective
 
 Spawn a `retrospective` subagent (foreground, not background). Pass:
@@ -196,12 +268,33 @@ Spawn a `retrospective` subagent (foreground, not background). Pass:
 
 ## Guardrails
 
+- Bash `cd` to a path outside the orchestrator's own cwd is denied. Always use
+  `git -C <path> ...` / `dotnet test <path>\...` (absolute path as the first
+  argument) instead of `cd <path> && ...` for any git/dotnet command the
+  orchestrator runs directly against a worktree or the main repo.
 - Fix agents: always `subagent_type: developer`. Never `cavecrew-builder` (no Bash).
-- If a developer agent cannot write files: patch the worktree's
-  `.claude/settings.local.json` (add Write, Edit, Bash(git *), Bash(dotnet *))
-  and relaunch in the existing worktree (no new isolation).
+- Never plan or reference a worktree path/branch name before spawning the
+  `isolation: "worktree"` subagent. Always discover the actual auto-assigned
+  path (`.claude/worktrees/agent-<id>`) and branch (`worktree-agent-<id>`)
+  from the spawn result and use that everywhere downstream (reviewer prompts,
+  fix agents, coverage checks, merge, cleanup). Do not run `git worktree add`
+  yourself for a developer/reviewer subagent.
+- If a developer or reviewer agent cannot write files or read/glob/grep: patch
+  the worktree's `.claude/settings.local.json` (add Read, Glob, Grep, Write,
+  Edit, Bash(git *), Bash(dotnet *)) and relaunch in the existing worktree (no
+  new isolation).
 - If a developer agent cannot commit: commit from the main thread.
+- The orchestrator (running in the main repo) does not have direct filesystem
+  or Bash access into a spawned worktree's path beyond its
+  `.claude` subdirectory — do not attempt to `Read`/`Bash` into a worktree
+  to verify a subagent's work directly. Trust the developer agent's self-report
+  and rely on the pr-reviewer subagent (which runs with its own tool grants
+  inside the worktree) for independent verification instead.
 - tasks.md will have merge conflicts across branches — resolve by accepting all
   checked-off tasks from all branches (union of completed tasks).
+- A stale worktree directory left on disk after `git worktree remove --force`
+  reports "Permission denied" is safe to ignore once `git worktree list` no
+  longer shows it — it is a file-lock artifact (test runner/Testcontainers),
+  not a logical cleanup failure. Do not block or retry-loop on it.
 - Track progress with TaskCreate/TaskUpdate: one task per section (impl +
   review), plus merge and retrospective tasks with blockedBy dependencies.

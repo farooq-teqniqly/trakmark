@@ -1,0 +1,43 @@
+# Use Case 002 - Add School Districts
+
+## Summary
+User adds school districts which are used when creating Schools.
+
+## Actor
+Registered user
+
+## Preconditions
+1. Registered user is authenticated.
+2. Registered user is member of Admin role.
+3. Cities have been added by an Admin. See 001-add-cities.
+4. Roles have been seeded by system.
+
+## Main Sequence
+1. User clicks Admin drop down menu in nav bar.
+2. User selects Add School Districts nav bar item.
+3. System shows Add School Districts form.
+4. User enters one or more (max 100) School Districts:
+    - Name  (required)
+    - State (required, drop down)
+    - City (required, drop down)
+5. If no validation errors, Save button is enabled.
+6. User clicks Save.
+7. Server validates form data.
+8. If server validation succeeds, School Districts are persisted.
+9. Notification toast saying Save is successful.
+
+## Alternative Sequences
+4A1. Validation fails. The system shows the error message to the user.
+5A1. User clicks Cancel. System navigates back to Home page. No data is modified.
+8A1. Server validation fails. The system shows the error message to the user. Notification toast saying Save failed.
+
+## Persistence Notes
+When a School District is added:
+- Database sets created date to the current UTC time.
+- Database sets last updated date to NULL.
+- Database auto assigns surrogate key.
+    
+## Business Rules
+School Districts are duplicates if:
+    - Names, Cities, and States are equal.
+    - Duplicates not allowed.

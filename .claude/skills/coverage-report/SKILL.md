@@ -21,8 +21,12 @@ Defaults:
 Run `Run-Coverage.ps1` (co-located with this SKILL.md) with `-Clean` to get a fresh Cobertura XML:
 
 ```powershell
+# Windows PowerShell 5.1 only accepts two Join-Path segments at a time —
+# chain calls rather than passing 3+ path segments in one call.
 $repoRoot = & git rev-parse --show-toplevel
-$skillDir = Join-Path $repoRoot ".claude" "skills" "coverage-report"
+$skillDir = Join-Path $repoRoot ".claude"
+$skillDir = Join-Path $skillDir "skills"
+$skillDir = Join-Path $skillDir "coverage-report"
 & (Join-Path $skillDir "Run-Coverage.ps1") -Clean
 ```
 
