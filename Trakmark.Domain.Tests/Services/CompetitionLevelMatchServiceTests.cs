@@ -131,10 +131,13 @@ public sealed class CompetitionLevelMatchServiceTests
         var hsSchool = CreateHsSchool();
         var student = StudentEnrolledAt(hsSchool, new SchoolYear(2025));
         var hsMeet = HighSchoolMeet2025();
-        var emptySchools = new Dictionary<SchoolId, School>();
 
         // Act
-        var isValid = CompetitionLevelMatchService.IsLevelMatch(student, hsMeet, emptySchools);
+        var isValid = CompetitionLevelMatchService.IsLevelMatch(
+            student,
+            hsMeet,
+            new Dictionary<SchoolId, School>()
+        );
 
         // Assert
         Assert.False(isValid);
