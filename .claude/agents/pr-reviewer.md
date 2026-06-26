@@ -88,6 +88,8 @@ Apply Blazor/.NET best practices as a primary lens across all findings. Flag dev
 
 ## Output file
 
+**Override**: if the calling prompt explicitly says "reply in chat only", "do not write a file", or "do not write a docs/PR_REVIEW*.md file", honor that instruction — deliver all findings in the chat reply and skip the file write entirely. The default below applies only when no such override is given.
+
 1. Write complete review to `docs/PR_REVIEW.md` (or `docs/PR_REVIEW_<YYYY-MM-DD>.md`, or `docs/PR_REVIEW_pr-<number>.md` when PR number known). Create `docs/` if missing.
 2. Header **must** include `Reviewed commit:` with short hash and branch:
    ```

@@ -12,7 +12,8 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Use **NSubstitute** for mocking in tests.
 - One test class per production type, one file per test class — never group multiple unrelated types in a single test file.
 - Each test has `// Arrange`, `// Act`, `// Assert` comments.
-- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
+- Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. The moment you need a second `[Fact]` that tests the same method with different inputs or expected outputs, stop and write a `[Theory]` instead — do not accumulate `[Fact]`s first and consolidate later. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
+- When writing tests for a type that returns a discriminated union or named result subtypes (e.g. `Success`, `NotFound`, `Conflict`, `Duplicate`), enumerate all subtypes before writing the first test and ensure each subtype has at least one dedicated test case.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
 - For integration and end-to-end tests, prefer the real database via **Testcontainers** over in-memory fakes.
 - Do not test `internal` helpers directly. Cover them through their public API callers (e.g. test `DomainId.IsValid` by calling `TryParse`, not by invoking `IsValid` directly). If the helper is not reachable through any public surface, that is a design signal, not a reason to add a direct test.
@@ -58,6 +59,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Simulate authentication in bUnit via `TestAuthorizationContext` (from the `bunit.web` package). Do not spin up a real auth server for component tests.
 - Mock the service boundary via NSubstitute in bUnit tests. Do not re-prove database behavior through UI tests — that is covered by integration tests (Testcontainers).
 - Playwright may be introduced later as a separate smoke-test layer for true E2E coverage (login flow, full stack). Keep it in a separate project; do not mix with component tests.
+- Before committing a Blazor form component, verify that every `maxlength`, `min`, and `max` attribute on input elements matches the corresponding domain constraint exactly — look up the domain type's constant or constructor guard; do not rely on memory.
 
 ## Git commits
 
