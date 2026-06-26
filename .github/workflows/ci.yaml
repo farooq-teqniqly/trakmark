@@ -6,9 +6,6 @@ on:
     pull_request:
     workflow_dispatch:
 
-env:
-    PROJECT_NAME: Trakmark
-
 jobs:
     build:
         name: Build
@@ -35,6 +32,7 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: build
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
         env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
