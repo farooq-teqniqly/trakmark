@@ -65,7 +65,7 @@ public sealed class StudentCareerTests
 
         // Assert
         Assert.NotNull(student.Career.Current);
-        Assert.Equal(year2024, student.Career.Current!.SchoolYear);
+        Assert.Equal(year2024, student.Career.Current.SchoolYear);
     }
 
     // ── Reject a duplicate school year ────────────────────────────────────
@@ -125,7 +125,7 @@ public sealed class StudentCareerTests
 
         // Assert
         Assert.NotNull(current);
-        Assert.Equal(new SchoolYear(2024), current!.SchoolYear);
+        Assert.Equal(new SchoolYear(2024), current.SchoolYear);
     }
 
     [Fact]
