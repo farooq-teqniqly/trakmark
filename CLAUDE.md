@@ -11,7 +11,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Test projects use **xUnit** and reference the project under test.
 - Use **NSubstitute** for mocking in tests.
 - One test class per production type, one file per test class — never group multiple unrelated types in a single test file.
-- Each test has `// Arrange`, `// Act`, `// Assert` comments.
+- Each test has `// Arrange`, `// Act`, `// Assert` comments. When all phases collapse to a single expression or lambda (e.g. `Assert.Throws<>(...)` or a one-liner `Assert.False(SomeCall(value))`), combine them as `// Arrange / Act / Assert` or `// Act / Assert` on a single line — do not artificially split. Never annotate AAA markers with inline notes (e.g. `// Assert — some explanation`); use the plain marker only.
 - Prefer data-driven tests (`[Theory]`/`[InlineData]`/`[MemberData]`) over many near-duplicate `[Fact]`s. The moment you need a second `[Fact]` that tests the same method with different inputs or expected outputs, stop and write a `[Theory]` instead — do not accumulate `[Fact]`s first and consolidate later. Once a `[Theory]` covers a case, do not also write a `[Fact]` for the same scenario — it is redundant and will diverge.
 - When writing tests for a type that returns a discriminated union or named result subtypes (e.g. `Success`, `NotFound`, `Conflict`, `Duplicate`), enumerate all subtypes before writing the first test and ensure each subtype has at least one dedicated test case.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.

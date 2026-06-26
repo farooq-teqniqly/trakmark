@@ -1,7 +1,7 @@
 namespace Trakmark.Data.Entities;
 
 /// <summary>
-/// EF Core persistence entity for a <see cref="Domain.ValueObjects.City"/>, carrying
+/// EF Core persistence entity for a <see cref="Trakmark.Domain.ValueObjects.City"/>, carrying
 /// audit metadata (<see cref="CreatedAt"/>, <see cref="CreatedByUserId"/>) that is
 /// not part of the domain model.
 /// </summary>

@@ -29,7 +29,7 @@ Registered user
 9. Notification toast saying Save is successful.
 
 ## Alternative Sequences
-4A1. Validarion fails. The system shows the error message to the user.
+4A1. Validation fails. The system shows the error message to the user.
 5A1. User clicks Cancel. System navigates back to Home page. No data is modified.
 8A1. Server validation fails. The system shows the error message to the user. Notification toast saying Save failed.
 

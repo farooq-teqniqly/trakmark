@@ -72,7 +72,7 @@ public sealed class AddCitiesTests : BunitContext
             await cut.Find("#add-row-btn").ClickAsync(new MouseEventArgs());
         }
 
-        // Assert — 100 rows present and Add Row disabled
+        // Assert
         Assert.Equal(100, cut.FindAll("input[type='text']").Count);
         Assert.True(cut.Find("#add-row-btn").HasAttribute("disabled"));
     }
@@ -87,7 +87,7 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         var cut = Render<AddCities>();
 
-        // Assert — initial row has empty name → Save disabled
+        // Assert
         Assert.True(cut.Find("#save-btn").HasAttribute("disabled"));
     }
 
