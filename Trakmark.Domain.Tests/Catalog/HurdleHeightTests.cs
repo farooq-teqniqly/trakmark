@@ -35,7 +35,8 @@ public sealed class HurdleHeightTests
     public void HurdleHeight_Equals_WrongType_ReturnsFalse()
     {
         // Arrange / Act / Assert
-        Assert.False(HurdleHeight.Inches39.Equals("39\""));
+        object wrongType = "39\"";
+        Assert.False(HurdleHeight.Inches39.Equals(wrongType));
     }
 
     [Fact]
