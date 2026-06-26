@@ -203,13 +203,6 @@
         /// <summary>Whether any field in this row has been interacted with.</summary>
         public bool Touched { get; set; }
 
-        /// <summary>Returns <see langword="true"/> when the name is non-empty and at most 100 characters after trimming.</summary>
-        public bool IsNameValid =>
-            !string.IsNullOrWhiteSpace(Name) && Name.Trim().Length <= 100;
-
-        /// <summary>Returns <see langword="true"/> when a state has been selected.</summary>
-        public bool IsStateValid => !string.IsNullOrEmpty(StateAbbreviation);
-
         /// <summary>Returns <see langword="true"/> when both name and state are valid.</summary>
         public bool IsValid => IsNameValid && IsStateValid;
 
@@ -241,5 +234,13 @@
 
         /// <summary>Returns <see langword="true"/> when the state error should be displayed.</summary>
         public bool ShowStateError => Touched && StateError is not null;
+
+        /// <summary>Returns <see langword="true"/> when the name is non-empty and at most 100 characters after trimming.</summary>
+        private bool IsNameValid =>
+            !string.IsNullOrWhiteSpace(Name) && Name.Trim().Length <= 100;
+
+        /// <summary>Returns <see langword="true"/> when a state has been selected.</summary>
+        private bool IsStateValid => !string.IsNullOrEmpty(StateAbbreviation);
+
     }
 }
