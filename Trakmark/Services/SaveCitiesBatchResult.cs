@@ -14,7 +14,7 @@ public abstract class SaveCitiesBatchResult
         /// <summary>The number of cities persisted in this batch.</summary>
         public int Count { get; }
 
-        /// <summary>Initializes a new <see cref="Success"/> result.</summary>
+        /// <summary>Initializes a new <see cref="SaveCitiesBatchResult.Success"/> result.</summary>
         /// <param name="count">The number of cities persisted.</param>
         public Success(int count)
         {
@@ -31,7 +31,7 @@ public abstract class SaveCitiesBatchResult
         /// <summary>A human-readable description of the first validation failure.</summary>
         public string Message { get; }
 
-        /// <summary>Initializes a new <see cref="ValidationError"/> result.</summary>
+        /// <summary>Initializes a new <see cref="SaveCitiesBatchResult.ValidationError"/> result.</summary>
         /// <param name="message">The validation failure message.</param>
         public ValidationError(string message)
         {
@@ -52,7 +52,7 @@ public abstract class SaveCitiesBatchResult
         /// <summary>The two-letter state abbreviation that appeared more than once in the batch.</summary>
         public string StateAbbreviation { get; }
 
-        /// <summary>Initializes a new <see cref="InBatchDuplicate"/> result.</summary>
+        /// <summary>Initializes a new <see cref="SaveCitiesBatchResult.InBatchDuplicate"/> result.</summary>
         /// <param name="cityName">The duplicate city name.</param>
         /// <param name="stateAbbreviation">The duplicate state abbreviation.</param>
         public InBatchDuplicate(string cityName, string stateAbbreviation)
@@ -76,7 +76,7 @@ public abstract class SaveCitiesBatchResult
         /// <summary>The two-letter state abbreviation of the duplicate city.</summary>
         public string StateAbbreviation { get; }
 
-        /// <summary>Initializes a new <see cref="CrossBatchDuplicate"/> result.</summary>
+        /// <summary>Initializes a new <see cref="SaveCitiesBatchResult.CrossBatchDuplicate"/> result.</summary>
         /// <param name="cityName">The duplicate city name.</param>
         /// <param name="stateAbbreviation">The duplicate state abbreviation.</param>
         public CrossBatchDuplicate(string cityName, string stateAbbreviation)

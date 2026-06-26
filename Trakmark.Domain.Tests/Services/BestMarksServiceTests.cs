@@ -382,7 +382,7 @@ public sealed class BestMarksServiceTests
         var student = CreateStudentWithEnrollments(Season2025);
 
         // Act
-        var pb = BestMarksService.PersonalBest(student, Run100, Enumerable.Empty<Result>());
+        var pb = BestMarksService.PersonalBest(student, Run100, []);
 
         // Assert
         Assert.Null(pb);

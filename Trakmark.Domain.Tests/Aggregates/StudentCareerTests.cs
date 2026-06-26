@@ -92,7 +92,7 @@ public sealed class StudentCareerTests
 
     /// <summary>Supplies all four grade levels as test cases.</summary>
     public static TheoryData<GradeLevel> AllGradeLevels =>
-        new() { GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior };
+        [GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior];
 
     [Theory]
     [MemberData(nameof(AllGradeLevels))]
