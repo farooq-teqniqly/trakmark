@@ -102,6 +102,9 @@ public sealed class SaveCitiesBatchService
             cities.Select(c => c.State.Abbreviation.ToUpperInvariant()),
             StringComparer.Ordinal);
 
+        // EF Core cannot translate ToUpperInvariant() to SQL, so ToUpper() is used here
+        // instead. SQL UPPER() is semantically equivalent to ToUpperInvariant() for U.S.
+        // city and state names, which are restricted to ASCII characters.
         var existing = await _context.Cities
             .Where(e => batchNames.Contains(e.Name.ToUpper()) && batchAbbrs.Contains(e.State.ToUpper()))
             .ToListAsync();
