@@ -42,5 +42,5 @@
 
 ## 7. Pre-merge
 
-- [ ] 7.1 Register any new test/data-access projects in `Trakmark.slnx` if not already present.
-- [ ] 7.2 Run the SonarQube clean-build warning check per `CLAUDE.md` and resolve or triage findings.
+- [x] 7.1 Register any new test/data-access projects in `Trakmark.slnx` if not already present.
+- [x] 7.2 Run the SonarQube clean-build warning check per `CLAUDE.md` and resolve or triage findings.
