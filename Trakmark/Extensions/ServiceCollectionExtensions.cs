@@ -24,16 +24,23 @@ public static class ServiceCollectionExtensions
             // Set credentials via user secrets (dev) or environment variables (prod):
             //   dotnet user-secrets set "Authentication:Google:ClientId" "<id>"
             //   dotnet user-secrets set "Authentication:Google:ClientSecret" "<secret>"
-            var clientId = config["Authentication:Google:ClientId"];
-            var clientSecret = config["Authentication:Google:ClientSecret"];
-            if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
+            var clientId =
+                config["Authentication:Google:ClientId"]
+                ?? throw new InvalidOperationException(
+                    "Google OAuth ClientId is not configured. Set 'Authentication:Google:ClientId' in user secrets or environment variables."
+                );
+
+            var clientSecret =
+                config["Authentication:Google:ClientSecret"]
+                ?? throw new InvalidOperationException(
+                    "Google OAuth ClientSecret is not configured. Set 'Authentication:Google:ClientSecret' in user secrets or environment variables."
+                );
+
+            auth.AddGoogle(options =>
             {
-                auth.AddGoogle(options =>
-                {
-                    options.ClientId = clientId;
-                    options.ClientSecret = clientSecret;
-                });
-            }
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+            });
 
             return services;
         }
