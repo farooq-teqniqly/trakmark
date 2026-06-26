@@ -155,7 +155,7 @@ public sealed class SaveCitiesBatchService
         }
         catch (DbUpdateException ex) when (IsDuplicateKeyException(ex))
         {
-            return new SaveCitiesBatchResult.CrossBatchDuplicate(string.Empty, string.Empty);
+            return new SaveCitiesBatchResult.ConcurrentDuplicate();
         }
     }
 

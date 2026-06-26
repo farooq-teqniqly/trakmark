@@ -87,4 +87,15 @@ public abstract class SaveCitiesBatchResult
             StateAbbreviation = stateAbbreviation;
         }
     }
+
+    /// <summary>
+    /// The database rejected the batch insert with a unique-constraint violation after
+    /// the pre-persist cross-batch duplicate check passed. This indicates a concurrent
+    /// insert from another request landed between the check and the save. The conflicting
+    /// city name and state are not identifiable from the exception; the caller should
+    /// treat the entire batch as rejected and advise the user to retry.
+    /// </summary>
+    public sealed class ConcurrentDuplicate : SaveCitiesBatchResult
+    {
+    }
 }

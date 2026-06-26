@@ -182,6 +182,38 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
         Assert.Equal(adminId.Value, city.CreatedByUserId);
     }
 
+    [Fact]
+    public async Task Unique_constraint_violation_at_persist_returns_ConcurrentDuplicate()
+    {
+        // Arrange
+        var adminId = RegisteredUserId.NewId();
+        var rows = new List<SaveCityRow> { new("Springfield", State.Illinois) };
+
+        await using var context = CreateContext();
+
+        // Pre-stage a city entity that duplicates the batch row, but do NOT save it.
+        // This simulates a concurrent insert: FindCrossBatchDuplicateAsync queries
+        // the database (sees nothing — the staged entity is only in the local change
+        // tracker), but SaveChangesAsync flushes both the staged entity and the
+        // service's entity and hits the (Name, State) unique index.
+        context.Cities.Add(new CityEntity
+        {
+            CityId = "CTY-RACE1",
+            Name = "Springfield",
+            State = "IL",
+            CreatedAt = DateTimeOffset.UtcNow,
+            CreatedByUserId = adminId.Value,
+        });
+
+        var service = new SaveCitiesBatchService(context);
+
+        // Act
+        var result = await service.SaveAsync(rows, adminId);
+
+        // Assert
+        Assert.IsType<SaveCitiesBatchResult.ConcurrentDuplicate>(result);
+    }
+
     private ApplicationDbContext CreateContext()
     {
         var connectionStringBuilder = new SqlConnectionStringBuilder(_container.GetConnectionString())
