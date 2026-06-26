@@ -2,6 +2,8 @@
 
 ## Developer Setup
 
+All commands run from the **repo root** unless noted otherwise.
+
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
@@ -21,7 +23,11 @@ MSSQL_SA_PASSWORD=<your-strong-password>
 Start SQL Server:
 
 ```bash
+# Docker
 docker compose up -d
+
+# Podman
+podman compose up -d
 ```
 
 This runs SQL Server 2025 on `localhost,1433` with a persistent volume (`sqlserver_data`).
@@ -33,10 +39,9 @@ This runs SQL Server 2025 on `localhost,1433` with a persistent volume (`sqlserv
 All secrets go in user secrets — never in `appsettings.json`.
 
 ```powershell
-cd Trakmark
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;"
-dotnet user-secrets set "Authentication:Google:ClientId" "<your-client-id>"
-dotnet user-secrets set "Authentication:Google:ClientSecret" "<your-client-secret>"
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;" --project Trakmark
+dotnet user-secrets set "Authentication:Google:ClientId" "<your-client-id>" --project Trakmark
+dotnet user-secrets set "Authentication:Google:ClientSecret" "<your-client-secret>" --project Trakmark
 ```
 
 ---
@@ -89,9 +94,14 @@ App is available at `https://localhost:7214`.
 After logging in for the first time, assign your account the Admin role directly in the database:
 
 ```sql
-DECLARE @UserId  NVARCHAR(450) = (SELECT Id FROM AspNetUsers  WHERE Email = '<your-email>');
-DECLARE @RoleId  NVARCHAR(450) = (SELECT Id FROM AspNetRoles  WHERE Name  = 'Admin');
-INSERT INTO AspNetUserRoles (UserId, RoleId) VALUES (@UserId, @RoleId);
+DECLARE @UserId  NVARCHAR(450) = (SELECT Id FROM AspNetUsers WHERE Email = '<your-email>');
+DECLARE @RoleId  NVARCHAR(450) = (SELECT Id FROM AspNetRoles WHERE Name  = 'Admin');
+
+IF @UserId IS NULL  THROW 50000, 'User not found — check the email address.', 1;
+IF @RoleId IS NULL  THROW 50001, 'Admin role not found — ensure the app has been run at least once to seed roles.', 1;
+
+IF NOT EXISTS (SELECT 1 FROM AspNetUserRoles WHERE UserId = @UserId AND RoleId = @RoleId)
+    INSERT INTO AspNetUserRoles (UserId, RoleId) VALUES (@UserId, @RoleId);
 ```
 
 Run this against the `Trakmark` database on `localhost,1433` using any SQL client (SSMS, Azure Data Studio, etc.).
