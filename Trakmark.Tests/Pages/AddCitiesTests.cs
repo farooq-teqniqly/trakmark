@@ -67,7 +67,7 @@ public sealed class AddCitiesTests : BunitContext
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
-        // Add 99 more rows (starts at 1)
+        // Act
         for (var i = 0; i < 99; i++)
         {
             await cut.Find("#add-row-btn").ClickAsync(new MouseEventArgs());
@@ -252,6 +252,54 @@ public sealed class AddCitiesTests : BunitContext
         Assert.NotEmpty(cut.FindAll("#error-alert"));
         Assert.Empty(cut.FindAll("#success-alert"));
         Assert.Contains("Springfield", cut.Markup);
+    }
+
+    [Fact]
+    public async Task Save_shows_error_alert_on_in_batch_duplicate()
+    {
+        // Arrange
+        SetupAdminAuth();
+        var mockService = Substitute.For<ISaveCitiesBatchService>();
+        mockService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+            .Returns(new SaveCitiesBatchResult.InBatchDuplicate("Springfield", "IL"));
+        Services.AddSingleton(mockService);
+
+        var cut = Render<AddCities>();
+        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
+
+        // Act
+        await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
+
+        // Assert — error alert shown, no success alert
+        Assert.NotEmpty(cut.FindAll("#error-alert"));
+        Assert.Empty(cut.FindAll("#success-alert"));
+        Assert.Contains("Springfield", cut.Markup);
+    }
+
+    [Fact]
+    public async Task Save_shows_error_alert_on_concurrent_duplicate()
+    {
+        // Arrange
+        SetupAdminAuth();
+        var mockService = Substitute.For<ISaveCitiesBatchService>();
+        mockService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+            .Returns(new SaveCitiesBatchResult.ConcurrentDuplicate());
+        Services.AddSingleton(mockService);
+
+        var cut = Render<AddCities>();
+        await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
+
+        // Act
+        await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
+
+        // Assert — error alert shown, no success alert
+        Assert.NotEmpty(cut.FindAll("#error-alert"));
+        Assert.Empty(cut.FindAll("#success-alert"));
+        Assert.Contains("duplicate was detected during save", cut.Markup);
     }
 
     // -----------------------------------------------------------------------

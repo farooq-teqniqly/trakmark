@@ -33,14 +33,14 @@
     @for (var i = 0; i < _rows.Count; i++)
     {
         var row = _rows[i];
-        <div class="row g-2 mb-2 align-items-start">
+        <div @key="row" class="row g-2 mb-2 align-items-start">
             <div class="col-md-5">
                 <input type="text"
                        class="form-control @(row.ShowNameError ? "is-invalid" : "")"
                        placeholder="City name"
                        value="@row.Name"
                        @onchange="@(e => OnNameChanged(row, e.Value?.ToString() ?? string.Empty))"
-                       maxlength="101" />
+                       maxlength="100" />
                 @if (row.ShowNameError)
                 {
                     <div class="invalid-feedback">@row.NameError</div>
@@ -101,14 +101,12 @@
     {
         row.Name = value;
         row.Touched = true;
-        StateHasChanged();
     }
 
     private void OnStateChanged(CityRow row, string value)
     {
         row.StateAbbreviation = value;
         row.Touched = true;
-        StateHasChanged();
     }
 
     private void AddRow()
@@ -166,11 +164,10 @@
         var result = new List<SaveCityRow>(_rows.Count);
         foreach (var row in _rows)
         {
-            var state = StateHelper.GetByAbbreviation(row.StateAbbreviation);
-            if (state is not null)
-            {
-                result.Add(new SaveCityRow(row.Name, state));
-            }
+            var state = StateHelper.GetByAbbreviation(row.StateAbbreviation)
+                ?? throw new InvalidOperationException(
+                    $"BuildSaveRows called with unresolved state '{row.StateAbbreviation}'. Call only when IsFormValid is true.");
+            result.Add(new SaveCityRow(row.Name, state));
         }
 
         return result;

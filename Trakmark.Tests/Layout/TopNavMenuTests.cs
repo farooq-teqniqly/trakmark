@@ -7,45 +7,34 @@ namespace Trakmark.Tests.Layout;
 /// <summary>bUnit tests for <see cref="TopNavMenu"/>.</summary>
 public sealed class TopNavMenuTests : BunitContext
 {
-    [Fact]
-    public void AddCities_link_renders_for_Admin_role()
+    /// <summary>Provides auth setup actions and expected Add Cities link counts for the theory.</summary>
+    public static IEnumerable<object[]> AddCitiesLinkVisibilityData()
     {
-        // Arrange
-        AddAuthorization()
-            .SetAuthorized("admin@test.com")
-            .SetRoles("Admin");
+        yield return [new Action<BunitAuthorizationContext>(auth =>
+        {
+            auth.SetAuthorized("admin@test.com").SetRoles("Admin");
+        }), 1];
 
-        // Act
-        var cut = Render<TopNavMenu>();
+        yield return [new Action<BunitAuthorizationContext>(auth =>
+        {
+            auth.SetAuthorized("user@test.com");
+        }), 0];
 
-        // Assert
-        Assert.NotEmpty(cut.FindAll("a[href='admin/cities/add']"));
+        yield return [new Action<BunitAuthorizationContext>(_ => { }), 0];
     }
 
-    [Fact]
-    public void AddCities_link_does_not_render_for_authenticated_non_Admin_user()
+    [Theory]
+    [MemberData(nameof(AddCitiesLinkVisibilityData))]
+    public void AddCities_link_visibility_matches_role(Action<BunitAuthorizationContext> setupAuth, int expectedCount)
     {
         // Arrange
-        AddAuthorization()
-            .SetAuthorized("user@test.com");
+        var auth = AddAuthorization();
+        setupAuth(auth);
 
         // Act
         var cut = Render<TopNavMenu>();
 
         // Assert
-        Assert.Empty(cut.FindAll("a[href='admin/cities/add']"));
-    }
-
-    [Fact]
-    public void AddCities_link_does_not_render_when_unauthenticated()
-    {
-        // Arrange
-        AddAuthorization();
-
-        // Act
-        var cut = Render<TopNavMenu>();
-
-        // Assert
-        Assert.Empty(cut.FindAll("a[href='admin/cities/add']"));
+        Assert.Equal(expectedCount, cut.FindAll("a[href='admin/cities/add']").Count);
     }
 }
