@@ -52,6 +52,13 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Endpoint overrides go in `appsettings.json` with sensible defaults in code.
 - `Properties/launchSettings.json` sets `DOTNET_ENVIRONMENT=Development`.
 
+## UI testing
+
+- Use **bUnit + xUnit** in a `Trakmark.Tests` project for all Blazor component tests. Do not use Playwright or Cypress for component-level UI work — they require a running app, cannot mock services via NSubstitute, and make auth simulation difficult.
+- Simulate authentication in bUnit via `TestAuthorizationContext` (from the `bunit.web` package). Do not spin up a real auth server for component tests.
+- Mock the service boundary via NSubstitute in bUnit tests. Do not re-prove database behavior through UI tests — that is covered by integration tests (Testcontainers).
+- Playwright may be introduced later as a separate smoke-test layer for true E2E coverage (login flow, full stack). Keep it in a separate project; do not mix with component tests.
+
 ## Git commits
 
 - Subject line: ≤ 50 characters, imperative mood, no period.
