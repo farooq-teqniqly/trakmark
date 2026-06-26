@@ -53,6 +53,12 @@ dotnet user-secrets set "Authentication:Google:ClientSecret" "<your-client-secre
 
 ### 4. Database Migration
 
+Install the `dotnet-ef` global tool if not already present:
+
+```powershell
+dotnet tool install --global dotnet-ef
+```
+
 Set the design-time connection string environment variable, then run migrations:
 
 ```powershell
