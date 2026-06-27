@@ -33,6 +33,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Use **source-generated logging** (`[LoggerMessage]`) for all `ILogger` calls — never `LogInformation(...)` directly (CA1873).
 - Split large partial classes by concern: e.g. `Foo.cs` for logic, `Foo.Logging.cs` for `[LoggerMessage]` declarations.
 - Keep cyclomatic complexity of any method at **15 or below**; extract helpers when a method would exceed this.
+- Keep constructor and method parameter counts at **7 or below** (SonarQube S107). When a signature would exceed this, introduce a parameter object — a `sealed record` (or `internal sealed record`) that groups the related parameters — rather than reordering or splitting arbitrarily. The grouping must reflect a genuine domain concept, not just a bag of parameters.
 - Validate all public constructor and method parameters that accept reference types: use `ArgumentNullException.ThrowIfNull(param)` as the first line. Exception: DI-injected dependencies (trust the container). **After writing every new public/internal type, scan each public constructor and method — confirm every reference-type parameter has the guard before moving on.**
 - When `Equals` uses a specific `StringComparison`, `GetHashCode` must use the same comparer (e.g. `Value.GetHashCode(StringComparison.Ordinal)`). Mismatched comparers silently break dictionary lookups.
 - No defensive null-checks on DI-injected dependencies — trust the container.

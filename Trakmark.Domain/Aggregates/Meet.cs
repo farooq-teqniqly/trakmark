@@ -96,9 +96,8 @@ public sealed class Meet
 
         var effectiveTier = tier ?? Tier.Open;
         var order = NextOrderFor(studentId);
-        _results.Add(
-            new Result(studentId, @event, status, mark, place, effectiveTier, order, Date)
-        );
+        var outcome = new ResultOutcome(status, mark, place);
+        _results.Add(new Result(studentId, @event, outcome, effectiveTier, order, Date));
     }
 
     private void EnforceSportMatch(Event @event)

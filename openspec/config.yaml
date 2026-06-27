@@ -16,6 +16,7 @@ context: |
 rules:
   tasks:
     - "After implementing each public/internal type, verify every public constructor and method: every reference-type parameter must have `ArgumentNullException.ThrowIfNull` as its first line (except DI-injected deps). Do this before marking the task done."
+    - "Keep constructor and method parameter counts at 7 or below (SonarQube S107). When a signature would exceed this, introduce a parameter object — a `sealed record` (or `internal sealed record`) that groups the related parameters — rather than reordering or splitting arbitrarily. The grouping must reflect a genuine domain concept."
     - Every type that implements IEquatable<T> must also expose == and != operator overloads. Check this before marking the task done.
     - "When writing a task that targets an internal method or property, do not suggest a new test file. Instead, instruct the agent to test via the public API caller (e.g. 'cover via TryParse' rather than 'test IsValid directly or in a new file')."
     - "When implementing tests for a type that returns a discriminated union or named result subtypes (e.g. Success, NotFound, Conflict, Duplicate), list all subtypes in a comment before writing the first test and ensure each subtype has at least one test case before marking the task done."
