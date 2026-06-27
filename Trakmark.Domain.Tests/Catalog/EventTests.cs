@@ -36,7 +36,7 @@ public sealed class EventTests
     {
         // Arrange
         var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
-        Event? nullEvent = null;
+        Event? nullEvent = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(ev.Equals(null));

@@ -118,7 +118,7 @@ public sealed class CityTests
     {
         // Arrange
         var city = City.Create("Springfield", State.Illinois);
-        City? nullCity = null;
+        City? nullCity = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(city.Equals(null));

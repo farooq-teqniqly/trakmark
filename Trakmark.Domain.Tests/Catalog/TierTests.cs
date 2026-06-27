@@ -24,7 +24,7 @@ public sealed class TierTests
     public void Tier_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        Tier? nullTier = null;
+        Tier? nullTier = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(Tier.Varsity.Equals(null));

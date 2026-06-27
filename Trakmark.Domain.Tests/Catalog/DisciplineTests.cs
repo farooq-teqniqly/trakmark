@@ -108,7 +108,7 @@ public sealed class DisciplineTests
     {
         // Arrange
         var d = Discipline.Run(100);
-        Discipline? nullDiscipline = null;
+        Discipline? nullDiscipline = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(d.Equals(null));

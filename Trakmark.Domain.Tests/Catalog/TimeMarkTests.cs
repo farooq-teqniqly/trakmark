@@ -55,7 +55,7 @@ public sealed class TimeMarkTests
     {
         // Arrange
         var t = new TimeMark(5000);
-        TimeMark? nullTimeMark = null;
+        TimeMark? nullTimeMark = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(t.Equals(null));

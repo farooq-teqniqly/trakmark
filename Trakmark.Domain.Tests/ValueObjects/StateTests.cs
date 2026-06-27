@@ -40,7 +40,7 @@ public sealed class StateTests
     public void State_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        State? nullState = null;
+        State? nullState = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(State.California.Equals(null));

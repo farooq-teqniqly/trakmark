@@ -47,7 +47,7 @@ public sealed class TeamNameTests
     {
         // Arrange
         var n = new TeamName("Varsity Boys");
-        TeamName? nullName = null;
+        TeamName? nullName = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(n.Equals(null));

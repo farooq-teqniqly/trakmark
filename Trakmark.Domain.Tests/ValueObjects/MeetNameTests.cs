@@ -47,7 +47,7 @@ public sealed class MeetNameTests
     {
         // Arrange
         var n = new MeetName("Spring Classic");
-        MeetName? nullName = null;
+        MeetName? nullName = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(n.Equals(null));

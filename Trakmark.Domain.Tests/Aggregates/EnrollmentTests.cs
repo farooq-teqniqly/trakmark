@@ -45,7 +45,7 @@ public sealed class EnrollmentTests
     {
         // Arrange
         var e = new Enrollment(SchoolA, new SchoolYear(2024), GradeLevel.Freshman);
-        Enrollment? nullEnrollment = null;
+        Enrollment? nullEnrollment = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(e.Equals(null));

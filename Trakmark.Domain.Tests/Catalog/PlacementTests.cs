@@ -25,7 +25,7 @@ public sealed class PlacementTests
     {
         // Arrange
         var p = new Placement(1);
-        Placement? nullPlacement = null;
+        Placement? nullPlacement = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(p.Equals(null));

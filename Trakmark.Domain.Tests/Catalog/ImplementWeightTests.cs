@@ -24,7 +24,7 @@ public sealed class ImplementWeightTests
     public void ImplementWeight_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        ImplementWeight? nullWeight = null;
+        ImplementWeight? nullWeight = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(ImplementWeight.Kg4.Equals(null));

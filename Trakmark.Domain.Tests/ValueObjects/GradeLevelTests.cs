@@ -35,7 +35,7 @@ public sealed class GradeLevelTests
     public void GradeLevel_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        GradeLevel? nullLevel = null;
+        GradeLevel? nullLevel = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(GradeLevel.Freshman.Equals(null));

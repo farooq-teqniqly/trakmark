@@ -31,7 +31,7 @@ public sealed class SportTests
     public void Sport_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        Sport? nullSport = null;
+        Sport? nullSport = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(Sport.TrackAndField.Equals(null));

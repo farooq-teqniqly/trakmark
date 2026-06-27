@@ -24,7 +24,7 @@ public sealed class HurdleHeightTests
     public void HurdleHeight_Equals_Null_ReturnsFalse()
     {
         // Arrange
-        HurdleHeight? nullHeight = null;
+        HurdleHeight? nullHeight = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(HurdleHeight.Inches39.Equals(null));
