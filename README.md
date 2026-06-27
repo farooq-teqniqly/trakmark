@@ -67,7 +67,7 @@ dotnet tool install --global dotnet-ef
 Set the design-time connection string environment variable, then run migrations:
 
 ```powershell
-$env:TRAKMARK_DESIGN_TIME_CONNSTR = "Server=localhost,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;"
+$env:TRAKMARK_DESIGN_TIME_CONNSTR = "Server=127.0.0.1,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;"
 dotnet ef database update --project Trakmark --startup-project Trakmark
 ```
 
