@@ -7,22 +7,35 @@ namespace Trakmark.Tests.Layout;
 /// <summary>bUnit tests for <see cref="TopNavMenu"/>.</summary>
 public sealed class TopNavMenuTests : BunitContext
 {
-    /// <summary>Provides auth setup actions and expected Add Cities link counts for the theory.</summary>
-    public static TheoryData<Action<BunitAuthorizationContext>, int> AddCitiesLinkVisibilityData() =>
+    /// <summary>Provides serializable auth scenario names and expected Add Cities link counts.</summary>
+    public static TheoryData<string, int> AddCitiesLinkVisibilityData() =>
         new()
         {
-            { auth => auth.SetAuthorized("admin@test.com").SetRoles("Admin"), 1 },
-            { auth => auth.SetAuthorized("user@test.com"), 0 },
-            { _ => { }, 0 },
+            { "admin", 1 },
+            { "user", 0 },
+            { "anon", 0 },
         };
+
+    private static void SetupAuth(BunitAuthorizationContext auth, string scenario)
+    {
+        switch (scenario)
+        {
+            case "admin":
+                auth.SetAuthorized("admin@test.com").SetRoles("Admin");
+                break;
+            case "user":
+                auth.SetAuthorized("user@test.com");
+                break;
+        }
+    }
 
     [Theory]
     [MemberData(nameof(AddCitiesLinkVisibilityData))]
-    public void AddCitiesLink_AuthRole_ControlsVisibility(Action<BunitAuthorizationContext> setupAuth, int expectedCount)
+    public void AddCitiesLink_AuthScenario_ControlsVisibility(string scenario, int expectedCount)
     {
         // Arrange
         var auth = AddAuthorization();
-        setupAuth(auth);
+        SetupAuth(auth, scenario);
 
         // Act
         var cut = Render<TopNavMenu>();
