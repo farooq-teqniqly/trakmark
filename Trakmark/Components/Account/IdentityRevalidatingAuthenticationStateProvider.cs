@@ -40,17 +40,17 @@ internal sealed class IdentityRevalidatingAuthenticationStateProvider(
         {
             return false;
         }
-        else if (!userManager.SupportsUserSecurityStamp)
-        {
-            return true;
-        }
-        else
+        else if (userManager.SupportsUserSecurityStamp)
         {
             var principalStamp = principal.FindFirstValue(
                 options.Value.ClaimsIdentity.SecurityStampClaimType
             );
             var userStamp = await userManager.GetSecurityStampAsync(user);
             return principalStamp == userStamp;
+        }
+        else
+        {
+            return true;
         }
     }
 }
