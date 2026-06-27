@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data;
