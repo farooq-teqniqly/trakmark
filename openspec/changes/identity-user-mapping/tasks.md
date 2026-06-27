@@ -7,11 +7,11 @@
 
 ## 2. Audit infrastructure
 
-- [ ] 2.1 Add `IAuditableEntity` interface to `Trakmark/Data/` with `CreatedByUserId` (string) and `CreatedAt` (DateTimeOffset) properties
-- [ ] 2.2 Implement `ICurrentUserContext` interface and `CurrentUserContext` sealed class (scoped) in `Trakmark/Services/`; expose `RegisteredUserId? UserId { get; set; }`
-- [ ] 2.3 Add `AuditInterceptor : SaveChangesInterceptor` to `Trakmark/Data/`; in `SavingChangesAsync` stamp all `Added` `IAuditableEntity` entries with `ICurrentUserContext.UserId.Value` and `DateTimeOffset.UtcNow`; throw `InvalidOperationException` if `UserId` is null
-- [ ] 2.4 Mark `CityEntity` as implementing `IAuditableEntity` (properties already exist)
-- [ ] 2.5 Register `ICurrentUserContext` / `CurrentUserContext` as scoped and `AuditInterceptor` via `AddDbContext` `options.AddInterceptors(...)` in `ServiceCollectionExtensions.AddAppDatabase`
+- [x] 2.1 Add `IAuditableEntity` interface to `Trakmark/Data/` with `CreatedByUserId` (string) and `CreatedAt` (DateTimeOffset) properties
+- [x] 2.2 Implement `ICurrentUserContext` interface and `CurrentUserContext` sealed class (scoped) in `Trakmark/Services/`; expose `RegisteredUserId? UserId { get; set; }`
+- [x] 2.3 Add `AuditInterceptor : SaveChangesInterceptor` to `Trakmark/Data/`; in `SavingChangesAsync` stamp all `Added` `IAuditableEntity` entries with `ICurrentUserContext.UserId.Value` and `DateTimeOffset.UtcNow`; throw `InvalidOperationException` if `UserId` is null
+- [x] 2.4 Mark `CityEntity` as implementing `IAuditableEntity` (properties already exist)
+- [x] 2.5 Register `ICurrentUserContext` / `CurrentUserContext` as scoped and `AuditInterceptor` via `AddDbContext` `options.AddInterceptors(...)` in `ServiceCollectionExtensions.AddAppDatabase`
 
 ## 3. Registration hook — failing tests first
 
