@@ -53,7 +53,7 @@ public sealed class ServiceCollectionExtensionsTests
     [InlineData("id", "")]
     [InlineData("id", "   ")]
     [InlineData(null, null)]
-    public void AddAppAuthentication_throws_when_google_credentials_missing(
+    public void AddAppAuthentication_GoogleCredentialsMissing_ThrowsInvalidOperationException(
         string? clientId,
         string? clientSecret
     )
@@ -67,7 +67,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddAppAuthentication_succeeds_when_google_credentials_present()
+    public void AddAppAuthentication_GoogleCredentialsPresent_Succeeds()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -81,7 +81,7 @@ public sealed class ServiceCollectionExtensionsTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddAppDatabase_throws_when_connection_string_missing(string? connectionString)
+    public void AddAppDatabase_ConnectionStringMissing_ThrowsInvalidOperationException(string? connectionString)
     {
         // Arrange
         var services = new ServiceCollection();
@@ -93,7 +93,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddAppDatabase_succeeds_when_connection_string_present()
+    public void AddAppDatabase_ConnectionStringPresent_Succeeds()
     {
         // Arrange
         var services = new ServiceCollection();

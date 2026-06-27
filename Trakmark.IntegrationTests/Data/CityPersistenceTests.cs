@@ -26,7 +26,7 @@ public sealed class CityPersistenceTests : IAsyncLifetime
     public Task DisposeAsync() => Task.CompletedTask;
 
     [Fact]
-    public async Task City_round_trips_with_created_at_and_created_by_user_id()
+    public async Task City_PersistedAndLoaded_RoundTripsWithAuditMetadata()
     {
         // Arrange
         var createdAt = new DateTimeOffset(2026, 6, 21, 12, 30, 0, TimeSpan.Zero);
