@@ -263,16 +263,25 @@ namespace Trakmark.Migrations
 
             modelBuilder.Entity("Trakmark.Data.Entities.RegisteredUserEntity", b =>
                 {
-                    b.Property<string>("RegisteredUserId")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccountId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("RegisteredUserId");
+                    b.Property<string>("RegisteredUserId")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("RegisteredUserId");
 
                     b.HasIndex("AccountId")
                         .IsUnique();

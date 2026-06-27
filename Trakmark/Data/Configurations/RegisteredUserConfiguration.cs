@@ -19,9 +19,9 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
     private const int AccountIdMaxLength = 450;
 
     /// <summary>
-    /// Configures the <c>RegisteredUsers</c> table: <see cref="RegisteredUserEntity.RegisteredUserId"/>
-    /// as the primary key (application-assigned, no auto-generation), and a unique index on
-    /// <see cref="RegisteredUserEntity.AccountId"/>.
+    /// Configures the <c>RegisteredUsers</c> table: a DB-generated <c>int IDENTITY</c> clustered
+    /// primary key, with <see cref="RegisteredUserEntity.RegisteredUserId"/> mapped as a unique
+    /// non-clustered alternate key column, and a unique index on <see cref="RegisteredUserEntity.AccountId"/>.
     /// </summary>
     /// <param name="builder">The entity type builder supplied by EF Core.</param>
     public void Configure(EntityTypeBuilder<RegisteredUserEntity> builder)
@@ -30,11 +30,15 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
 
         builder.ToTable("RegisteredUsers");
 
-        builder.HasKey(r => r.RegisteredUserId);
+        builder.HasKey(r => r.Id);
+        builder.Property(r => r.Id).ValueGeneratedOnAdd();
+
         builder.Property(r => r.RegisteredUserId)
             .IsRequired()
             .HasMaxLength(RegisteredUserIdMaxLength)
             .ValueGeneratedNever();
+
+        builder.HasAlternateKey(r => r.RegisteredUserId);
 
         builder.Property(r => r.AccountId)
             .IsRequired()

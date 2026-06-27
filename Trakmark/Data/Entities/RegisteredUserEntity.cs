@@ -7,8 +7,15 @@ namespace Trakmark.Data.Entities;
 public sealed class RegisteredUserEntity
 {
     /// <summary>
+    /// The DB-generated surrogate key used as the clustered primary key.
+    /// This is a persistence-only implementation detail, never exposed outside
+    /// the EF Core configuration/entity.
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// The domain <c>RegisteredUserId</c> value (format <c>USR-XXXXXX</c>, 10 chars),
-    /// used as the primary key.
+    /// mapped as a unique alternate key.
     /// </summary>
     public string RegisteredUserId { get; set; } = null!;
 

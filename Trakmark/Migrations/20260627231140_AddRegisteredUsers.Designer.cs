@@ -12,7 +12,7 @@ using Trakmark.Data;
 namespace Trakmark.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260627222628_AddRegisteredUsers")]
+    [Migration("20260627231140_AddRegisteredUsers")]
     partial class AddRegisteredUsers
     {
         /// <inheritdoc />
@@ -266,16 +266,25 @@ namespace Trakmark.Migrations
 
             modelBuilder.Entity("Trakmark.Data.Entities.RegisteredUserEntity", b =>
                 {
-                    b.Property<string>("RegisteredUserId")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccountId")
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("RegisteredUserId");
+                    b.Property<string>("RegisteredUserId")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("RegisteredUserId");
 
                     b.HasIndex("AccountId")
                         .IsUnique();

@@ -14,12 +14,15 @@ namespace Trakmark.Migrations
                 name: "RegisteredUsers",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RegisteredUserId = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     AccountId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RegisteredUsers", x => x.RegisteredUserId);
+                    table.PrimaryKey("PK_RegisteredUsers", x => x.Id);
+                    table.UniqueConstraint("AK_RegisteredUsers_RegisteredUserId", x => x.RegisteredUserId);
                 });
 
             migrationBuilder.CreateIndex(

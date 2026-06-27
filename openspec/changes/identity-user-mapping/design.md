@@ -71,6 +71,16 @@ A Blazor Server constraint shapes the interceptor design: `IHttpContextAccessor.
 
 ---
 
+### D7 — Surrogate `int IDENTITY` PK; `RegisteredUserId` as alternate key
+
+**Decision:** `RegisteredUsers` uses a DB-generated `int Id` as the clustered primary key. `RegisteredUserId` is mapped as a unique non-clustered alternate key via `HasAlternateKey`.
+
+**Rationale:** Domain-assigned IDs are random strings (Crockford Base32). Using them as the clustered PK fragments the index on every insert and degrades range-scan performance. A sequential integer surrogate eliminates fragmentation. This is the same pattern used by `CityEntity` / `CityConfiguration`. The domain ID retains its uniqueness guarantee via the alternate key constraint.
+
+**Alternative considered:** Keep `RegisteredUserId` as the PK with `ValueGeneratedNever()`. Rejected: random string clustering causes index fragmentation at scale.
+
+---
+
 ### D6 — `RegisteredUserEntity` in `Trakmark/Data/Entities/`, config in `Trakmark/Data/Configurations/`
 
 **Decision:** Follow the existing pattern: entity class in `Data/Entities/`, EF configuration in `Data/Configurations/` as a dedicated `IEntityTypeConfiguration<T>` class.
