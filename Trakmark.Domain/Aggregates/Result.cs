@@ -23,20 +23,22 @@ public sealed class Result
     /// <summary>The event in which the result was recorded.</summary>
     public Event Event { get; }
 
+    private readonly ResultOutcome _outcome;
+
     /// <summary>The completion status of this result.</summary>
-    public ResultStatus Status { get; }
+    public ResultStatus Status => _outcome.Status;
 
     /// <summary>
     /// The measured performance mark, present only when <see cref="Status"/> is
     /// <see cref="ResultStatus.Finished"/> and the discipline is not place-only.
     /// </summary>
-    public Performance? Mark { get; }
+    public Performance? Mark => _outcome.Mark;
 
     /// <summary>
     /// The finish placement, present only when <see cref="Status"/> is
     /// <see cref="ResultStatus.Finished"/>.
     /// </summary>
-    public Placement? Place { get; }
+    public Placement? Place => _outcome.Place;
 
     /// <summary>
     /// The competitive tier this result was set in. Defaults to <see cref="Tier.Open"/>
@@ -60,21 +62,18 @@ public sealed class Result
     internal Result(
         StudentId studentId,
         Event @event,
-        ResultStatus status,
-        Performance? mark,
-        Placement? place,
+        ResultOutcome outcome,
         Tier tier,
         int order,
         MeetDate meetDate
     )
     {
         ArgumentNullException.ThrowIfNull(@event);
+        ArgumentNullException.ThrowIfNull(outcome);
         ArgumentNullException.ThrowIfNull(tier);
         StudentId = studentId;
         Event = @event;
-        Status = status;
-        Mark = mark;
-        Place = place;
+        _outcome = outcome;
         Tier = tier;
         Order = order;
         MeetDate = meetDate;
