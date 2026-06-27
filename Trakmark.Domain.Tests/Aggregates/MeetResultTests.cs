@@ -31,8 +31,6 @@ public sealed class MeetResultTests
             Sport.TrackAndField
         );
 
-    // ── Create a meet ─────────────────────────────────────────────────────────
-
     [Fact]
     public void Meet_Create_AssignsNewIdAndHasNoResults()
     {
@@ -43,8 +41,6 @@ public sealed class MeetResultTests
         Assert.NotEqual(MeetId.Empty, meet.Id);
         Assert.Empty(meet.Results);
     }
-
-    // ── Tier defaults to Open ─────────────────────────────────────────────────
 
     [Fact]
     public void RecordResult_NoTierSupplied_DefaultsToOpen()
@@ -61,8 +57,6 @@ public sealed class MeetResultTests
         // Assert
         Assert.Equal(Tier.Open, meet.Results.Single().Tier);
     }
-
-    // ── Record a result with a competitive tier ───────────────────────────────
 
     [Theory]
     [InlineData("Varsity")]
@@ -90,8 +84,6 @@ public sealed class MeetResultTests
         Assert.Equal(tier, meet.Results.Single().Tier);
     }
 
-    // ── A finished result requires a mark and a place ─────────────────────────
-
     [Theory]
     [InlineData("no_mark")]
     [InlineData("no_place")]
@@ -114,8 +106,6 @@ public sealed class MeetResultTests
             )
         );
     }
-
-    // ── A non-finished result carries neither mark nor place ──────────────────
 
     [Theory]
     [InlineData(ResultStatus.DidNotFinish)]
@@ -181,8 +171,6 @@ public sealed class MeetResultTests
             )
         );
     }
-
-    // ── Results preserve entry order ──────────────────────────────────────────
 
     [Fact]
     public void RecordResult_MultipleResultsForSameStudent_AssignsEntryOrder()
@@ -264,8 +252,6 @@ public sealed class MeetResultTests
         Assert.Equal(1, s2Results[0].Order);
     }
 
-    // ── Reject a mismatched mark ──────────────────────────────────────────────
-
     [Fact]
     public void RecordResult_DistanceMarkForTimeEvent_Throws()
     {
@@ -304,8 +290,6 @@ public sealed class MeetResultTests
         );
     }
 
-    // ── A finished result for a distance discipline requires a mark ───────────
-
     [Fact]
     public void RecordResult_Finished_DistanceDiscipline_NoMark_Throws()
     {
@@ -324,8 +308,6 @@ public sealed class MeetResultTests
             )
         );
     }
-
-    // ── A place-only discipline takes a place and no mark ─────────────────────
 
     [Fact]
     public void RecordResult_PlaceOnly_Finished_WithPlaceAndNoMark_Succeeds()
@@ -387,8 +369,6 @@ public sealed class MeetResultTests
         );
     }
 
-    // ── Reject a cross-sport event ─────────────────────────────────────────────
-
     [Fact]
     public void RecordResult_CrossSportEvent_Throws()
     {
@@ -407,8 +387,6 @@ public sealed class MeetResultTests
             )
         );
     }
-
-    // ── Each relay leg's student gets the team time ────────────────────────────
 
     [Fact]
     public void RecordResult_Relay_OneResultPerStudentWithSharedTime()

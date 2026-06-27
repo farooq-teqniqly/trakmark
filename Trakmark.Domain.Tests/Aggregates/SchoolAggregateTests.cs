@@ -10,8 +10,6 @@ namespace Trakmark.Domain.Tests.Aggregates;
 /// </summary>
 public sealed class SchoolAggregateTests
 {
-    // ── Create a school ───────────────────────────────────────────────────
-
     [Fact]
     public void CreateSchool_WithValidNameAndLevel_AssignsNewIdAndStoresProperties()
     {
@@ -28,8 +26,6 @@ public sealed class SchoolAggregateTests
         Assert.Equal(level, school.Level);
     }
 
-    // ── School name must be valid ─────────────────────────────────────────
-
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -42,8 +38,6 @@ public sealed class SchoolAggregateTests
             School.Create(name, CompetitionLevel.HighSchool);
         });
     }
-
-    // ── Add a team for a sport ────────────────────────────────────────────
 
     [Fact]
     public void AddTeam_ForNewSport_AddsTeamToSchoolCatalog()
@@ -76,8 +70,6 @@ public sealed class SchoolAggregateTests
         Assert.Contains("already", ex.Message);
     }
 
-    // ── Roster membership is not stored on the team ───────────────────────
-
     [Fact]
     public void Team_HasNoStoredRosterCollection()
     {
@@ -93,7 +85,7 @@ public sealed class SchoolAggregateTests
             .Select(p => p.Name)
             .ToHashSet(StringComparer.Ordinal);
 
-        // Assert — Team must expose exactly Id and Sport; no roster collection
+        // Assert
         Assert.Equal(
             new HashSet<string>(StringComparer.Ordinal) { "Id", "Sport" },
             publicPropertyNames
