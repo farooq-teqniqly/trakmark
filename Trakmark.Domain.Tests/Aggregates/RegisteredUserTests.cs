@@ -10,8 +10,6 @@ namespace Trakmark.Domain.Tests.Aggregates;
 /// </summary>
 public sealed class RegisteredUserTests
 {
-    // ── Adding a student creates and follows it ───────────────────────────
-
     [Fact]
     public void AddStudent_ValidName_CreatesStudentAndFollowsWithEmptyCareer()
     {
@@ -29,8 +27,6 @@ public sealed class RegisteredUserTests
         Assert.Empty(student.Career.Enrollments);
     }
 
-    // ── Person name must be valid ─────────────────────────────────────────
-
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -46,8 +42,6 @@ public sealed class RegisteredUserTests
         Assert.Throws<ArgumentException>(() => user.AddStudent(new PersonName(invalidName)));
         Assert.Equal(followingBefore, user.Following.Count);
     }
-
-    // ── Unfollow removes the link only ────────────────────────────────────
 
     [Fact]
     public void Unfollow_ExistingStudentId_RemovesFromFollowingOnly()
@@ -67,8 +61,6 @@ public sealed class RegisteredUserTests
         Assert.Empty(user.Following);
     }
 
-    // ── Following is idempotent ───────────────────────────────────────────
-
     [Fact]
     public void Follow_AlreadyFollowing_NoopAndNoDuplicate()
     {
@@ -86,8 +78,6 @@ public sealed class RegisteredUserTests
         Assert.Equal(countAfterFirst, user.Following.Count);
         Assert.Contains(studentId, user.Following);
     }
-
-    // ── A student has no account link by default ──────────────────────────
 
     [Fact]
     public void AddStudent_ByDefault_StudentHasNoAccountLink()

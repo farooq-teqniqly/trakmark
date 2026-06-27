@@ -9,8 +9,6 @@ namespace Trakmark.Domain.Tests.Aggregates;
 /// </summary>
 public sealed class CareerTests
 {
-    // ── Adding enrollment for a new year ─────────────────────────────────
-
     [Fact]
     public void TryAddEnrollment_NewAndLaterYear_LatestYearBecomesCurrent()
     {
@@ -33,8 +31,6 @@ public sealed class CareerTests
         Assert.Same(second, career.Current);
     }
 
-    // ── Rejecting a duplicate year ────────────────────────────────────────
-
     [Fact]
     public void TryAddEnrollment_DuplicateYear_ReturnsFalseAndCareerUnchanged()
     {
@@ -55,8 +51,6 @@ public sealed class CareerTests
         Assert.Equal(countBefore, career.Enrollments.Count);
     }
 
-    // ── Grade level stored correctly ──────────────────────────────────────
-
     [Fact]
     public void TryAddEnrollment_Grade_StoredOnEnrollment()
     {
@@ -71,8 +65,6 @@ public sealed class CareerTests
         // Assert
         Assert.Same(GradeLevel.Sophomore, career.Current!.GradeLevel);
     }
-
-    // ── Inserting a middle year maintains chronological order ────────────────
 
     [Fact]
     public void TryAddEnrollment_MiddleYear_InsertsInChronologicalOrder()
@@ -89,22 +81,19 @@ public sealed class CareerTests
         // Act
         var result = career.TryAddEnrollment(middle);
 
-        // Assert — all three accepted; list is in ascending year order
+        // Assert
         Assert.True(result);
         Assert.Equal(3, career.Enrollments.Count);
         Assert.Equal(new SchoolYear(2022), career.Enrollments[0].SchoolYear);
         Assert.Equal(new SchoolYear(2023), career.Enrollments[1].SchoolYear);
         Assert.Equal(new SchoolYear(2024), career.Enrollments[2].SchoolYear);
-        // Current is the latest year
         Assert.Equal(new SchoolYear(2024), career.Current!.SchoolYear);
     }
-
-    // ── Inserting an earlier year keeps chronological order ───────────────
 
     [Fact]
     public void TryAddEnrollment_EarlierYear_InsertsBeforeExisting()
     {
-        // Arrange — add a later year first, then an earlier year
+        // Arrange
         var career = new Career();
         var schoolId = SchoolId.NewId();
         var later = new Enrollment(schoolId, new SchoolYear(2025), GradeLevel.Senior);
@@ -115,12 +104,11 @@ public sealed class CareerTests
         // Act
         var result = career.TryAddEnrollment(earlier);
 
-        // Assert — both enrollments accepted; list is in ascending year order
+        // Assert
         Assert.True(result);
         Assert.Equal(2, career.Enrollments.Count);
         Assert.Equal(new SchoolYear(2023), career.Enrollments[0].SchoolYear);
         Assert.Equal(new SchoolYear(2025), career.Enrollments[1].SchoolYear);
-        // Current is still the latest year
         Assert.Equal(new SchoolYear(2025), career.Current!.SchoolYear);
     }
 }

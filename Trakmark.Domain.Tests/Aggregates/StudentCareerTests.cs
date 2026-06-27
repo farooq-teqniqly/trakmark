@@ -10,15 +10,11 @@ namespace Trakmark.Domain.Tests.Aggregates;
 /// </summary>
 public sealed class StudentCareerTests
 {
-    // ── Shared helpers ─────────────────────────────────────────────────────
-
     private static StudentId NewStudentId() => StudentId.NewId();
 
     private static SchoolId NewSchoolId() => SchoolId.NewId();
 
     private static PersonName AnyName() => new("Jane Doe");
-
-    // ── Empty career until enrollment ──────────────────────────────────────
 
     [Fact]
     public void Student_HasEmptyCareerOnCreation()
@@ -30,8 +26,6 @@ public sealed class StudentCareerTests
         Assert.Empty(student.Career.Enrollments);
         Assert.Null(student.Career.Current);
     }
-
-    // ── Add an enrollment for a new school year ────────────────────────────
 
     [Fact]
     public void AddEnrollment_ForNewYear_AddsToCareer()
@@ -68,8 +62,6 @@ public sealed class StudentCareerTests
         Assert.Equal(year2024, student.Career.Current.SchoolYear);
     }
 
-    // ── Reject a duplicate school year ────────────────────────────────────
-
     [Fact]
     public void AddEnrollment_DuplicateYear_IsRejectedAndCareerUnchanged()
     {
@@ -79,7 +71,7 @@ public sealed class StudentCareerTests
         var year = new SchoolYear(2024);
         student.AddEnrollment(schoolId, year, GradeLevel.Junior);
 
-        // Act — attempt to add same year again
+        // Act
         var result = student.AddEnrollment(schoolId, year, GradeLevel.Senior);
 
         // Assert
@@ -87,8 +79,6 @@ public sealed class StudentCareerTests
         Assert.NotNull(result.FailureReason);
         Assert.Single(student.Career.Enrollments);
     }
-
-    // ── Grade level is recorded independently ──────────────────────────────
 
     /// <summary>Supplies all four grade levels as test cases.</summary>
     public static TheoryData<GradeLevel> AllGradeLevels =>
@@ -108,8 +98,6 @@ public sealed class StudentCareerTests
         var enrollment = Assert.Single(student.Career.Enrollments);
         Assert.Equal(grade, enrollment.GradeLevel);
     }
-
-    // ── Season helpers ─────────────────────────────────────────────────────
 
     [Fact]
     public void Current_ReturnsEnrollmentWithLatestSchoolYear()
@@ -161,8 +149,6 @@ public sealed class StudentCareerTests
         Assert.Empty(past);
     }
 
-    // ── Enrollment value object equality ──────────────────────────────────
-
     [Fact]
     public void Enrollment_EqualityBySchoolIdYearAndGrade()
     {
@@ -204,8 +190,6 @@ public sealed class StudentCareerTests
         // Assert
         Assert.NotEqual(a, b);
     }
-
-    // ── Student.UserAccountId is absent by default ─────────────────────────
 
     [Fact]
     public void Student_UserAccountId_IsNullByDefault()

@@ -13,8 +13,6 @@ public sealed class EnrollmentTests
     private static readonly SchoolId SchoolA = SchoolId.NewId();
     private static readonly SchoolId SchoolB = SchoolId.NewId();
 
-    // ── Enrollment equality ───────────────────────────────────────────────
-
     [Theory]
     [InlineData("equal", true)] // same all-fields → equal
     [InlineData("diff_school", false)] // differ by SchoolId → not equal
