@@ -1,9 +1,9 @@
 ## 1. Domain persistence infrastructure
 
-- [ ] 1.1 Add `RegisteredUserEntity` to `Trakmark/Data/Entities/` with `RegisteredUserId` (string, PK) and `AccountId` (string) columns
-- [ ] 1.2 Add `RegisteredUserConfiguration` to `Trakmark/Data/Configurations/` implementing `IEntityTypeConfiguration<RegisteredUserEntity>`; configure PK, column names, max lengths, and a unique index on `AccountId`
-- [ ] 1.3 Add `DbSet<RegisteredUserEntity> RegisteredUsers` to `ApplicationDbContext` and apply configuration in `OnModelCreating`
-- [ ] 1.4 Check for unrelated schema drift (`dotnet ef migrations add _check ...`), remove it, then scaffold migration `AddRegisteredUsers`
+- [x] 1.1 Add `RegisteredUserEntity` to `Trakmark/Data/Entities/` with `RegisteredUserId` (string, PK) and `AccountId` (string) columns
+- [x] 1.2 Add `RegisteredUserConfiguration` to `Trakmark/Data/Configurations/` implementing `IEntityTypeConfiguration<RegisteredUserEntity>`; configure PK, column names, max lengths, and a unique index on `AccountId`
+- [x] 1.3 Add `DbSet<RegisteredUserEntity> RegisteredUsers` to `ApplicationDbContext` and apply configuration in `OnModelCreating`
+- [x] 1.4 Check for unrelated schema drift (`dotnet ef migrations add _check ...`), remove it, then scaffold migration `AddRegisteredUsers`
 
 ## 2. Audit infrastructure
 
