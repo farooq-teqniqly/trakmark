@@ -48,13 +48,14 @@ public sealed class PersonNameTests
     {
         // Arrange
         var n = new PersonName("Alice");
+        PersonName? nullName = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(n.Equals(null));
-        Assert.False(n == null);
-        Assert.True(n != null);
-        Assert.False(null == n);
-        Assert.True(null != n);
+        Assert.False(n == nullName);
+        Assert.True(n != nullName);
+        Assert.False(nullName == n);
+        Assert.True(nullName != n);
     }
 
     [Fact]

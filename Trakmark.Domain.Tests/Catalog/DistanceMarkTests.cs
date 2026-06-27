@@ -55,13 +55,14 @@ public sealed class DistanceMarkTests
     {
         // Arrange
         var d = new DistanceMark(500);
+        DistanceMark? nullDistanceMark = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(d.Equals(null));
-        Assert.False(d == null);
-        Assert.True(d != null);
-        Assert.False(null == d);
-        Assert.True(null != d);
+        Assert.False(d == nullDistanceMark);
+        Assert.True(d != nullDistanceMark);
+        Assert.False(nullDistanceMark == d);
+        Assert.True(nullDistanceMark != d);
     }
 
     [Fact]

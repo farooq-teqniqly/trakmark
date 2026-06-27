@@ -108,13 +108,14 @@ public sealed class DisciplineTests
     {
         // Arrange
         var d = Discipline.Run(100);
+        Discipline? nullDiscipline = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
 
         // Act / Assert
         Assert.False(d.Equals(null));
-        Assert.False(d == null);
-        Assert.True(d != null);
-        Assert.False(null == d);
-        Assert.True(null != d);
+        Assert.False(d == nullDiscipline);
+        Assert.True(d != nullDiscipline);
+        Assert.False(nullDiscipline == d);
+        Assert.True(nullDiscipline != d);
     }
 
     [Fact]

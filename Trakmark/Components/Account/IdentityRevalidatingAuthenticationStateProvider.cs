@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -11,6 +12,7 @@ namespace Trakmark.Components.Account;
 /// Server-side <see cref="AuthenticationStateProvider"/> that revalidates the security stamp
 /// for the connected user every 30 minutes while an interactive Blazor circuit is active.
 /// </summary>
+[ExcludeFromCodeCoverage(Justification = "Scaffolded ASP.NET Core Identity infrastructure; requires a live auth server to test.")]
 internal sealed class IdentityRevalidatingAuthenticationStateProvider(
     ILoggerFactory loggerFactory,
     IServiceScopeFactory scopeFactory,
@@ -40,17 +42,17 @@ internal sealed class IdentityRevalidatingAuthenticationStateProvider(
         {
             return false;
         }
-        else if (!userManager.SupportsUserSecurityStamp)
-        {
-            return true;
-        }
-        else
+        else if (userManager.SupportsUserSecurityStamp)
         {
             var principalStamp = principal.FindFirstValue(
                 options.Value.ClaimsIdentity.SecurityStampClaimType
             );
             var userStamp = await userManager.GetSecurityStampAsync(user);
             return principalStamp == userStamp;
+        }
+        else
+        {
+            return true;
         }
     }
 }

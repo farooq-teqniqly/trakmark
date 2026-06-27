@@ -23,12 +23,15 @@ public sealed class MarkKindTests
     [Fact]
     public void MarkKind_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        MarkKind? nullKind = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
+
+        // Act / Assert
         Assert.False(MarkKind.Time.Equals(null));
-        Assert.False(MarkKind.Time == null);
-        Assert.True(MarkKind.Time != null);
-        Assert.False(null == MarkKind.Time);
-        Assert.True(null != MarkKind.Time);
+        Assert.False(MarkKind.Time == nullKind);
+        Assert.True(MarkKind.Time != nullKind);
+        Assert.False(nullKind == MarkKind.Time);
+        Assert.True(nullKind != MarkKind.Time);
     }
 
     [Fact]

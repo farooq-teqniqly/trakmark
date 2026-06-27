@@ -23,12 +23,15 @@ public sealed class HurdleHeightTests
     [Fact]
     public void HurdleHeight_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        HurdleHeight? nullHeight = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
+
+        // Act / Assert
         Assert.False(HurdleHeight.Inches39.Equals(null));
-        Assert.False(HurdleHeight.Inches39 == null);
-        Assert.True(HurdleHeight.Inches39 != null);
-        Assert.False(null == HurdleHeight.Inches39);
-        Assert.True(null != HurdleHeight.Inches39);
+        Assert.False(HurdleHeight.Inches39 == nullHeight);
+        Assert.True(HurdleHeight.Inches39 != nullHeight);
+        Assert.False(nullHeight == HurdleHeight.Inches39);
+        Assert.True(nullHeight != HurdleHeight.Inches39);
     }
 
     [Fact]

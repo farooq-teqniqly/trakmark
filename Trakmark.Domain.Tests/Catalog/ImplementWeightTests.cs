@@ -23,12 +23,15 @@ public sealed class ImplementWeightTests
     [Fact]
     public void ImplementWeight_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        ImplementWeight? nullWeight = null; // typed null invokes custom operator== null-left branch without triggering xUnit2024
+
+        // Act / Assert
         Assert.False(ImplementWeight.Kg4.Equals(null));
-        Assert.False(ImplementWeight.Kg4 == null);
-        Assert.True(ImplementWeight.Kg4 != null);
-        Assert.False(null == ImplementWeight.Kg4);
-        Assert.True(null != ImplementWeight.Kg4);
+        Assert.False(ImplementWeight.Kg4 == nullWeight);
+        Assert.True(ImplementWeight.Kg4 != nullWeight);
+        Assert.False(nullWeight == ImplementWeight.Kg4);
+        Assert.True(nullWeight != ImplementWeight.Kg4);
     }
 
     [Fact]

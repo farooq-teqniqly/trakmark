@@ -16,10 +16,12 @@ context: |
 rules:
   tasks:
     - "After implementing each public/internal type, verify every public constructor and method: every reference-type parameter must have `ArgumentNullException.ThrowIfNull` as its first line (except DI-injected deps). Do this before marking the task done."
+    - "Never negate the condition of an if that has an else branch (SonarQube S1940 in C#, S7735 in JS/TS). Invert the condition and swap the branches so the positive case leads: `if (x) { ... } else { ... }` not `if (!x) { ... } else { ... }`. Apply this in both C# and JavaScript/TypeScript."
     - "Keep constructor and method parameter counts at 7 or below (SonarQube S107). When a signature would exceed this, introduce a parameter object — a `sealed record` (or `internal sealed record`) that groups the related parameters — rather than reordering or splitting arbitrarily. The grouping must reflect a genuine domain concept."
     - Every type that implements IEquatable<T> must also expose == and != operator overloads. Check this before marking the task done.
     - "When writing a task that targets an internal method or property, do not suggest a new test file. Instead, instruct the agent to test via the public API caller (e.g. 'cover via TryParse' rather than 'test IsValid directly or in a new file')."
     - "When implementing tests for a type that returns a discriminated union or named result subtypes (e.g. Success, NotFound, Conflict, Duplicate), list all subtypes in a comment before writing the first test and ensure each subtype has at least one test case before marking the task done."
+    - "Prefer Assert.Null/Assert.NotNull over Assert.False(x == null)/Assert.True(x != null) (xUnit2024). Exception: when a test must cover a custom operator== null branch (e.g. `left?.Equals(right) ?? right is null`), use a typed null variable (`TypeName? nullFoo = null;`) in the comparison instead of the literal null — this invokes the operator without triggering xUnit2024."
   ui_testing:
     - "Use bUnit + xUnit in a `Trakmark.Tests` project for all Blazor component tests. Do not use Playwright or Cypress for component-level UI work — they require a running app, cannot mock services via NSubstitute, and make auth simulation difficult. bUnit covers all component-level concerns: role-restricted rendering, form validation/state, service wiring, and navigation."
     - "Simulate authentication in bUnit via `TestAuthorizationContext` (from the `bunit.web` package). Do not spin up a real auth server for component tests."
