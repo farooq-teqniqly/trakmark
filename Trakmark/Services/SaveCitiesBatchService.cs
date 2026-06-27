@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data;
@@ -31,13 +32,17 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
     /// <param name="createdByUserId">The <see cref="RegisteredUserId"/> of the submitting Admin.</param>
     public async Task<SaveCitiesBatchResult> SaveAsync(
         IReadOnlyList<SaveCityRow> rows,
-        RegisteredUserId createdByUserId)
+        RegisteredUserId createdByUserId
+    )
     {
         ArgumentNullException.ThrowIfNull(rows);
 
         if (rows.Count == 0 || rows.Count > 100)
         {
-            throw new ArgumentOutOfRangeException(nameof(rows), "Batch must contain between 1 and 100 rows.");
+            throw new ArgumentOutOfRangeException(
+                nameof(rows),
+                "Batch must contain between 1 and 100 rows."
+            );
         }
 
         var (cities, validationError) = BuildAndValidate(rows);
@@ -61,8 +66,10 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
         return await PersistAsync(cities!, createdByUserId);
     }
 
-    private static (List<City>? Cities, SaveCitiesBatchResult.ValidationError? Error) BuildAndValidate(
-        IReadOnlyList<SaveCityRow> rows)
+    private static (
+        List<City>? Cities,
+        SaveCitiesBatchResult.ValidationError? Error
+    ) BuildAndValidate(IReadOnlyList<SaveCityRow> rows)
     {
         var cities = new List<City>(rows.Count);
 
@@ -88,25 +95,33 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
 
         return duplicate is null
             ? null
-            : new SaveCitiesBatchResult.InBatchDuplicate(duplicate.Name, duplicate.State.Abbreviation);
+            : new SaveCitiesBatchResult.InBatchDuplicate(
+                duplicate.Name,
+                duplicate.State.Abbreviation
+            );
     }
 
     private async Task<SaveCitiesBatchResult.CrossBatchDuplicate?> FindCrossBatchDuplicateAsync(
-        List<City> cities)
+        List<City> cities
+    )
     {
         var batchNames = new HashSet<string>(
             cities.Select(c => c.Name.ToUpperInvariant()),
-            StringComparer.Ordinal);
+            StringComparer.Ordinal
+        );
 
         var batchAbbrs = new HashSet<string>(
             cities.Select(c => c.State.Abbreviation.ToUpperInvariant()),
-            StringComparer.Ordinal);
+            StringComparer.Ordinal
+        );
 
         // EF Core cannot translate ToUpperInvariant() to SQL, so ToUpper() is used here
         // instead. SQL UPPER() is semantically equivalent to ToUpperInvariant() for U.S.
         // city and state names, which are restricted to ASCII characters.
-        var existing = await _context.Cities
-            .Where(e => batchNames.Contains(e.Name.ToUpper()) && batchAbbrs.Contains(e.State.ToUpper()))
+        var existing = await _context
+            .Cities.Where(e =>
+                batchNames.Contains(e.Name.ToUpper()) && batchAbbrs.Contains(e.State.ToUpper())
+            )
             .ToListAsync();
 
         if (existing.Count == 0)
@@ -114,38 +129,39 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
             return null;
         }
 
-        foreach (var city in cities)
-        {
-            var nameUpper = city.Name.ToUpperInvariant();
-            var abbrUpper = city.State.Abbreviation.ToUpperInvariant();
-
-            if (existing.Any(e =>
-                    e.Name.ToUpperInvariant() == nameUpper &&
-                    e.State.ToUpperInvariant() == abbrUpper))
-            {
-                return new SaveCitiesBatchResult.CrossBatchDuplicate(city.Name, city.State.Abbreviation);
-            }
-        }
-
-        return null;
+        return cities
+            .Where(city =>
+                existing.Any(e =>
+                    e.Name.Equals(city.Name, StringComparison.OrdinalIgnoreCase)
+                    && e.State.Equals(city.State.Abbreviation, StringComparison.OrdinalIgnoreCase)
+                )
+            )
+            .Select(city => new SaveCitiesBatchResult.CrossBatchDuplicate(
+                city.Name,
+                city.State.Abbreviation
+            ))
+            .FirstOrDefault();
     }
 
     private async Task<SaveCitiesBatchResult> PersistAsync(
         List<City> cities,
-        RegisteredUserId createdByUserId)
+        RegisteredUserId createdByUserId
+    )
     {
         var now = DateTimeOffset.UtcNow;
 
         foreach (var city in cities)
         {
-            _context.Cities.Add(new CityEntity
-            {
-                CityId = city.Id.Value,
-                Name = city.Name,
-                State = city.State.Abbreviation,
-                CreatedAt = now,
-                CreatedByUserId = createdByUserId.Value,
-            });
+            _context.Cities.Add(
+                new CityEntity
+                {
+                    CityId = city.Id.Value,
+                    Name = city.Name,
+                    State = city.State.Abbreviation,
+                    CreatedAt = now,
+                    CreatedByUserId = createdByUserId.Value,
+                }
+            );
         }
 
         try
