@@ -95,7 +95,7 @@ public sealed class StudentCareerTests
 
     [Theory]
     [MemberData(nameof(AllGradeLevelNames))]
-    public void AddEnrollment_StoresSuppliedGradeLevel(string gradeLevelName)
+    public void AddEnrollment_EachGradeLevel_StoresGradeOnEnrollment(string gradeLevelName)
     {
         // Arrange
         var grade = ToGradeLevel(gradeLevelName);

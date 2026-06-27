@@ -8,7 +8,7 @@ public sealed class PerformanceTests
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public void Performance_IsBetterThan_WrongType_ReturnsFalse(bool firstIsTime)
+    public void IsBetterThan_CrossTypeComparison_ReturnsFalse(bool firstIsTime)
     {
         // Arrange
         Performance mark = firstIsTime ? new TimeMark(5000) : new DistanceMark(500);
