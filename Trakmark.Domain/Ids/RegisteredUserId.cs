@@ -18,11 +18,11 @@ public readonly record struct RegisteredUserId
     );
 
     /// <summary>
-    /// Static initializer for <see cref="Empty"/>. Excluded from coverage because
-    /// the compiler-generated .cctor for a <c>readonly record struct</c> with a
-    /// static field is not reliably instrumented by coverage tools.
+    /// Static initializer for <see cref="RegisteredUserId"/>.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(
+        Justification = "Compiler-generated .cctor for readonly record struct with a static field is not reliably instrumented by coverage tools."
+    )]
     static RegisteredUserId() { }
 
     /// <summary>Generates a new, effectively unique <see cref="RegisteredUserId"/>.</summary>
