@@ -31,7 +31,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public void InitialRender_DefaultState_ShowsOneRowWithNameInputAndStateDropdown()
+    public void InitialRender_OnLoad_ShowsOneRowWithNameInputAndStateDropdown()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -171,7 +171,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_ValidInput_CallsServiceAndShowsSuccessToast()
+    public async Task Save_ValidInput_CallsServiceShowsSuccessToastAndClearsForm()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
