@@ -1,3 +1,3 @@
-﻿window.setTheme = (theme) => {
-    document.querySelector("[data-cf-theme]").setAttribute("data-cf-theme", theme);
+﻿globalThis.setTheme = (theme) => {
+    document.querySelector("[data-cf-theme]").dataset.cfTheme = theme;
 };
