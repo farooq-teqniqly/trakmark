@@ -21,7 +21,6 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         _userContext = userContext;
     }
 
-    /// <summary>Stamps audit fields on all Added IAuditableEntity entries.</summary>
     /// <inheritdoc/>
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
