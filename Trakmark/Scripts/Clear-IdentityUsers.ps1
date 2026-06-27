@@ -56,7 +56,6 @@ $cs = "Server=$Server;Database=$Database;User Id=$Username;Password=$Password;Tr
 
 $tables = @(
     'AspNetUserTokens',
-    'AspNetUserPasskeys',
     'AspNetUserLogins',
     'AspNetUserClaims',
     'AspNetUserRoles',
