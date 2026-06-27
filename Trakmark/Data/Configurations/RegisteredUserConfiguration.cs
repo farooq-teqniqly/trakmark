@@ -1,0 +1,45 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Trakmark.Data.Entities;
+
+namespace Trakmark.Data.Configurations;
+
+/// <summary>
+/// EF Core entity type configuration for <see cref="RegisteredUserEntity"/>.
+/// </summary>
+public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<RegisteredUserEntity>
+{
+    /// <summary>The maximum length of the <see cref="RegisteredUserEntity.RegisteredUserId"/> column (format <c>USR-XXXXXX</c>).</summary>
+    private const int RegisteredUserIdMaxLength = 10;
+
+    /// <summary>
+    /// The maximum length of the <see cref="RegisteredUserEntity.AccountId"/> column,
+    /// set to 450 for ASP.NET Identity GUID compatibility.
+    /// </summary>
+    private const int AccountIdMaxLength = 450;
+
+    /// <summary>
+    /// Configures the <c>RegisteredUsers</c> table: <see cref="RegisteredUserEntity.RegisteredUserId"/>
+    /// as the primary key (application-assigned, no auto-generation), and a unique index on
+    /// <see cref="RegisteredUserEntity.AccountId"/>.
+    /// </summary>
+    /// <param name="builder">The entity type builder supplied by EF Core.</param>
+    public void Configure(EntityTypeBuilder<RegisteredUserEntity> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.ToTable("RegisteredUsers");
+
+        builder.HasKey(r => r.RegisteredUserId);
+        builder.Property(r => r.RegisteredUserId)
+            .IsRequired()
+            .HasMaxLength(RegisteredUserIdMaxLength)
+            .ValueGeneratedNever();
+
+        builder.Property(r => r.AccountId)
+            .IsRequired()
+            .HasMaxLength(AccountIdMaxLength);
+
+        builder.HasIndex(r => r.AccountId).IsUnique();
+    }
+}
