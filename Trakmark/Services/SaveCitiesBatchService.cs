@@ -36,7 +36,7 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
     {
         ArgumentNullException.ThrowIfNull(rows);
 
-        if (rows.Count == 0 || rows.Count > 100)
+        if (rows.Count is 0 or > 100)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(rows),
@@ -176,7 +176,6 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
 
     private static bool IsDuplicateKeyException(DbUpdateException ex)
     {
-        return ex.InnerException is SqlException sqlEx
-            && (sqlEx.Number == 2601 || sqlEx.Number == 2627);
+        return ex.InnerException is SqlException { Number: 2601 or 2627 };
     }
 }

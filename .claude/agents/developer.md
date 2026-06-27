@@ -86,6 +86,7 @@ Before staging files, run through this list:
 - **Denormalized date on child entities**: when a read projection needs a date from the owning aggregate to resolve context (e.g. school year), add a denormalized date field to the child entity at construction time (e.g. `Result.MeetDate` set from `Meet.Date`). Do not require callers to join back to the owning aggregate to resolve the date.
 - **Factory method called once per entity**: if you have a validate-then-build pattern, do not call `Entity.Create(...)` in both the validate pass and the build pass — each call generates a fresh identity. Validate inputs first, call the factory exactly once, then use the returned instance.
 - **DbUpdateException on unique-index writes**: every service method that saves to a table protected by a unique index must catch `DbUpdateException`, inspect the inner `SqlException` for error numbers 2601 and 2627, and return a domain-level duplicate result rather than propagating the exception to the caller.
+- **C# pattern matching over boolean expressions**: use `x is val1 or val2` (or relational patterns like `x is 0 or > 100`) instead of `x == val1 || x == val2` for constant/relational checks on a single variable; use `obj is T { Prop: val1 or val2 }` property patterns instead of `obj is T t && (t.Prop == val1 || t.Prop == val2)`. Apply this wherever the intent is matching a value or inspecting a property on a matched type.
 
 ## Before finishing
 
