@@ -12,7 +12,7 @@ namespace Trakmark.Components.Account;
 /// Server-side <see cref="AuthenticationStateProvider"/> that revalidates the security stamp
 /// for the connected user every 30 minutes while an interactive Blazor circuit is active.
 /// </summary>
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage(Justification = "Scaffolded ASP.NET Core Identity infrastructure; requires a live auth server to test.")]
 internal sealed class IdentityRevalidatingAuthenticationStateProvider(
     ILoggerFactory loggerFactory,
     IServiceScopeFactory scopeFactory,
