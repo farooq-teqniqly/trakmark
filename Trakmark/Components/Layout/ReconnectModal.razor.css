@@ -88,7 +88,7 @@
 
 #components-reconnect-modal button {
     border: 0;
-    background-color: #6b9ed2;
+    background-color: #1a5fa8;
     color: white;
     padding: 4px 24px;
     border-radius: 4px;
@@ -99,7 +99,7 @@
     }
 
     #components-reconnect-modal button:active {
-        background-color: #6b9ed2;
+        background-color: #1a5fa8;
     }
 
 .components-rejoining-animation {
