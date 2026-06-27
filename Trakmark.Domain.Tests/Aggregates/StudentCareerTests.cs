@@ -80,15 +80,25 @@ public sealed class StudentCareerTests
         Assert.Single(student.Career.Enrollments);
     }
 
-    /// <summary>Supplies all four grade levels as test cases.</summary>
-    public static TheoryData<GradeLevel> AllGradeLevels =>
-        [GradeLevel.Freshman, GradeLevel.Sophomore, GradeLevel.Junior, GradeLevel.Senior];
+    /// <summary>Supplies all four grade level names as serializable test cases.</summary>
+    public static TheoryData<string> AllGradeLevelNames =>
+        [nameof(GradeLevel.Freshman), nameof(GradeLevel.Sophomore), nameof(GradeLevel.Junior), nameof(GradeLevel.Senior)];
+
+    private static GradeLevel ToGradeLevel(string name) => name switch
+    {
+        nameof(GradeLevel.Freshman) => GradeLevel.Freshman,
+        nameof(GradeLevel.Sophomore) => GradeLevel.Sophomore,
+        nameof(GradeLevel.Junior) => GradeLevel.Junior,
+        nameof(GradeLevel.Senior) => GradeLevel.Senior,
+        _ => throw new ArgumentOutOfRangeException(nameof(name)),
+    };
 
     [Theory]
-    [MemberData(nameof(AllGradeLevels))]
-    public void AddEnrollment_StoresSuppliedGradeLevel(GradeLevel grade)
+    [MemberData(nameof(AllGradeLevelNames))]
+    public void AddEnrollment_StoresSuppliedGradeLevel(string gradeLevelName)
     {
         // Arrange
+        var grade = ToGradeLevel(gradeLevelName);
         var student = new Student(NewStudentId(), AnyName());
 
         // Act
