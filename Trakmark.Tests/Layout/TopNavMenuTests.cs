@@ -25,7 +25,7 @@ public sealed class TopNavMenuTests : BunitContext
 
     [Theory]
     [MemberData(nameof(AddCitiesLinkVisibilityData))]
-    public void AddCities_link_visibility_matches_role(Action<BunitAuthorizationContext> setupAuth, int expectedCount)
+    public void AddCitiesLink_AuthRole_ControlsVisibility(Action<BunitAuthorizationContext> setupAuth, int expectedCount)
     {
         // Arrange
         var auth = AddAuthorization();

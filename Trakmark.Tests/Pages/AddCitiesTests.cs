@@ -30,12 +30,8 @@ public sealed class AddCitiesTests : BunitContext
         SetupAdminAuth();
     }
 
-    // -----------------------------------------------------------------------
-    // Task 6.3 — form shape and validation
-    // -----------------------------------------------------------------------
-
     [Fact]
-    public void Initial_render_shows_one_row_with_name_input_and_state_dropdown()
+    public void InitialRender_DefaultState_ShowsOneRowWithNameInputAndStateDropdown()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -49,7 +45,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Add_row_button_increases_row_count()
+    public async Task AddRowButton_Clicked_IncreasesRowCount()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -63,7 +59,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Add_row_button_is_disabled_when_100_rows_exist()
+    public async Task AddRowButton_100RowsExist_IsDisabled()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -81,7 +77,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public void Save_button_is_disabled_when_name_is_empty()
+    public void SaveButton_NameIsEmpty_IsDisabled()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -94,7 +90,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_button_is_disabled_when_no_state_selected()
+    public async Task SaveButton_NoStateSelected_IsDisabled()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -109,7 +105,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_button_is_enabled_when_all_rows_have_name_and_state()
+    public async Task SaveButton_AllRowsHaveNameAndState_IsEnabled()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -127,7 +123,7 @@ public sealed class AddCitiesTests : BunitContext
     [Theory]
     [InlineData("", "Name is required.")]
     [InlineData("   ", "Name is required.")]
-    public async Task Validation_message_appears_when_name_is_empty_or_whitespace(
+    public async Task ValidationMessage_NameIsEmptyOrWhitespace_Appears(
         string name,
         string expectedMessage
     )
@@ -145,7 +141,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Validation_message_appears_when_name_exceeds_100_characters()
+    public async Task ValidationMessage_NameExceeds100Characters_Appears()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -160,7 +156,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Validation_message_appears_when_no_state_selected()
+    public async Task ValidationMessage_NoStateSelected_Appears()
     {
         // Arrange
         Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
@@ -174,12 +170,8 @@ public sealed class AddCitiesTests : BunitContext
         Assert.Contains("State is required.", cut.Markup);
     }
 
-    // -----------------------------------------------------------------------
-    // Task 6.5 — Save wiring
-    // -----------------------------------------------------------------------
-
     [Fact]
-    public async Task Save_calls_service_and_shows_success_toast_then_clears_form()
+    public async Task Save_ValidInput_CallsServiceAndShowsSuccessToast()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
@@ -209,7 +201,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_shows_error_alert_on_validation_failure()
+    public async Task Save_ValidationFailure_ShowsErrorAlert()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
@@ -233,7 +225,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_shows_error_alert_on_duplicate_failure()
+    public async Task Save_CrossBatchDuplicate_ShowsErrorAlert()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
@@ -257,7 +249,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_shows_error_alert_on_in_batch_duplicate()
+    public async Task Save_InBatchDuplicate_ShowsErrorAlert()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
@@ -281,7 +273,7 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
-    public async Task Save_shows_error_alert_on_concurrent_duplicate()
+    public async Task Save_ConcurrentDuplicate_ShowsErrorAlert()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
@@ -304,12 +296,8 @@ public sealed class AddCitiesTests : BunitContext
         Assert.Contains("duplicate was detected during save", cut.Markup);
     }
 
-    // -----------------------------------------------------------------------
-    // Task 6.7 — Cancel
-    // -----------------------------------------------------------------------
-
     [Fact]
-    public async Task Cancel_navigates_to_home_without_calling_save_service()
+    public async Task Cancel_Clicked_NavigatesToHomeWithoutCallingSave()
     {
         // Arrange
         var mockService = Substitute.For<ISaveCitiesBatchService>();
