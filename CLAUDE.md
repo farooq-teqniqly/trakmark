@@ -17,6 +17,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Test behavior, not implementation — assert observable outcomes, not internal calls, so tests aren't brittle.
 - For integration and end-to-end tests, prefer the real database via **Testcontainers** over in-memory fakes.
 - Do not test `internal` helpers directly. Cover them through their public API callers (e.g. test `DomainId.IsValid` by calling `TryParse`, not by invoking `IsValid` directly). If the helper is not reachable through any public surface, that is a design signal, not a reason to add a direct test.
+- Prefer `Assert.Null`/`Assert.NotNull` over `Assert.False(x == null)` / `Assert.True(x != null)` (xUnit2024). Exception: when a test must explicitly invoke a custom `==`/`!=` operator to cover its null branch (e.g. `left?.Equals(right) ?? right is null`), pass a typed null variable (`TypeName? nullFoo = null;`) instead of the literal `null` — this exercises the operator without triggering xUnit2024.
 - Practice **TDD**: when a spec defines behavior (e.g. OpenSpec `#### Scenario:` blocks), write the failing tests from those scenarios first, then implement to green. Each scenario maps to a test case. For test-only changes (adding tests against already-complete production code), satisfy the failing-first requirement by writing the test body with `Assert.Fail("not implemented")` as a placeholder, confirming the test fails, then replacing the placeholder with real assertions. Pre-merge and pure-chore sections that introduce no new production behavior and cite no spec scenarios are exempt from the failing-test-first requirement.
 - Register every new project in `Trakmark.slnx`.
 
@@ -40,6 +41,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Remove any DI-injected dependency that is not used in the file it is injected into.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
 - Always use braces for control statements (`if`, `else`, `for`, `foreach`, `while`, `do`) — even single-line bodies.
+- Never negate the condition of an `if` that has an `else` branch (SonarQube S1940 / S7735). Invert the condition and swap the branches so the positive case comes first: `if (x) { ... } else { ... }` not `if (!x) { ... } else { ... }`.
 - No comments that restate what the code already says.
 - Factory methods that generate a new identity (e.g. `Entity.Create(...)`) must be called **exactly once** per entity being constructed. Calling the same factory in separate passes (e.g., a validation pass and a build pass) produces a different identity on each call. Validate inputs first, then call the factory once and use its result throughout.
 - Any service method that saves an entity to a table protected by a unique index must catch `DbUpdateException` and inspect the inner `SqlException` for SQL error numbers **2601** and **2627** (unique-constraint violations). Translate those into a domain-level duplicate result (e.g., a `Conflict` or `DuplicateEntry` discriminated-union case) rather than letting the exception propagate to the caller.
