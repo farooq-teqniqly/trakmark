@@ -59,7 +59,8 @@ $tables = @(
     'AspNetUserLogins',
     'AspNetUserClaims',
     'AspNetUserRoles',
-    'AspNetUsers'
+    'AspNetUsers',
+    'RegisteredUsers'
 )
 
 $deleteSql = ($tables | ForEach-Object { "DELETE FROM [$_];" }) -join "`n"
