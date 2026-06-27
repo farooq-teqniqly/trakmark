@@ -44,6 +44,7 @@ Use U.S. English in all prose, comments, commit messages, and docs.
 - Remove any DI-injected dependency that is not used in the file it is injected into.
 - Use `null!` (not `default!`) to suppress nullable warnings on uninitialized required properties.
 - Always use braces for control statements (`if`, `else`, `for`, `foreach`, `while`, `do`) — even single-line bodies.
+- Prefer C# pattern matching over boolean expressions: use `x is val1 or val2` (or relational patterns like `x is 0 or > 100`) instead of `x == val1 || x == val2` for constant/relational checks on a single variable; use `obj is T { Prop: val1 or val2 }` property patterns instead of `obj is T t && (t.Prop == val1 || t.Prop == val2)`.
 - Never negate the condition of an `if` that has an `else` branch (SonarQube S1940 / S7735). Invert the condition and swap the branches so the positive case comes first: `if (x) { ... } else { ... }` not `if (!x) { ... } else { ... }`.
 - No comments that restate what the code already says.
 - Factory methods that generate a new identity (e.g. `Entity.Create(...)`) must be called **exactly once** per entity being constructed. Calling the same factory in separate passes (e.g., a validation pass and a build pass) produces a different identity on each call. Validate inputs first, then call the factory once and use its result throughout.
