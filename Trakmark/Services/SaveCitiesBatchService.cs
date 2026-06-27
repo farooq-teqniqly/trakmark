@@ -106,13 +106,13 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
     )
     {
         var batchNames = new HashSet<string>(
-            cities.Select(c => c.Name.ToUpperInvariant()),
-            StringComparer.Ordinal
+            cities.Select(c => c.Name),
+            StringComparer.OrdinalIgnoreCase
         );
 
         var batchAbbrs = new HashSet<string>(
-            cities.Select(c => c.State.Abbreviation.ToUpperInvariant()),
-            StringComparer.Ordinal
+            cities.Select(c => c.State.Abbreviation),
+            StringComparer.OrdinalIgnoreCase
         );
 
         // EF Core cannot translate ToUpperInvariant() to SQL, so ToUpper() is used here
