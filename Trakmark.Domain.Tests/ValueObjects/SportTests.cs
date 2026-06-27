@@ -30,12 +30,15 @@ public sealed class SportTests
     [Fact]
     public void Sport_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        Sport? nullSport = null;
+
+        // Act / Assert
         Assert.False(Sport.TrackAndField.Equals(null));
-        Assert.False(Sport.TrackAndField == null);
-        Assert.True(Sport.TrackAndField != null);
-        Assert.False(null == Sport.TrackAndField);
-        Assert.True(null != Sport.TrackAndField);
+        Assert.False(Sport.TrackAndField == nullSport);
+        Assert.True(Sport.TrackAndField != nullSport);
+        Assert.False(nullSport == Sport.TrackAndField);
+        Assert.True(nullSport != Sport.TrackAndField);
     }
 
     [Fact]

@@ -25,13 +25,14 @@ public sealed class PlacementTests
     {
         // Arrange
         var p = new Placement(1);
+        Placement? nullPlacement = null;
 
         // Act / Assert
         Assert.False(p.Equals(null));
-        Assert.False(p == null);
-        Assert.True(p != null);
-        Assert.False(null == p);
-        Assert.True(null != p);
+        Assert.False(p == nullPlacement);
+        Assert.True(p != nullPlacement);
+        Assert.False(nullPlacement == p);
+        Assert.True(nullPlacement != p);
     }
 
     [Fact]

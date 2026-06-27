@@ -55,13 +55,14 @@ public sealed class TimeMarkTests
     {
         // Arrange
         var t = new TimeMark(5000);
+        TimeMark? nullTimeMark = null;
 
         // Act / Assert
         Assert.False(t.Equals(null));
-        Assert.False(t == null);
-        Assert.True(t != null);
-        Assert.False(null == t);
-        Assert.True(null != t);
+        Assert.False(t == nullTimeMark);
+        Assert.True(t != nullTimeMark);
+        Assert.False(nullTimeMark == t);
+        Assert.True(nullTimeMark != t);
     }
 
     [Fact]

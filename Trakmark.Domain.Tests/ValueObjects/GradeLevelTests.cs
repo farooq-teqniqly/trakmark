@@ -34,12 +34,15 @@ public sealed class GradeLevelTests
     [Fact]
     public void GradeLevel_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        GradeLevel? nullLevel = null;
+
+        // Act / Assert
         Assert.False(GradeLevel.Freshman.Equals(null));
-        Assert.False(GradeLevel.Freshman == null);
-        Assert.True(GradeLevel.Freshman != null);
-        Assert.False(null == GradeLevel.Freshman);
-        Assert.True(null != GradeLevel.Freshman);
+        Assert.False(GradeLevel.Freshman == nullLevel);
+        Assert.True(GradeLevel.Freshman != nullLevel);
+        Assert.False(nullLevel == GradeLevel.Freshman);
+        Assert.True(nullLevel != GradeLevel.Freshman);
     }
 
     [Fact]

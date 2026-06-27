@@ -39,12 +39,15 @@ public sealed class StateTests
     [Fact]
     public void State_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        State? nullState = null;
+
+        // Act / Assert
         Assert.False(State.California.Equals(null));
-        Assert.False(State.California == null);
-        Assert.True(State.California != null);
-        Assert.False(null == State.California);
-        Assert.True(null != State.California);
+        Assert.False(State.California == nullState);
+        Assert.True(State.California != nullState);
+        Assert.False(nullState == State.California);
+        Assert.True(nullState != State.California);
     }
 
     [Fact]

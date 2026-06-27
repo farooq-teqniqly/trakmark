@@ -47,13 +47,14 @@ public sealed class TeamNameTests
     {
         // Arrange
         var n = new TeamName("Varsity Boys");
+        TeamName? nullName = null;
 
         // Act / Assert
         Assert.False(n.Equals(null));
-        Assert.False(n == null);
-        Assert.True(n != null);
-        Assert.False(null == n);
-        Assert.True(null != n);
+        Assert.False(n == nullName);
+        Assert.True(n != nullName);
+        Assert.False(nullName == n);
+        Assert.True(nullName != n);
     }
 
     [Fact]

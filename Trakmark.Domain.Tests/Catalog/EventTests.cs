@@ -36,13 +36,14 @@ public sealed class EventTests
     {
         // Arrange
         var ev = new Event(Discipline.Run(100), Sport.TrackAndField);
+        Event? nullEvent = null;
 
         // Act / Assert
         Assert.False(ev.Equals(null));
-        Assert.False(ev == null);
-        Assert.True(ev != null);
-        Assert.False(null == ev);
-        Assert.True(null != ev);
+        Assert.False(ev == nullEvent);
+        Assert.True(ev != nullEvent);
+        Assert.False(nullEvent == ev);
+        Assert.True(nullEvent != ev);
     }
 
     [Fact]

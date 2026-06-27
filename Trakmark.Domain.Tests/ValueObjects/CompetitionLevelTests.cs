@@ -31,12 +31,15 @@ public sealed class CompetitionLevelTests
     [Fact]
     public void CompetitionLevel_Equals_Null_ReturnsFalse()
     {
-        // Arrange / Act / Assert
+        // Arrange
+        CompetitionLevel? nullLevel = null;
+
+        // Act / Assert
         Assert.False(CompetitionLevel.HighSchool.Equals(null));
-        Assert.False(CompetitionLevel.HighSchool == null);
-        Assert.True(CompetitionLevel.HighSchool != null);
-        Assert.False(null == CompetitionLevel.HighSchool);
-        Assert.True(null != CompetitionLevel.HighSchool);
+        Assert.False(CompetitionLevel.HighSchool == nullLevel);
+        Assert.True(CompetitionLevel.HighSchool != nullLevel);
+        Assert.False(nullLevel == CompetitionLevel.HighSchool);
+        Assert.True(nullLevel != CompetitionLevel.HighSchool);
     }
 
     [Fact]
