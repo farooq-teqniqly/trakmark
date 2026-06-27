@@ -8,20 +8,13 @@ namespace Trakmark.Tests.Layout;
 public sealed class TopNavMenuTests : BunitContext
 {
     /// <summary>Provides auth setup actions and expected Add Cities link counts for the theory.</summary>
-    public static IEnumerable<object[]> AddCitiesLinkVisibilityData()
-    {
-        yield return [new Action<BunitAuthorizationContext>(auth =>
+    public static TheoryData<Action<BunitAuthorizationContext>, int> AddCitiesLinkVisibilityData() =>
+        new()
         {
-            auth.SetAuthorized("admin@test.com").SetRoles("Admin");
-        }), 1];
-
-        yield return [new Action<BunitAuthorizationContext>(auth =>
-        {
-            auth.SetAuthorized("user@test.com");
-        }), 0];
-
-        yield return [new Action<BunitAuthorizationContext>(_ => { }), 0];
-    }
+            { auth => auth.SetAuthorized("admin@test.com").SetRoles("Admin"), 1 },
+            { auth => auth.SetAuthorized("user@test.com"), 0 },
+            { _ => { }, 0 },
+        };
 
     [Theory]
     [MemberData(nameof(AddCitiesLinkVisibilityData))]
