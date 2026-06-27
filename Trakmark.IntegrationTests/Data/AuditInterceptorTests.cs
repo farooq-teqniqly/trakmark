@@ -85,7 +85,7 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
     [Fact]
     public async Task SavingChangesAsync_AddedNonAuditableEntity_DoesNotThrow()
     {
-        // Arrange — RegisteredUserEntity does not implement IAuditableEntity
+        // Arrange
         var userContext = new CurrentUserContext();
         await using var context = CreateContextWithInterceptor(userContext);
 
@@ -98,8 +98,35 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
         // Act
         await context.SaveChangesAsync();
 
-        // Assert — no exception thrown; entity was persisted
+        // Assert
         await using var readContext = _fixture.CreateContext();
         Assert.Equal(1, await readContext.RegisteredUsers.CountAsync());
+    }
+
+    [Fact]
+    public async Task SavingChanges_AddedAuditableEntity_StampsAuditFields()
+    {
+        // Arrange
+        var userId = RegisteredUserId.NewId();
+        var userContext = new CurrentUserContext { UserId = userId };
+        var before = DateTimeOffset.UtcNow;
+
+        await using var context = CreateContextWithInterceptor(userContext);
+
+        context.Cities.Add(new CityEntity
+        {
+            CityId = "CTY-AUDIT0003",
+            Name = "SyncAuditCity",
+            State = "IL",
+        });
+
+        // Act
+        context.SaveChanges();
+
+        // Assert
+        await using var readContext = _fixture.CreateContext();
+        var city = await readContext.Cities.SingleAsync(c => c.Name == "SyncAuditCity");
+        Assert.Equal(userId.Value, city.CreatedByUserId);
+        Assert.True(city.CreatedAt >= before);
     }
 }

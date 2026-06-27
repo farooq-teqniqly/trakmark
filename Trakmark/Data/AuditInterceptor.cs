@@ -21,6 +21,17 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         _userContext = userContext;
     }
 
+    /// <summary>Stamps audit fields on all Added IAuditableEntity entries.</summary>
+    /// <inheritdoc/>
+    public override InterceptionResult<int> SavingChanges(
+        DbContextEventData eventData,
+        InterceptionResult<int> result)
+    {
+        ArgumentNullException.ThrowIfNull(eventData);
+        StampAuditableEntries(eventData.Context);
+        return base.SavingChanges(eventData, result);
+    }
+
     /// <inheritdoc/>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -28,27 +39,25 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(eventData);
+        StampAuditableEntries(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
 
-        if (eventData.Context is null)
-        {
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
-        }
+    private void StampAuditableEntries(DbContext? context)
+    {
+        if (context is null) { return; }
 
-        var auditableEntries = eventData.Context.ChangeTracker
+        var auditableEntries = context.ChangeTracker
             .Entries()
             .Where(e => e.State == EntityState.Added && e.Entity is IAuditableEntity)
             .ToList();
 
-        if (auditableEntries.Count is 0)
-        {
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
-        }
+        if (auditableEntries.Count is 0) { return; }
 
         if (_userContext.UserId is null)
         {
             throw new InvalidOperationException(
-                "ICurrentUserContext.UserId is null. An authorized component must set UserId before SaveChangesAsync is called."
-            );
+                "ICurrentUserContext.UserId is null. An authorized component must set UserId before SaveChanges is called.");
         }
 
         var userId = _userContext.UserId.Value.Value;
@@ -60,7 +69,5 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             entity.CreatedByUserId = userId;
             entity.CreatedAt = now;
         }
-
-        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 }
