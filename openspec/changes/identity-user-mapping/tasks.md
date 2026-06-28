@@ -44,8 +44,8 @@
 
 ## 7. CLAUDE.md rules
 
-- [ ] 7.1 Add rule: "Every EF entity must have a dedicated `IEntityTypeConfiguration<T>` class in `Trakmark/Data/Configurations/`. Never configure entities inline in `OnModelCreating`."
-- [ ] 7.2 Add rule: "Use `IAuditableEntity` + `AuditInterceptor` for `CreatedByUserId` and `CreatedAt` — never stamp these fields manually in services or components."
+- [x] 7.1 Add rule: "Every EF entity must have a dedicated `IEntityTypeConfiguration<T>` class in `Trakmark/Data/Configurations/`. Never configure entities inline in `OnModelCreating`."
+- [x] 7.2 Add rule: "Use `IAuditableEntity` + `AuditInterceptor` for `CreatedByUserId` and `CreatedAt` — never stamp these fields manually in services or components."
 
 ## 8. Pre-merge
 
