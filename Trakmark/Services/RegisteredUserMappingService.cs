@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Trakmark.Data;
 using Trakmark.Data.Entities;
 using Trakmark.Domain.Aggregates;
@@ -15,11 +16,13 @@ namespace Trakmark.Services;
 public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<RegisteredUserMappingService> _logger;
 
     /// <summary>Initializes a new instance of <see cref="RegisteredUserMappingService"/>.</summary>
-    public RegisteredUserMappingService(ApplicationDbContext context)
+    public RegisteredUserMappingService(ApplicationDbContext context, ILogger<RegisteredUserMappingService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
@@ -41,7 +44,7 @@ public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
         }
         catch (DbUpdateException ex) when (ex.InnerException is SqlException { Number: 2601 or 2627 })
         {
-            // A mapping for this Identity user already exists — treat as idempotent success.
+            _logger.LogDuplicateMappingIgnored(identityUserId);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Trakmark.Services;
 
 namespace Trakmark.IntegrationTests.Services;
@@ -31,7 +32,7 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
         // Arrange
         var identityUserId = Guid.NewGuid().ToString();
         await using var context = _fixture.CreateContext();
-        var service = new RegisteredUserMappingService(context);
+        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
 
         // Act
         await service.CreateAsync(identityUserId);
@@ -40,7 +41,26 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
         await using var readContext = _fixture.CreateContext();
         var entity = await readContext.RegisteredUsers
             .SingleAsync(r => r.AccountId == identityUserId);
-        Assert.Equal(identityUserId, entity.AccountId);
         Assert.False(string.IsNullOrEmpty(entity.RegisteredUserId));
+    }
+
+    [Fact]
+    public async Task CreateAsync_SameIdentityUserIdCalledTwice_IsIdempotentAndPersistsSingleRow()
+    {
+        // Arrange
+        var identityUserId = Guid.NewGuid().ToString();
+        await using var context1 = _fixture.CreateContext();
+        var service1 = new RegisteredUserMappingService(context1, NullLogger<RegisteredUserMappingService>.Instance);
+        await service1.CreateAsync(identityUserId);
+
+        // Act
+        await using var context2 = _fixture.CreateContext();
+        var service2 = new RegisteredUserMappingService(context2, NullLogger<RegisteredUserMappingService>.Instance);
+        var exception = await Record.ExceptionAsync(() => service2.CreateAsync(identityUserId));
+
+        // Assert
+        Assert.Null(exception);
+        await using var readContext = _fixture.CreateContext();
+        Assert.Equal(1, await readContext.RegisteredUsers.CountAsync(r => r.AccountId == identityUserId));
     }
 }

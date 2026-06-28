@@ -22,12 +22,10 @@ namespace Trakmark.Tests.Pages;
 public sealed class ExternalLoginTests : BunitContext
 {
     [Fact]
-    public async Task CreateAndSignInUserAsync_MappingServiceThrows_RedirectsToLoginWithoutSignIn()
+    public async Task ExternalLoginCallback_MappingServiceThrows_RedirectsToLoginWithoutSignIn()
     {
-        // Arrange — user store implementing both IUserStore and IUserEmailStore
+        // Arrange
         var userStore = Substitute.For<IUserStore<ApplicationUser>, IUserEmailStore<ApplicationUser>>();
-
-        // Arrange — UserManager substitute (class, so pass minimal constructor args)
         var userManager = Substitute.For<UserManager<ApplicationUser>>(
             userStore, null, null, null, null, null, null, null, null);
         userManager.SupportsUserEmail.Returns(true);
@@ -35,7 +33,6 @@ public sealed class ExternalLoginTests : BunitContext
         userManager.AddLoginAsync(Arg.Any<ApplicationUser>(), Arg.Any<UserLoginInfo>())
             .Returns(IdentityResult.Success);
 
-        // Arrange — SignInManager substitute
         var signInManager = Substitute.For<SignInManager<ApplicationUser>>(
             userManager,
             Substitute.For<IHttpContextAccessor>(),
@@ -60,7 +57,6 @@ public sealed class ExternalLoginTests : BunitContext
         var loginInfo = new ExternalLoginInfo(principal, "Google", "google-key", "Google");
         signInManager.GetExternalLoginInfoAsync().Returns(loginInfo);
 
-        // Arrange — mapping service throws to simulate a database error
         var mappingService = Substitute.For<IRegisteredUserMappingService>();
         mappingService
             .CreateAsync(Arg.Any<string>())
@@ -75,7 +71,9 @@ public sealed class ExternalLoginTests : BunitContext
 
         // Register IdentityRedirectManager (internal type — access via reflection)
         var redirectManagerType = typeof(ExternalLogin).Assembly
-            .GetType("Trakmark.Components.Account.IdentityRedirectManager")!;
+            .GetType("Trakmark.Components.Account.IdentityRedirectManager")
+            ?? throw new InvalidOperationException(
+                "IdentityRedirectManager type not found — was it renamed or moved?");
         Services.AddSingleton(redirectManagerType);
 
         // Navigate to the ExternalLogin URL so [SupplyParameterFromQuery] picks up action
@@ -90,11 +88,10 @@ public sealed class ExternalLoginTests : BunitContext
         // Act
         Render<ExternalLogin>(p => p.AddCascadingValue(httpContext));
 
-        // Assert — a redirect to Account/Login was recorded
+        // Assert
         Assert.Contains(navManager.History, h => h.Uri.Contains("Account/Login")
             && !h.Uri.Contains("ExternalLogin"));
 
-        // Assert — SignInAsync was NOT called (user must not be signed in on failure)
         await signInManager.DidNotReceive()
             .SignInAsync(Arg.Any<ApplicationUser>(), Arg.Any<bool>(), Arg.Any<string?>());
     }
