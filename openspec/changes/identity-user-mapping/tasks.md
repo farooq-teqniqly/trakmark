@@ -39,8 +39,8 @@
 
 ## 6. AuditInterceptor and ICurrentUserContext tests
 
-- [ ] 6.1 Write unit tests in `Trakmark.Tests` (or a new `Trakmark.Tests` test class) for `AuditInterceptor` spec scenarios: (a) stamps `Added` `IAuditableEntity` with user ID and UTC time, (b) throws when `UserId` is null, (c) ignores non-`IAuditableEntity` entries; write as failing first, then implement to green
-- [ ] 6.2 Write unit tests for `CurrentUserContext`: (a) `UserId` is null on construction, (b) `UserId` returns set value; write as failing first, then implement to green
+- [x] 6.1 Write unit tests in `Trakmark.Tests` (or a new `Trakmark.Tests` test class) for `AuditInterceptor` spec scenarios: (a) stamps `Added` `IAuditableEntity` with user ID and UTC time, (b) throws when `UserId` is null, (c) ignores non-`IAuditableEntity` entries; write as failing first, then implement to green
+- [x] 6.2 Write unit tests for `CurrentUserContext`: (a) `UserId` is null on construction, (b) `UserId` returns set value; write as failing first, then implement to green
 
 ## 7. CLAUDE.md rules
 
