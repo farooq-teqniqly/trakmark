@@ -15,11 +15,11 @@
 
 ## 3. Registration hook — failing tests first
 
-- [ ] 3.1 Write failing integration tests in `Trakmark.IntegrationTests` for the `registered-user-identity-mapping` spec scenarios: (a) `RegisteredUser` row exists after new-user registration, (b) registration failure redirects to login; use `Assert.Fail("not implemented")` placeholder, confirm red, then replace
-- [ ] 3.2 Add `IRegisteredUserMappingService` interface and `RegisteredUserMappingService` to `Trakmark/Services/`; `CreateAsync(string identityUserId)` creates `RegisteredUser.Create(new UserAccountId(identityUserId))` and persists via `ApplicationDbContext`
-- [ ] 3.3 Register `IRegisteredUserMappingService` / `RegisteredUserMappingService` as scoped in `Program.cs`
-- [ ] 3.4 Inject `IRegisteredUserMappingService` into `ExternalLogin.razor`; in `CreateAndSignInUserAsync` call `CreateAsync(user.Id)` after `AddLoginAsync` succeeds; on failure redirect to `Account/Login` with error message and return
-- [ ] 3.5 Make integration tests green
+- [x] 3.1 Write failing integration tests in `Trakmark.IntegrationTests` for the `registered-user-identity-mapping` spec scenarios: (a) `RegisteredUser` row exists after new-user registration, (b) registration failure redirects to login; use `Assert.Fail("not implemented")` placeholder, confirm red, then replace
+- [x] 3.2 Add `IRegisteredUserMappingService` interface and `RegisteredUserMappingService` to `Trakmark/Services/`; `CreateAsync(string identityUserId)` creates `RegisteredUser.Create(new UserAccountId(identityUserId))` and persists via `ApplicationDbContext`
+- [x] 3.3 Register `IRegisteredUserMappingService` / `RegisteredUserMappingService` as scoped in `Program.cs`
+- [x] 3.4 Inject `IRegisteredUserMappingService` into `ExternalLogin.razor`; in `CreateAndSignInUserAsync` call `CreateAsync(user.Id)` after `AddLoginAsync` succeeds; on failure redirect to `Account/Login` with error message and return
+- [x] 3.5 Make integration tests green
 
 ## 4. Lookup service — failing tests first
 
