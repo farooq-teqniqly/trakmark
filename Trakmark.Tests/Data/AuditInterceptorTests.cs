@@ -104,7 +104,7 @@ public sealed class AuditInterceptorTests
         context.Auditable.Add(new AuditableTestEntity());
 
         // Act
-#pragma warning disable S6966 // Intentionally calling SaveChanges() to exercise the sync interceptor path
+#pragma warning disable S6966
         context.SaveChanges();
 #pragma warning restore S6966
 
@@ -112,5 +112,21 @@ public sealed class AuditInterceptorTests
         var entity = context.Auditable.Single();
         Assert.Equal(userId.Value, entity.CreatedByUserId);
         Assert.True(entity.CreatedAt >= before);
+    }
+
+    [Fact]
+    public void SavingChanges_UserIdNullWithAddedAuditableEntity_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var userContext = new CurrentUserContext();
+        var interceptor = new AuditInterceptor(userContext);
+
+        using var context = CreateContext(interceptor);
+        context.Auditable.Add(new AuditableTestEntity());
+
+        // Act / Assert
+#pragma warning disable S6966
+        Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
+#pragma warning restore S6966
     }
 }
