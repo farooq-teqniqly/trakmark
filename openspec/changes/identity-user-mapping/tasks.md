@@ -49,6 +49,6 @@
 
 ## 8. Pre-merge
 
-- [ ] 8.1 Run SonarQube warning sweep (up to 3 rounds); record any unresolved items in `docs/sonarqube-warnings-triage.md` if rounds are exhausted
-- [ ] 8.2 Run `coverage-report` and confirm `Trakmark.Domain` line coverage remains 100% (this change does not touch Domain, but verify no regression)
-- [ ] 8.3 Confirm GitHub issue #22 is resolved: save a city and verify `CreatedByUserId` in the database is a real `USR-XXXXXXX` value, not `USR-AAAAAAA`
+- [x] 8.1 Run SonarQube warning sweep (up to 3 rounds); record any unresolved items in `docs/sonarqube-warnings-triage.md` if rounds are exhausted
+- [x] 8.2 Run `coverage-report` and confirm `Trakmark.Domain` line coverage remains 100% (this change does not touch Domain, but verify no regression)
+- [x] 8.3 Confirm GitHub issue #22 is resolved: save a city and verify `CreatedByUserId` in the database is a real `USR-XXXXXXX` value, not `USR-AAAAAAA`
