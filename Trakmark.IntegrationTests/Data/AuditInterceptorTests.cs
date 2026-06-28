@@ -121,7 +121,9 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
         });
 
         // Act
+#pragma warning disable S6966 // Intentionally calling SaveChanges() to exercise the sync interceptor path
         context.SaveChanges();
+#pragma warning restore S6966
 
         // Assert
         await using var readContext = _fixture.CreateContext();
