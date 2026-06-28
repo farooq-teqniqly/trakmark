@@ -121,7 +121,8 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     [Fact]
     public async Task SaveAsync_CrossBatchDuplicate_RejectsWholeBatch()
     {
-        // Arrange — pre-seed an existing city directly (bypasses interceptor, sets fields manually)
+        // Pre-seed directly so the interceptor is bypassed and fields are set manually.
+        // Arrange
         await using (var seedContext = _fixture.CreateContext())
         {
             seedContext.Cities.Add(

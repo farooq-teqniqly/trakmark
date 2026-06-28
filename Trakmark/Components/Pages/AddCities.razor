@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 
 @using System.Security.Claims
+@using Microsoft.Extensions.Logging
 @using Trakmark.Helpers
 @using Trakmark.Services
 
@@ -10,6 +11,7 @@
 @inject IRegisteredUserLookupService UserLookupService
 @inject ICurrentUserContext UserContext
 @inject NavigationManager Navigation
+@inject ILogger<AddCities> Logger
 
 <PageTitle>Add Cities</PageTitle>
 
@@ -74,7 +76,7 @@
     <button id="save-btn"
             class="btn btn-primary"
             @onclick="SaveAsync"
-            disabled="@(!IsFormValid)">
+            disabled="@(!IsFormValid || _isSaving)">
         Save
     </button>
     <button id="cancel-btn"
@@ -90,6 +92,7 @@
     private readonly List<CityRow> _rows = [new()];
     private string? _successMessage;
     private string? _errorMessage;
+    private bool _isSaving;
 
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
@@ -99,6 +102,11 @@
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        if (!RendererInfo.IsInteractive)
+        {
+            return;
+        }
+
         if (AuthenticationStateTask is null)
         {
             return;
@@ -107,9 +115,20 @@
         var authState = await AuthenticationStateTask;
         var nameId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (nameId is not null)
+        if (string.IsNullOrEmpty(nameId))
+        {
+            _errorMessage = "Unable to determine the current user's identity.";
+            return;
+        }
+
+        try
         {
             UserContext.UserId = await UserLookupService.GetByAccountIdAsync(nameId);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or FormatException)
+        {
+            Logger.LogUserLookupFailed(nameId, ex);
+            _errorMessage = "Failed to load user information. Please try again or contact support.";
         }
     }
 
@@ -135,12 +154,26 @@
 
     private async Task SaveAsync()
     {
-        _successMessage = null;
-        _errorMessage = null;
+        if (_isSaving)
+        {
+            return;
+        }
 
-        var rows = BuildSaveRows();
-        var result = await BatchSaveService.SaveAsync(rows);
-        HandleSaveResult(result);
+        _isSaving = true;
+
+        try
+        {
+            _successMessage = null;
+            _errorMessage = null;
+
+            var rows = BuildSaveRows();
+            var result = await BatchSaveService.SaveAsync(rows);
+            HandleSaveResult(result);
+        }
+        finally
+        {
+            _isSaving = false;
+        }
     }
 
     private void HandleSaveResult(SaveCitiesBatchResult result)
