@@ -44,7 +44,6 @@ public sealed class AddCitiesTests : BunitContext
     public void Render_WithAuthenticatedUser_SetsCurrentUserContextUserId()
     {
         // Arrange
-        // (setup in constructor)
 
         // Act
         Render<AddCities>();
