@@ -51,7 +51,9 @@ Never let pre-existing drift ride in the same migration as intentional changes.
 **If your section has no `.T` task and cites no spec scenarios** (e.g., a
 pre-merge or infrastructure chore section), skip this entire workflow. There
 is no failing-test-first requirement when a section introduces no new
-production behavior. Work through the tasks sequentially and go straight to
+production behavior. The tasks in such a section are tool-runs and
+verifications (e.g., `dotnet build`, coverage report, manual DB spot-check),
+not code implementations. Work through them sequentially and go straight to
 "Before finishing."
 
 Follow the TDD rule in config.yaml exactly. In general:
@@ -140,6 +142,12 @@ Use a worktree per section when two or more sections run in parallel or when
 sections touch production code that could conflict. For single-section runs
 and test-only changes (no production code edits), work directly on the
 change branch — no worktree needed.
+
+Quality-gate and pre-merge sections (tool-runs only, no new code) always
+work directly on the change branch. No worktree is created. When handing
+off such a section to a reviewer or follow-up agent, target the main repo
+checkout directly — do not attempt to discover a worktree via
+`git worktree list`, because none will exist for these sections.
 
 When constructing `git -C <path>` or any path argument passed to Bash on
 Windows, always use forward slashes (`C:/src/my/...` not `C:\src\my\...`).
