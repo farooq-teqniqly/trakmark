@@ -83,7 +83,7 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SavingChangesAsync_AddedNonAuditableEntity_DoesNotThrow()
+    public async Task SavingChangesAsync_AddedPreStampedAuditableEntity_DoesNotThrow()
     {
         // Arrange
         var userContext = new CurrentUserContext();
@@ -93,6 +93,8 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
         {
             RegisteredUserId = RegisteredUserId.NewId().Value,
             AccountId = Guid.NewGuid().ToString(),
+            CreatedByUserId = WellKnownUsers.SystemUserId,
+            CreatedAt = DateTimeOffset.UtcNow,
         });
 
         // Act
