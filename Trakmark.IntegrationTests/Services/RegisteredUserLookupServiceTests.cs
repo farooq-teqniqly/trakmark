@@ -63,4 +63,22 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => lookupService.GetByAccountIdAsync(unknownIdentityUserId));
     }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetByAccountIdAsync_NullOrEmptyIdentityUserId_ThrowsArgumentException(
+        string? identityUserId)
+    {
+        // Arrange
+        await using var context = _fixture.CreateContext();
+        var sut = new RegisteredUserLookupService(
+            context, NullLogger<RegisteredUserLookupService>.Instance);
+
+        // Act
+        var ex = await Record.ExceptionAsync(() => sut.GetByAccountIdAsync(identityUserId!));
+
+        // Assert
+        Assert.IsAssignableFrom<ArgumentException>(ex);
+    }
 }

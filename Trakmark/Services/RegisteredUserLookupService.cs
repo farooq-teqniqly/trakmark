@@ -13,7 +13,6 @@ public sealed class RegisteredUserLookupService : IRegisteredUserLookupService
 {
     private readonly ApplicationDbContext _context;
 
-    /// <summary>The logger for this service.</summary>
     private readonly ILogger<RegisteredUserLookupService> _logger;
 
     /// <summary>Initializes a new instance of <see cref="RegisteredUserLookupService"/>.</summary>
