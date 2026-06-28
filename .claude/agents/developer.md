@@ -77,7 +77,8 @@ Before staging files, run through this list:
 - **[Fact] vs [Theory] redundancy**: the moment you need a second `[Fact]` that tests the same method with different inputs or expected outputs, stop and convert to `[Theory]`/`[InlineData]` instead — do not accumulate `[Fact]`s first and consolidate later. If a `[Theory]` already covers a case, delete any `[Fact]` for the same scenario.
 - **Discriminated union test completeness**: after writing tests for a method that returns a discriminated union or named result subtypes (e.g. `Success`, `NotFound`, `Conflict`, `Duplicate`), list all subtypes in a comment and confirm each has at least one dedicated test case before committing.
 - **UI form constraints vs domain constraints**: for every `maxlength`, `min`, and `max` attribute on a Blazor input element, look up the exact constant or constructor guard in the corresponding domain type and confirm the values match — off-by-one errors are invisible until review.
-- **SonarQube clean before committing**: before staging, run `dotnet build .\Trakmark\Trakmark.slnx 2>&1 | Select-String "warning S\d+" | Where-Object { $_ -notmatch "Microsoft\.Common" }` and fix or suppress every warning before committing. Do not defer this to merge time — fixes to unrelated warnings introduced by your changes add an avoidable review round.
+- **`inheritdoc` vs explicit `<summary>` on overrides**: for any override of a base-class or interface member, use `/// <inheritdoc/>` alone — do not place an explicit `<summary>` block alongside it on the same member. Both together are redundant and will be flagged in review.
+- **SonarQube clean before committing**: before staging, run `dotnet build .\Trakmark\Trakmark.slnx 2>&1 | Select-String "warning S\d+" | Where-Object { $_ -notmatch "Microsoft\.Common" }` and fix or suppress every warning before committing. Do not defer this to merge time — fixes to unrelated warnings introduced by your changes add an avoidable review round. Pay particular attention to **S6966**: if a test calls `context.SaveChanges()` on an intentional sync EF path (e.g. to exercise a `SavingChanges` interceptor override), add `#pragma warning disable S6966` / `#pragma warning restore S6966` around that call — the suppression must be in the same commit as the test, not applied post-merge.
 - **Null guards**: every public constructor and method that accepts a reference-type parameter must call `ArgumentNullException.ThrowIfNull(param)` as its first line. Exception: DI-injected dependencies.
 - **Equals/GetHashCode comparer parity**: if `Equals` uses `StringComparison.Ordinal` (or any explicit comparer), `GetHashCode` must use the same — e.g. `Value.GetHashCode(StringComparison.Ordinal)`. Mismatches silently break dictionary lookups.
 - **Testing internal members**: never create a test that calls an `internal` method or property directly. Reach it through its public API caller instead (e.g. cover `DomainId.IsValid` by calling `TryParse`, not by invoking `IsValid` directly). If a task says "or a new `XTests.cs`" but the target is `internal`, use the existing test class and test via the public caller.
@@ -107,6 +108,17 @@ Once all tasks in your section are green and checked off in `tasks.md`:
    subject, body explaining why not what, ≤72 chars per line).
 4. Add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>` as a
    trailer in the commit message body.
+
+## Orchestrator: reviewer prompt context
+
+When submitting a completed section for review, always include in the reviewer prompt:
+- The list of tasks explicitly deferred to a later section (by task ID and deferring section number).
+- A note that deferred items are out of scope for the current review and must not be raised as findings.
+
+Example addition to a reviewer prompt:
+> Known deferred items (out of scope for this review): task 5.2 (remove manual `CreatedByUserId`/`CreatedAt` stamping from `PersistAsync`) is intentionally deferred to section 5. Do not flag these as findings.
+
+Without this context, reviewers will raise High-severity findings on code that is intentionally incomplete, wasting a review round.
 
 ## Orchestrator: when to use worktrees
 
