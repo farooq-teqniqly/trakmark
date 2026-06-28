@@ -30,12 +30,12 @@
 
 ## 5. Wire AddCities and remove manual stamping — failing tests first
 
-- [ ] 5.1 Write failing bUnit tests in `Trakmark.Tests` covering `AddCities` with `ICurrentUserContext` set to a real `RegisteredUserId.NewId()` (not `Empty`); confirm existing tests that used `Empty` now fail; use `Assert.Fail("not implemented")` for new assertions
-- [ ] 5.2 Remove `RegisteredUserId createdByUserId` parameter from `ISaveCitiesBatchService.SaveAsync` and `SaveCitiesBatchService.SaveAsync` / `PersistAsync`; remove manual `CreatedByUserId` and `CreatedAt` stamping from `PersistAsync` (interceptor handles both)
-- [ ] 5.3 Inject `IRegisteredUserLookupService` and `ICurrentUserContext` into `AddCities.razor`; add `OnInitializedAsync` that resolves the `NameIdentifier` claim, calls `GetByAccountIdAsync`, and sets `ICurrentUserContext.UserId`; remove `GetCurrentUserIdAsync` method and the `userId` argument from the `BatchSaveService.SaveAsync` call in `SaveAsync`
-- [ ] 5.4 Update `AddCitiesTests` mocks/setup to remove `userId` argument from `SaveAsync` calls; set `ICurrentUserContext` via the `AuthenticationStateTask` / `TestAuthorizationContext` setup
-- [ ] 5.5 Update `SaveCitiesBatchTests` integration tests to remove `userId` argument; ensure `AuditInterceptor` stamps are verified through the persisted entity
-- [ ] 5.6 Make all updated tests green
+- [x] 5.1 Write failing bUnit tests in `Trakmark.Tests` covering `AddCities` with `ICurrentUserContext` set to a real `RegisteredUserId.NewId()` (not `Empty`); confirm existing tests that used `Empty` now fail; use `Assert.Fail("not implemented")` for new assertions
+- [x] 5.2 Remove `RegisteredUserId createdByUserId` parameter from `ISaveCitiesBatchService.SaveAsync` and `SaveCitiesBatchService.SaveAsync` / `PersistAsync`; remove manual `CreatedByUserId` and `CreatedAt` stamping from `PersistAsync` (interceptor handles both)
+- [x] 5.3 Inject `IRegisteredUserLookupService` and `ICurrentUserContext` into `AddCities.razor`; add `OnInitializedAsync` that resolves the `NameIdentifier` claim, calls `GetByAccountIdAsync`, and sets `ICurrentUserContext.UserId`; remove `GetCurrentUserIdAsync` method and the `userId` argument from the `BatchSaveService.SaveAsync` call in `SaveAsync`
+- [x] 5.4 Update `AddCitiesTests` mocks/setup to remove `userId` argument from `SaveAsync` calls; set `ICurrentUserContext` via the `AuthenticationStateTask` / `TestAuthorizationContext` setup
+- [x] 5.5 Update `SaveCitiesBatchTests` integration tests to remove `userId` argument; ensure `AuditInterceptor` stamps are verified through the persisted entity
+- [x] 5.6 Make all updated tests green
 
 ## 6. AuditInterceptor and ICurrentUserContext tests
 
