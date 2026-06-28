@@ -125,7 +125,7 @@
         {
             UserContext.UserId = await UserLookupService.GetByAccountIdAsync(nameId);
         }
-        catch (Exception ex) when (ex is InvalidOperationException or FormatException)
+        catch (Exception ex)
         {
             Logger.LogUserLookupFailed(nameId, ex);
             _errorMessage = "Failed to load user information. Please try again or contact support.";
@@ -160,6 +160,7 @@
         }
 
         _isSaving = true;
+        StateHasChanged();
 
         try
         {

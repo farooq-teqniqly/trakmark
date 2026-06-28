@@ -43,6 +43,9 @@ public sealed class AddCitiesTests : BunitContext
     [Fact]
     public void Render_WithAuthenticatedUser_SetsCurrentUserContextUserId()
     {
+        // Arrange
+        // (setup in constructor)
+
         // Act
         Render<AddCities>();
 
@@ -50,13 +53,21 @@ public sealed class AddCitiesTests : BunitContext
         Assert.Equal(TestUserId, _userContext.UserId);
     }
 
-    [Fact]
-    public void Render_WhenLookupThrows_ShowsErrorMessage()
+    [Theory]
+    [InlineData("InvalidOperation")]
+    [InlineData("HttpRequest")]
+    public void Render_WhenLookupThrows_ShowsErrorMessage(string exceptionKey)
     {
         // Arrange
+        var exception = exceptionKey switch
+        {
+            "InvalidOperation" => (Exception)new InvalidOperationException("User not found"),
+            "HttpRequest" => new HttpRequestException("Network failure"),
+            _ => throw new ArgumentOutOfRangeException(nameof(exceptionKey))
+        };
         _mockLookup
             .GetByAccountIdAsync(TestAccountId)
-            .Returns(Task.FromException<RegisteredUserId>(new InvalidOperationException("User not found")));
+            .Returns(Task.FromException<RegisteredUserId>(exception));
 
         // Act
         var cut = Render<AddCities>();
