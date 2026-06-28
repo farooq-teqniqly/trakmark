@@ -1,5 +1,5 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
-using Trakmark.Domain.Ids;
 using Trakmark.Services;
 
 namespace Trakmark.IntegrationTests.Services;
@@ -16,7 +16,6 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
     /// <summary>Initializes a new instance of <see cref="RegisteredUserLookupServiceTests"/>.</summary>
     public RegisteredUserLookupServiceTests(DatabaseFixture fixture)
     {
-        ArgumentNullException.ThrowIfNull(fixture);
         _fixture = fixture;
     }
 
@@ -36,14 +35,19 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
             seedContext, NullLogger<RegisteredUserMappingService>.Instance);
         await mappingService.CreateAsync(identityUserId);
 
+        var seeded = await seedContext.RegisteredUsers
+            .SingleAsync(r => r.AccountId == identityUserId);
+        var expectedRegisteredUserId = seeded.RegisteredUserId;
+
         await using var lookupContext = _fixture.CreateContext();
-        var lookupService = new RegisteredUserLookupService(lookupContext);
+        var lookupService = new RegisteredUserLookupService(
+            lookupContext, NullLogger<RegisteredUserLookupService>.Instance);
 
         // Act
         var registeredUserId = await lookupService.GetByAccountIdAsync(identityUserId);
 
         // Assert
-        Assert.True(RegisteredUserId.TryParse(registeredUserId.Value, out _));
+        Assert.Equal(expectedRegisteredUserId, registeredUserId.Value);
     }
 
     [Fact]
@@ -52,7 +56,8 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
         // Arrange
         var unknownIdentityUserId = Guid.NewGuid().ToString();
         await using var context = _fixture.CreateContext();
-        var lookupService = new RegisteredUserLookupService(context);
+        var lookupService = new RegisteredUserLookupService(
+            context, NullLogger<RegisteredUserLookupService>.Instance);
 
         // Act / Assert
         await Assert.ThrowsAsync<InvalidOperationException>(

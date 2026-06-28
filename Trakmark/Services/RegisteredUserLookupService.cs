@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Trakmark.Data;
 using Trakmark.Domain.Ids;
 
@@ -12,22 +13,29 @@ public sealed class RegisteredUserLookupService : IRegisteredUserLookupService
 {
     private readonly ApplicationDbContext _context;
 
+    /// <summary>The logger for this service.</summary>
+    private readonly ILogger<RegisteredUserLookupService> _logger;
+
     /// <summary>Initializes a new instance of <see cref="RegisteredUserLookupService"/>.</summary>
-    public RegisteredUserLookupService(ApplicationDbContext context)
+    public RegisteredUserLookupService(
+        ApplicationDbContext context,
+        ILogger<RegisteredUserLookupService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
     public async Task<RegisteredUserId> GetByAccountIdAsync(string identityUserId)
     {
-        ArgumentNullException.ThrowIfNull(identityUserId);
+        ArgumentException.ThrowIfNullOrEmpty(identityUserId);
 
         var entity = await _context.RegisteredUsers
             .SingleOrDefaultAsync(r => r.AccountId == identityUserId);
 
         if (entity is null)
         {
+            _logger.LogMappingNotFound(identityUserId);
             throw new InvalidOperationException(
                 $"No RegisteredUser found for Identity user ID '{identityUserId}'.");
         }
