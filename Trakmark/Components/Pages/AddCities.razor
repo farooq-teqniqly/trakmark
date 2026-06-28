@@ -3,11 +3,12 @@
 @rendermode InteractiveServer
 
 @using System.Security.Claims
-@using Trakmark.Domain.Ids
 @using Trakmark.Helpers
 @using Trakmark.Services
 
 @inject ISaveCitiesBatchService BatchSaveService
+@inject IRegisteredUserLookupService UserLookupService
+@inject ICurrentUserContext UserContext
 @inject NavigationManager Navigation
 
 <PageTitle>Add Cities</PageTitle>
@@ -95,6 +96,23 @@
 
     private bool IsFormValid => _rows.All(r => r.IsValid);
 
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationStateTask is null)
+        {
+            return;
+        }
+
+        var authState = await AuthenticationStateTask;
+        var nameId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (nameId is not null)
+        {
+            UserContext.UserId = await UserLookupService.GetByAccountIdAsync(nameId);
+        }
+    }
+
     private static void OnNameChanged(CityRow row, string value)
     {
         row.Name = value;
@@ -120,9 +138,8 @@
         _successMessage = null;
         _errorMessage = null;
 
-        var userId = await GetCurrentUserIdAsync();
         var rows = BuildSaveRows();
-        var result = await BatchSaveService.SaveAsync(rows, userId);
+        var result = await BatchSaveService.SaveAsync(rows);
         HandleSaveResult(result);
     }
 
@@ -169,24 +186,6 @@
         }
 
         return result;
-    }
-
-    private async Task<RegisteredUserId> GetCurrentUserIdAsync()
-    {
-        if (AuthenticationStateTask is null)
-        {
-            return RegisteredUserId.Empty;
-        }
-
-        var authState = await AuthenticationStateTask;
-        var nameId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (nameId is not null && RegisteredUserId.TryParse(nameId, out var id))
-        {
-            return id;
-        }
-
-        return RegisteredUserId.Empty;
     }
 
     /// <summary>A single row in the Add Cities form, holding name, state, and validation state.</summary>

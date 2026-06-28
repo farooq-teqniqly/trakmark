@@ -2,15 +2,14 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data;
 using Trakmark.Data.Entities;
-using Trakmark.Domain.Ids;
 using Trakmark.Domain.ValueObjects;
 
 namespace Trakmark.Services;
 
 /// <summary>
 /// Validates and persists a batch of cities in a single all-or-nothing transaction.
-/// Accepts the submitting Admin's <see cref="RegisteredUserId"/> as a parameter to
-/// keep the service testable without an HTTP context dependency.
+/// Creation metadata (<c>CreatedByUserId</c> and <c>CreatedAt</c>) is stamped by
+/// <see cref="AuditInterceptor"/> via <see cref="ICurrentUserContext"/> — not set here.
 /// </summary>
 public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
 {
@@ -28,11 +27,7 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
     /// validation failure, in-batch duplicate, and cross-batch (existing) duplicate.
     /// </summary>
     /// <param name="rows">The city rows to persist. Must not be null; must contain 1-100 items.</param>
-    /// <param name="createdByUserId">The <see cref="RegisteredUserId"/> of the submitting Admin.</param>
-    public async Task<SaveCitiesBatchResult> SaveAsync(
-        IReadOnlyList<SaveCityRow> rows,
-        RegisteredUserId createdByUserId
-    )
+    public async Task<SaveCitiesBatchResult> SaveAsync(IReadOnlyList<SaveCityRow> rows)
     {
         ArgumentNullException.ThrowIfNull(rows);
 
@@ -62,7 +57,7 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
             return crossBatchDuplicate;
         }
 
-        return await PersistAsync(cities!, createdByUserId);
+        return await PersistAsync(cities!);
     }
 
     private static (
@@ -142,13 +137,8 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
             .FirstOrDefault();
     }
 
-    private async Task<SaveCitiesBatchResult> PersistAsync(
-        List<City> cities,
-        RegisteredUserId createdByUserId
-    )
+    private async Task<SaveCitiesBatchResult> PersistAsync(List<City> cities)
     {
-        var now = DateTimeOffset.UtcNow;
-
         foreach (var city in cities)
         {
             _context.Cities.Add(
@@ -157,8 +147,6 @@ public sealed class SaveCitiesBatchService : ISaveCitiesBatchService
                     CityId = city.Id.Value,
                     Name = city.Name,
                     State = city.State.Abbreviation,
-                    CreatedAt = now,
-                    CreatedByUserId = createdByUserId.Value,
                 }
             );
         }
