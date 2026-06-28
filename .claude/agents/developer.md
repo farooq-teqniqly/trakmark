@@ -79,8 +79,12 @@ Before staging files, run through this list:
 - **[Fact] vs [Theory] redundancy**: the moment you need a second `[Fact]` that tests the same method with different inputs or expected outputs, stop and convert to `[Theory]`/`[InlineData]` instead — do not accumulate `[Fact]`s first and consolidate later. If a `[Theory]` already covers a case, delete any `[Fact]` for the same scenario.
 - **Discriminated union test completeness**: after writing tests for a method that returns a discriminated union or named result subtypes (e.g. `Success`, `NotFound`, `Conflict`, `Duplicate`), list all subtypes in a comment and confirm each has at least one dedicated test case before committing.
 - **Catch branch test coverage**: for every `catch` block that suppresses or transforms an exception (does not re-throw it), confirm there is at least one test case that drives execution into that block. Idempotent-success paths that catch `DbUpdateException` and return a `Success` result are the most commonly missed — check those explicitly.
+- **Guard test coverage**: for every `ArgumentNullException.ThrowIfNull` or `ArgumentException.ThrowIfNullOrEmpty` guard added to a public or internal constructor or method, confirm there is at least one test case that passes `null` (or empty string) and asserts the expected exception. Adding a guard without a test for it leaves the guard unverified.
+- **No trivially-true assertions**: before committing, scan test assertions for cases where the outcome is guaranteed by construction or type invariants rather than by the behavior under test — e.g. `Assert.True(MyId.TryParse(myId.Value, out _))` always passes because `myId.Value` came from a valid `MyId`. Replace such assertions with ones that actually exercise behavior.
 - **UI form constraints vs domain constraints**: for every `maxlength`, `min`, and `max` attribute on a Blazor input element, look up the exact constant or constructor guard in the corresponding domain type and confirm the values match — off-by-one errors are invisible until review.
 - **`inheritdoc` vs explicit `<summary>` on overrides**: for any override of a base-class or interface member, use `/// <inheritdoc/>` alone — do not place an explicit `<summary>` block alongside it on the same member. Both together are redundant and will be flagged in review.
+- **XML doc exemptions — private fields and `[LoggerMessage]` methods**: scan every `*.Logging.cs` file and every new type for spurious `<summary>` tags on (a) `private` fields and (b) `[LoggerMessage]`-annotated methods — both are explicitly exempt per CLAUDE.md because the message template or the field name is self-documenting. Remove any `<summary>` found on these members before staging.
+- **ILogger injection for catch-block services**: if you added a `catch` block that logs (or should log), confirm that `ILogger<T>` is injected in the constructor and that `[LoggerMessage]` methods are declared in a `*.Logging.cs` partial. A service that has a catch block without an injected logger cannot satisfy the "emit a Warning-level log entry" rule. When a sibling service has a logger and the new service shares the same failure mode, the new service needs one too.
 - **SonarQube clean before committing**: before staging, run `dotnet build .\Trakmark\Trakmark.slnx 2>&1 | Select-String "warning S\d+" | Where-Object { $_ -notmatch "Microsoft\.Common" }` and fix or suppress every warning before committing. Do not defer this to merge time — fixes to unrelated warnings introduced by your changes add an avoidable review round. Pay particular attention to **S6966**: if a test calls `context.SaveChanges()` on an intentional sync EF path (e.g. to exercise a `SavingChanges` interceptor override), add `#pragma warning disable S6966` / `#pragma warning restore S6966` around that call — the suppression must be in the same commit as the test, not applied post-merge.
 - **Null guards**: every public constructor and method that accepts a reference-type parameter must call `ArgumentNullException.ThrowIfNull(param)` as its first line. Exception: DI-injected dependencies.
 - **Equals/GetHashCode comparer parity**: if `Equals` uses `StringComparison.Ordinal` (or any explicit comparer), `GetHashCode` must use the same — e.g. `Value.GetHashCode(StringComparison.Ordinal)`. Mismatches silently break dictionary lookups.
@@ -129,6 +133,12 @@ Use a worktree per section when two or more sections run in parallel or when
 sections touch production code that could conflict. For single-section runs
 and test-only changes (no production code edits), work directly on the
 change branch — no worktree needed.
+
+When constructing `git -C <path>` or any path argument passed to Bash on
+Windows, always use forward slashes (`C:/src/my/...` not `C:\src\my\...`).
+Backslashes inside Bash strings are treated as escape sequences and will
+cause "cannot change to directory" failures. Double-check every worktree
+path string in a fix-agent prompt before sending it.
 
 ## Orchestrator: post-merge cleanup
 
