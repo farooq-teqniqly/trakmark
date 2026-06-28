@@ -23,10 +23,10 @@
 
 ## 4. Lookup service — failing tests first
 
-- [ ] 4.1 Write failing integration tests in `Trakmark.IntegrationTests` for `IRegisteredUserLookupService` spec scenarios: (a) returns `RegisteredUserId` for known user, (b) throws `InvalidOperationException` for unknown user; use `Assert.Fail("not implemented")` placeholder, confirm red, then replace
-- [ ] 4.2 Add `IRegisteredUserLookupService` interface and `RegisteredUserLookupService` to `Trakmark/Services/`; `GetByAccountIdAsync(string identityUserId)` queries `RegisteredUsers` by `AccountId`; throws `InvalidOperationException` if not found
-- [ ] 4.3 Register `IRegisteredUserLookupService` / `RegisteredUserLookupService` as scoped in `Program.cs`
-- [ ] 4.4 Make integration tests green
+- [x] 4.1 Write failing integration tests in `Trakmark.IntegrationTests` for `IRegisteredUserLookupService` spec scenarios: (a) returns `RegisteredUserId` for known user, (b) throws `InvalidOperationException` for unknown user; use `Assert.Fail("not implemented")` placeholder, confirm red, then replace
+- [x] 4.2 Add `IRegisteredUserLookupService` interface and `RegisteredUserLookupService` to `Trakmark/Services/`; `GetByAccountIdAsync(string identityUserId)` queries `RegisteredUsers` by `AccountId`; throws `InvalidOperationException` if not found
+- [x] 4.3 Register `IRegisteredUserLookupService` / `RegisteredUserLookupService` as scoped in `Program.cs`
+- [x] 4.4 Make integration tests green
 
 ## 5. Wire AddCities and remove manual stamping — failing tests first
 
