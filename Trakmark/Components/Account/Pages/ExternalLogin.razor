@@ -3,12 +3,14 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using Trakmark.Data
+@using Trakmark.Services
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
+@inject IRegisteredUserMappingService RegisteredUserMappingService
 
 <PageTitle>Register</PageTitle>
 
@@ -134,6 +136,20 @@
         }
 
         Logger.LogUserCreatedWithExternalProvider(info.LoginProvider);
+
+        try
+        {
+            await RegisteredUserMappingService.CreateAsync(user.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogRegisteredUserMappingFailed(ex, user.Id);
+            RedirectManager.RedirectToWithStatus(
+                "Account/Login",
+                "Error creating user account. Please try again.",
+                HttpContext);
+            return;
+        }
 
         var roleResult = await UserManager.AddToRoleAsync(user, "User");
         if (!roleResult.Succeeded)
