@@ -129,4 +129,54 @@ public sealed class AuditInterceptorTests
         Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
 #pragma warning restore S6966
     }
+
+    [Fact]
+    public async Task SavingChangesAsync_AddedAuditableEntityWithPreStampedUserId_SkipsStamping()
+    {
+        // Arrange
+        var userContext = new CurrentUserContext();
+        var interceptor = new AuditInterceptor(userContext);
+        var preStampedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
+
+        await using var context = CreateContext(interceptor);
+        context.Auditable.Add(new AuditableTestEntity
+        {
+            CreatedByUserId = "SYSTEM",
+            CreatedAt = preStampedAt,
+        });
+
+        // Act
+        await context.SaveChangesAsync();
+
+        // Assert
+        var entity = await context.Auditable.SingleAsync();
+        Assert.Equal("SYSTEM", entity.CreatedByUserId);
+        Assert.Equal(preStampedAt, entity.CreatedAt);
+    }
+
+    [Fact]
+    public void SavingChanges_AddedAuditableEntityWithPreStampedUserId_SkipsStamping()
+    {
+        // Arrange
+        var userContext = new CurrentUserContext();
+        var interceptor = new AuditInterceptor(userContext);
+        var preStampedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
+
+        using var context = CreateContext(interceptor);
+        context.Auditable.Add(new AuditableTestEntity
+        {
+            CreatedByUserId = "SYSTEM",
+            CreatedAt = preStampedAt,
+        });
+
+        // Act
+#pragma warning disable S6966
+        context.SaveChanges();
+#pragma warning restore S6966
+
+        // Assert
+        var entity = context.Auditable.Single();
+        Assert.Equal("SYSTEM", entity.CreatedByUserId);
+        Assert.Equal(preStampedAt, entity.CreatedAt);
+    }
 }

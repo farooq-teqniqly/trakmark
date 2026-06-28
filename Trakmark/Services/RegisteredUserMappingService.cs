@@ -36,6 +36,8 @@ public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
         {
             RegisteredUserId = registeredUser.Id.Value,
             AccountId = registeredUser.AccountId.Value,
+            CreatedByUserId = WellKnownUsers.SystemUserId,
+            CreatedAt = DateTimeOffset.UtcNow,
         });
 
         try

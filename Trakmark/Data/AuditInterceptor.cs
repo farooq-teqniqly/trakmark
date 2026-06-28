@@ -53,6 +53,12 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
 
         if (auditableEntries.Count is 0) { return; }
 
+        var unstampedEntries = auditableEntries
+            .Where(e => string.IsNullOrEmpty(((IAuditableEntity)e.Entity).CreatedByUserId))
+            .ToList();
+
+        if (unstampedEntries.Count is 0) { return; }
+
         if (_userContext.UserId is null)
         {
             throw new InvalidOperationException(
@@ -62,7 +68,7 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         var userId = _userContext.UserId.Value.Value;
         var now = DateTimeOffset.UtcNow;
 
-        foreach (var entry in auditableEntries)
+        foreach (var entry in unstampedEntries)
         {
             var entity = (IAuditableEntity)entry.Entity;
             entity.CreatedByUserId = userId;

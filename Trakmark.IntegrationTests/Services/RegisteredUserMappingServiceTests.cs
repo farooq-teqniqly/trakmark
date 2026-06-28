@@ -45,6 +45,25 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task CreateAsync_ValidIdentityUserId_StampsSystemSentinelAuditValues()
+    {
+        // Arrange
+        var identityUserId = Guid.NewGuid().ToString();
+        var before = DateTimeOffset.UtcNow;
+        await using var context = _fixture.CreateContext();
+        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
+
+        // Act
+        await service.CreateAsync(identityUserId);
+
+        // Assert
+        await using var readContext = _fixture.CreateContext();
+        var entity = await readContext.RegisteredUsers.SingleAsync(r => r.AccountId == identityUserId);
+        Assert.Equal("SYSTEM", entity.CreatedByUserId);
+        Assert.True(entity.CreatedAt >= before);
+    }
+
+    [Fact]
     public async Task CreateAsync_SameIdentityUserIdCalledTwice_IsIdempotentAndPersistsSingleRow()
     {
         // Arrange

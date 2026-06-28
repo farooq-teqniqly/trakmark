@@ -18,6 +18,9 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
     /// </summary>
     private const int AccountIdMaxLength = 450;
 
+    /// <summary>The maximum length of the <see cref="IAuditableEntity.CreatedByUserId"/> column.</summary>
+    private const int CreatedByUserIdMaxLength = 20;
+
     /// <summary>
     /// Configures the <c>RegisteredUsers</c> table: a DB-generated <c>int IDENTITY</c> clustered
     /// primary key, with <see cref="RegisteredUserEntity.RegisteredUserId"/> mapped as a unique
@@ -45,5 +48,8 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
             .HasMaxLength(AccountIdMaxLength);
 
         builder.HasIndex(r => r.AccountId).IsUnique();
+
+        builder.Property(r => r.CreatedByUserId).IsRequired().HasMaxLength(CreatedByUserIdMaxLength);
+        builder.Property(r => r.CreatedAt).IsRequired();
     }
 }
