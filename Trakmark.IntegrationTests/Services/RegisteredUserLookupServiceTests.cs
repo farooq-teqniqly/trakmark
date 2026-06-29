@@ -79,6 +79,6 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
         var ex = await Record.ExceptionAsync(() => sut.GetByAccountIdAsync(identityUserId!));
 
         // Assert
-        Assert.IsAssignableFrom<ArgumentException>(ex);
+        Assert.IsType<ArgumentException>(ex, exactMatch: false);
     }
 }
