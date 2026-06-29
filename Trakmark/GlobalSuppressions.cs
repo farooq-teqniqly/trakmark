@@ -9,4 +9,5 @@ using System.Diagnostics.CodeAnalysis;
     "CA1861:Avoid constant arrays as arguments",
     Justification = "Auto-generated EF Core migration files — pragma suppression would be lost on re-scaffold.",
     Scope = "namespaceanddescendants",
-    Target = "~N:Trakmark.Migrations")]
+    Target = "~N:Trakmark.Migrations"
+)]

@@ -32,16 +32,21 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
         var identityUserId = Guid.NewGuid().ToString();
         await using var seedContext = _fixture.CreateContext();
         var mappingService = new RegisteredUserMappingService(
-            seedContext, NullLogger<RegisteredUserMappingService>.Instance);
+            seedContext,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
         await mappingService.CreateAsync(identityUserId);
 
-        var seeded = await seedContext.RegisteredUsers
-            .SingleAsync(r => r.AccountId == identityUserId);
+        var seeded = await seedContext.RegisteredUsers.SingleAsync(r =>
+            r.AccountId == identityUserId
+        );
         var expectedRegisteredUserId = seeded.RegisteredUserId;
 
         await using var lookupContext = _fixture.CreateContext();
         var lookupService = new RegisteredUserLookupService(
-            lookupContext, NullLogger<RegisteredUserLookupService>.Instance);
+            lookupContext,
+            NullLogger<RegisteredUserLookupService>.Instance
+        );
 
         // Act
         var registeredUserId = await lookupService.GetByAccountIdAsync(identityUserId);
@@ -57,23 +62,29 @@ public sealed class RegisteredUserLookupServiceTests : IAsyncLifetime
         var unknownIdentityUserId = Guid.NewGuid().ToString();
         await using var context = _fixture.CreateContext();
         var lookupService = new RegisteredUserLookupService(
-            context, NullLogger<RegisteredUserLookupService>.Instance);
+            context,
+            NullLogger<RegisteredUserLookupService>.Instance
+        );
 
         // Act / Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            () => lookupService.GetByAccountIdAsync(unknownIdentityUserId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            lookupService.GetByAccountIdAsync(unknownIdentityUserId)
+        );
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     public async Task GetByAccountIdAsync_NullOrEmptyIdentityUserId_ThrowsArgumentException(
-        string? identityUserId)
+        string? identityUserId
+    )
     {
         // Arrange
         await using var context = _fixture.CreateContext();
         var sut = new RegisteredUserLookupService(
-            context, NullLogger<RegisteredUserLookupService>.Instance);
+            context,
+            NullLogger<RegisteredUserLookupService>.Instance
+        );
 
         // Act
         var ex = await Record.ExceptionAsync(() => sut.GetByAccountIdAsync(identityUserId!));

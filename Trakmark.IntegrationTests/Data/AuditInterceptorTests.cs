@@ -47,12 +47,14 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
 
         await using var context = CreateContextWithInterceptor(userContext);
 
-        context.Cities.Add(new CityEntity
-        {
-            CityId = "CTY-AUDIT0001",
-            Name = "AuditCity",
-            State = "IL",
-        });
+        context.Cities.Add(
+            new CityEntity
+            {
+                CityId = "CTY-AUDIT0001",
+                Name = "AuditCity",
+                State = "IL",
+            }
+        );
 
         // Act
         await context.SaveChangesAsync();
@@ -71,12 +73,14 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
         var userContext = new CurrentUserContext();
         await using var context = CreateContextWithInterceptor(userContext);
 
-        context.Cities.Add(new CityEntity
-        {
-            CityId = "CTY-AUDIT0002",
-            Name = "NullUserCity",
-            State = "IL",
-        });
+        context.Cities.Add(
+            new CityEntity
+            {
+                CityId = "CTY-AUDIT0002",
+                Name = "NullUserCity",
+                State = "IL",
+            }
+        );
 
         // Act / Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() => context.SaveChangesAsync());
@@ -89,13 +93,15 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
         var userContext = new CurrentUserContext();
         await using var context = CreateContextWithInterceptor(userContext);
 
-        context.RegisteredUsers.Add(new RegisteredUserEntity
-        {
-            RegisteredUserId = RegisteredUserId.NewId().Value,
-            AccountId = Guid.NewGuid().ToString(),
-            CreatedByUserId = WellKnownUsers.SystemUserId,
-            CreatedAt = DateTimeOffset.UtcNow,
-        });
+        context.RegisteredUsers.Add(
+            new RegisteredUserEntity
+            {
+                RegisteredUserId = RegisteredUserId.NewId().Value,
+                AccountId = Guid.NewGuid().ToString(),
+                CreatedByUserId = WellKnownUsers.SystemUserId,
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         // Act
         await context.SaveChangesAsync();
@@ -115,12 +121,14 @@ public sealed class AuditInterceptorTests : IAsyncLifetime
 
         await using var context = CreateContextWithInterceptor(userContext);
 
-        context.Cities.Add(new CityEntity
-        {
-            CityId = "CTY-AUDIT0003",
-            Name = "SyncAuditCity",
-            State = "IL",
-        });
+        context.Cities.Add(
+            new CityEntity
+            {
+                CityId = "CTY-AUDIT0003",
+                Name = "SyncAuditCity",
+                State = "IL",
+            }
+        );
 
         // Act
 #pragma warning disable S6966 // Intentionally calling SaveChanges() to exercise the sync interceptor path

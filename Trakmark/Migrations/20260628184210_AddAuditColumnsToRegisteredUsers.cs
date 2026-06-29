@@ -16,7 +16,11 @@ namespace Trakmark.Migrations
                 table: "RegisteredUsers",
                 type: "datetimeoffset",
                 nullable: false,
-                defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
+                defaultValue: new DateTimeOffset(
+                    new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                    new TimeSpan(0, 0, 0, 0, 0)
+                )
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "CreatedByUserId",
@@ -24,19 +28,16 @@ namespace Trakmark.Migrations
                 type: "nvarchar(20)",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "RegisteredUsers");
+            migrationBuilder.DropColumn(name: "CreatedAt", table: "RegisteredUsers");
 
-            migrationBuilder.DropColumn(
-                name: "CreatedByUserId",
-                table: "RegisteredUsers");
+            migrationBuilder.DropColumn(name: "CreatedByUserId", table: "RegisteredUsers");
         }
     }
 }

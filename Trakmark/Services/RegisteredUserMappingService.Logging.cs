@@ -7,8 +7,10 @@ internal static partial class RegisteredUserMappingServiceLoggingExtensions
 {
     [LoggerMessage(
         Level = LogLevel.Warning,
-        Message = "RegisteredUser mapping for Identity user {IdentityUserId} already exists; skipping.")]
+        Message = "RegisteredUser mapping for Identity user {IdentityUserId} already exists; skipping."
+    )]
     internal static partial void LogDuplicateMappingIgnored(
         this ILogger logger,
-        string identityUserId);
+        string identityUserId
+    );
 }

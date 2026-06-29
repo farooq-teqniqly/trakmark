@@ -14,6 +14,4 @@ public static class IntegrationTestCollection
 /// across all integration test classes.
 /// </summary>
 [CollectionDefinition(IntegrationTestCollection.Name)]
-public sealed class IntegrationTestCollectionDefinition : ICollectionFixture<DatabaseFixture>
-{
-}
+public sealed class IntegrationTestCollectionDefinition : ICollectionFixture<DatabaseFixture> { }

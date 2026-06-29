@@ -10,7 +10,8 @@ namespace Trakmark.Data;
 /// environment variable, falling back to a LocalDB default when the variable
 /// is not set.
 /// </summary>
-internal sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+internal sealed class ApplicationDbContextFactory
+    : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     /// <summary>
     /// Creates a configured <see cref="ApplicationDbContext"/> for design-time
@@ -20,7 +21,8 @@ internal sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        var connectionString = Environment.GetEnvironmentVariable("TRAKMARK_DESIGN_TIME_CONNSTR")
+        var connectionString =
+            Environment.GetEnvironmentVariable("TRAKMARK_DESIGN_TIME_CONNSTR")
             ?? @"Server=(localdb)\mssqllocaldb;Database=Trakmark;Trusted_Connection=True;";
 
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()

@@ -64,8 +64,11 @@ internal static class StateHelper
         State.Wyoming,
     ];
 
-    private static readonly Dictionary<string, State> ByAbbreviation =
-        AllStates.ToDictionary(s => s.Abbreviation, s => s, StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, State> ByAbbreviation = AllStates.ToDictionary(
+        s => s.Abbreviation,
+        s => s,
+        StringComparer.OrdinalIgnoreCase
+    );
 
     /// <summary>
     /// Returns the <see cref="State"/> with the given two-letter abbreviation,

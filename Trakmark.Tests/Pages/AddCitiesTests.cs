@@ -62,7 +62,7 @@ public sealed class AddCitiesTests : BunitContext
         {
             "InvalidOperation" => (Exception)new InvalidOperationException("User not found"),
             "HttpRequest" => new HttpRequestException("Network failure"),
-            _ => throw new ArgumentOutOfRangeException(nameof(exceptionKey))
+            _ => throw new ArgumentOutOfRangeException(nameof(exceptionKey)),
         };
         _mockLookup
             .GetByAccountIdAsync(TestAccountId)
@@ -147,7 +147,9 @@ public sealed class AddCitiesTests : BunitContext
         // Arrange
         _mockLookup
             .GetByAccountIdAsync(TestAccountId)
-            .Returns(Task.FromException<RegisteredUserId>(new InvalidOperationException("lookup failed")));
+            .Returns(
+                Task.FromException<RegisteredUserId>(new InvalidOperationException("lookup failed"))
+            );
 
         var cut = Render<AddCities>();
 
@@ -239,9 +241,7 @@ public sealed class AddCitiesTests : BunitContext
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
         // Assert
-        await _mockBatchService
-            .Received(1)
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
+        await _mockBatchService.Received(1).SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
         Assert.NotEmpty(cut.FindAll("#success-alert"));
         Assert.Single(cut.FindAll("input[type='text']"));
     }
@@ -347,8 +347,6 @@ public sealed class AddCitiesTests : BunitContext
         var navManager = (BunitNavigationManager)Services.GetRequiredService<NavigationManager>();
         Assert.NotEmpty(navManager.History);
         Assert.EndsWith("/", navManager.History.Last().Uri);
-        await _mockBatchService
-            .DidNotReceive()
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
+        await _mockBatchService.DidNotReceive().SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
     }
 }

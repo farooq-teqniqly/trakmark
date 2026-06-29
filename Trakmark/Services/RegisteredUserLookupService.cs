@@ -18,7 +18,8 @@ public sealed class RegisteredUserLookupService : IRegisteredUserLookupService
     /// <summary>Initializes a new instance of <see cref="RegisteredUserLookupService"/>.</summary>
     public RegisteredUserLookupService(
         ApplicationDbContext context,
-        ILogger<RegisteredUserLookupService> logger)
+        ILogger<RegisteredUserLookupService> logger
+    )
     {
         _context = context;
         _logger = logger;
@@ -29,14 +30,16 @@ public sealed class RegisteredUserLookupService : IRegisteredUserLookupService
     {
         ArgumentException.ThrowIfNullOrEmpty(identityUserId);
 
-        var entity = await _context.RegisteredUsers
-            .SingleOrDefaultAsync(r => r.AccountId == identityUserId);
+        var entity = await _context.RegisteredUsers.SingleOrDefaultAsync(r =>
+            r.AccountId == identityUserId
+        );
 
         if (entity is null)
         {
             _logger.LogMappingNotFound(identityUserId);
             throw new InvalidOperationException(
-                $"No RegisteredUser found for Identity user ID '{identityUserId}'.");
+                $"No RegisteredUser found for Identity user ID '{identityUserId}'."
+            );
         }
 
         return RegisteredUserId.Parse(entity.RegisteredUserId);

@@ -38,10 +38,10 @@ public sealed class DatabaseFixture : IAsyncLifetime
         await using var conn = new SqlConnection(ConnectionString);
         await conn.OpenAsync();
 
-        _respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
-        {
-            DbAdapter = DbAdapter.SqlServer,
-        });
+        _respawner = await Respawner.CreateAsync(
+            conn,
+            new RespawnerOptions { DbAdapter = DbAdapter.SqlServer }
+        );
     }
 
     /// <inheritdoc/>

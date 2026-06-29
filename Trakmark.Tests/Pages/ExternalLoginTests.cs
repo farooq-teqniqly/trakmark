@@ -25,12 +25,25 @@ public sealed class ExternalLoginTests : BunitContext
     public async Task ExternalLoginCallback_MappingServiceThrows_RedirectsToLoginWithoutSignIn()
     {
         // Arrange
-        var userStore = Substitute.For<IUserStore<ApplicationUser>, IUserEmailStore<ApplicationUser>>();
+        var userStore = Substitute.For<
+            IUserStore<ApplicationUser>,
+            IUserEmailStore<ApplicationUser>
+        >();
         var userManager = Substitute.For<UserManager<ApplicationUser>>(
-            userStore, null, null, null, null, null, null, null, null);
+            userStore,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
         userManager.SupportsUserEmail.Returns(true);
         userManager.CreateAsync(Arg.Any<ApplicationUser>()).Returns(IdentityResult.Success);
-        userManager.AddLoginAsync(Arg.Any<ApplicationUser>(), Arg.Any<UserLoginInfo>())
+        userManager
+            .AddLoginAsync(Arg.Any<ApplicationUser>(), Arg.Any<UserLoginInfo>())
             .Returns(IdentityResult.Success);
 
         var signInManager = Substitute.For<SignInManager<ApplicationUser>>(
@@ -40,20 +53,29 @@ public sealed class ExternalLoginTests : BunitContext
             Options.Create(new IdentityOptions()),
             Substitute.For<ILogger<SignInManager<ApplicationUser>>>(),
             Substitute.For<IAuthenticationSchemeProvider>(),
-            Substitute.For<IUserConfirmation<ApplicationUser>>());
+            Substitute.For<IUserConfirmation<ApplicationUser>>()
+        );
 
         // ExternalLoginSignInAsync returns failed (new user, not yet registered locally)
         signInManager
             .ExternalLoginSignInAsync(
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>()
+            )
             .Returns(SignInResult.Failed);
 
         // GetExternalLoginInfoAsync returns valid info with email claim
-        var principal = new ClaimsPrincipal(new ClaimsIdentity(
-        [
-            new Claim(ClaimTypes.Email, "test@example.com"),
-            new Claim(ClaimTypes.NameIdentifier, "google-key"),
-        ], "Google"));
+        var principal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.Email, "test@example.com"),
+                    new Claim(ClaimTypes.NameIdentifier, "google-key"),
+                ],
+                "Google"
+            )
+        );
         var loginInfo = new ExternalLoginInfo(principal, "Google", "google-key", "Google");
         signInManager.GetExternalLoginInfoAsync().Returns(loginInfo);
 
@@ -70,16 +92,18 @@ public sealed class ExternalLoginTests : BunitContext
         Services.AddSingleton(Substitute.For<ILogger<ExternalLogin>>());
 
         // Register IdentityRedirectManager (internal type — access via reflection)
-        var redirectManagerType = typeof(ExternalLogin).Assembly
-            .GetType("Trakmark.Components.Account.IdentityRedirectManager")
+        var redirectManagerType =
+            typeof(ExternalLogin).Assembly.GetType(
+                "Trakmark.Components.Account.IdentityRedirectManager"
+            )
             ?? throw new InvalidOperationException(
-                "IdentityRedirectManager type not found — was it renamed or moved?");
+                "IdentityRedirectManager type not found — was it renamed or moved?"
+            );
         Services.AddSingleton(redirectManagerType);
 
         // Navigate to the ExternalLogin URL so [SupplyParameterFromQuery] picks up action
         var navManager = Services.GetRequiredService<NavigationManager>() as BunitNavigationManager;
-        navManager!.NavigateTo(
-            "http://localhost/Account/ExternalLogin?action=LoginCallback");
+        navManager!.NavigateTo("http://localhost/Account/ExternalLogin?action=LoginCallback");
 
         // Provide HttpContext as the required cascading parameter
         HttpContext httpContext = new DefaultHttpContext();
@@ -89,10 +113,13 @@ public sealed class ExternalLoginTests : BunitContext
         Render<ExternalLogin>(p => p.AddCascadingValue(httpContext));
 
         // Assert
-        Assert.Contains(navManager.History, h => h.Uri.Contains("Account/Login")
-            && !h.Uri.Contains("ExternalLogin"));
+        Assert.Contains(
+            navManager.History,
+            h => h.Uri.Contains("Account/Login") && !h.Uri.Contains("ExternalLogin")
+        );
 
-        await signInManager.DidNotReceive()
+        await signInManager
+            .DidNotReceive()
             .SignInAsync(Arg.Any<ApplicationUser>(), Arg.Any<bool>(), Arg.Any<string?>());
     }
 }
