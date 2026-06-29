@@ -9,7 +9,7 @@ namespace Trakmark.IntegrationTests.Services;
 /// <summary>
 /// Integration tests for <see cref="SaveCitiesBatchService"/> covering all batch-save
 /// outcome scenarios: success, validation error, in-batch duplicate, cross-batch
-/// duplicate, and CreatedByUserId propagation.
+/// duplicate, and CreatedByUserId propagation via <see cref="AuditInterceptor"/>.
 /// </summary>
 [Collection(IntegrationTestCollection.Name)]
 public sealed class SaveCitiesBatchTests : IAsyncLifetime
@@ -35,37 +35,35 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     public async Task SaveAsync_BatchOutsideValidRange_ThrowsArgumentOutOfRangeException(int count)
     {
         // Arrange
-        var adminId = RegisteredUserId.NewId();
         var rows = Enumerable
             .Range(0, count)
             .Select(i => new SaveCityRow($"City{i}", State.Illinois))
             .ToList();
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            service.SaveAsync(rows, adminId)
-        );
+        // Act / Assert
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.SaveAsync(rows));
     }
 
     [Fact]
     public async Task SaveAsync_AllValidRows_PersistsAllRows()
     {
         // Arrange
-        var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow>
         {
             new("Springfield", State.Illinois),
             new("Chicago", State.Illinois),
         };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.Success>(result);
@@ -78,18 +76,18 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     public async Task SaveAsync_OneInvalidRow_RejectsWholeBatch()
     {
         // Arrange
-        var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow>
         {
             new("Springfield", State.Illinois),
             new("   ", State.Illinois),
         };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.ValidationError>(result);
@@ -101,18 +99,18 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     public async Task SaveAsync_InBatchDuplicate_RejectsWholeBatch()
     {
         // Arrange
-        var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow>
         {
             new("Springfield", State.Illinois),
             new("springfield", State.Illinois),
         };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.InBatchDuplicate>(result);
@@ -123,7 +121,8 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     [Fact]
     public async Task SaveAsync_CrossBatchDuplicate_RejectsWholeBatch()
     {
-        // Arrange — pre-seed an existing city
+        // Pre-seed directly so the interceptor is bypassed and fields are set manually.
+        // Arrange
         await using (var seedContext = _fixture.CreateContext())
         {
             seedContext.Cities.Add(
@@ -140,14 +139,14 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
             await seedContext.SaveChangesAsync();
         }
 
-        var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow> { new("Springfield", State.Illinois) };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.CrossBatchDuplicate>(result);
@@ -156,17 +155,18 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SaveAsync_ValidBatch_SetsCreatedByUserIdFromSubmittingAdmin()
+    public async Task SaveAsync_ValidBatch_AuditInterceptorStampsCreatedByUserId()
     {
         // Arrange
         var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow> { new("Decatur", State.Illinois) };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = adminId };
+        await using var context = _fixture.CreateContext(userContext);
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.Success>(result);
@@ -179,10 +179,10 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
     public async Task SaveAsync_UniqueConstraintViolationAtPersist_ReturnsConcurrentDuplicate()
     {
         // Arrange
-        var adminId = RegisteredUserId.NewId();
         var rows = new List<SaveCityRow> { new("Springfield", State.Illinois) };
 
-        await using var context = _fixture.CreateContext();
+        var userContext = new CurrentUserContext { UserId = RegisteredUserId.NewId() };
+        await using var context = _fixture.CreateContext(userContext);
 
         // Pre-stage a city entity that duplicates the batch row, but do NOT save it.
         // This simulates a concurrent insert: FindCrossBatchDuplicateAsync queries
@@ -195,15 +195,13 @@ public sealed class SaveCitiesBatchTests : IAsyncLifetime
                 CityId = "CTY-RACE1",
                 Name = "Springfield",
                 State = "IL",
-                CreatedAt = DateTimeOffset.UtcNow,
-                CreatedByUserId = adminId.Value,
             }
         );
 
         var service = new SaveCitiesBatchService(context);
 
         // Act
-        var result = await service.SaveAsync(rows, adminId);
+        var result = await service.SaveAsync(rows);
 
         // Assert
         Assert.IsType<SaveCitiesBatchResult.ConcurrentDuplicate>(result);

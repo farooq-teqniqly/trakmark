@@ -14,28 +14,71 @@ namespace Trakmark.Tests.Pages;
 /// <summary>bUnit tests for the <see cref="AddCities"/> Blazor component.</summary>
 public sealed class AddCitiesTests : BunitContext
 {
-    private static readonly RegisteredUserId TestUserId = RegisteredUserId.Empty;
+    private static readonly string TestAccountId = Guid.NewGuid().ToString();
+    private static readonly RegisteredUserId TestUserId = RegisteredUserId.NewId();
 
-    private void SetupAdminAuth()
-    {
-        AddAuthorization()
-            .SetAuthorized("admin@test.com")
-            .SetRoles("Admin")
-            .SetClaims(new Claim(ClaimTypes.NameIdentifier, TestUserId.Value));
-    }
+    private readonly CurrentUserContext _userContext;
+    private readonly IRegisteredUserLookupService _mockLookup;
+    private readonly ISaveCitiesBatchService _mockBatchService;
 
     /// <summary>Initializes a new instance of <see cref="AddCitiesTests"/>.</summary>
     public AddCitiesTests()
     {
-        SetupAdminAuth();
+        _userContext = new CurrentUserContext();
+        _mockLookup = Substitute.For<IRegisteredUserLookupService>();
+        _mockLookup.GetByAccountIdAsync(TestAccountId).Returns(TestUserId);
+        _mockBatchService = Substitute.For<ISaveCitiesBatchService>();
+
+        AddAuthorization()
+            .SetAuthorized("admin@test.com")
+            .SetRoles("Admin")
+            .SetClaims(new Claim(ClaimTypes.NameIdentifier, TestAccountId));
+        Services.AddLogging();
+        Services.AddSingleton<ICurrentUserContext>(_userContext);
+        Services.AddSingleton(_mockLookup);
+        Services.AddSingleton(_mockBatchService);
+        SetRendererInfo(new RendererInfo("Server", isInteractive: true));
+    }
+
+    [Fact]
+    public void Render_WithAuthenticatedUser_SetsCurrentUserContextUserId()
+    {
+        // Arrange
+
+        // Act
+        Render<AddCities>();
+
+        // Assert
+        Assert.Equal(TestUserId, _userContext.UserId);
+    }
+
+    [Theory]
+    [InlineData("InvalidOperation")]
+    [InlineData("HttpRequest")]
+    public void Render_WhenLookupThrows_ShowsErrorMessage(string exceptionKey)
+    {
+        // Arrange
+        var exception = exceptionKey switch
+        {
+            "InvalidOperation" => (Exception)new InvalidOperationException("User not found"),
+            "HttpRequest" => new HttpRequestException("Network failure"),
+            _ => throw new ArgumentOutOfRangeException(nameof(exceptionKey))
+        };
+        _mockLookup
+            .GetByAccountIdAsync(TestAccountId)
+            .Returns(Task.FromException<RegisteredUserId>(exception));
+
+        // Act
+        var cut = Render<AddCities>();
+
+        // Assert
+        Assert.NotEmpty(cut.FindAll("#error-alert"));
+        _mockBatchService.DidNotReceive().SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
     }
 
     [Fact]
     public void InitialRender_OnLoad_ShowsOneRowWithNameInputAndStateDropdown()
     {
-        // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
-
         // Act
         var cut = Render<AddCities>();
 
@@ -48,7 +91,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task AddRowButton_Clicked_IncreasesRowCount()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
         // Act
@@ -62,7 +104,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task AddRowButton_100RowsExist_IsDisabled()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
         // Act
@@ -79,9 +120,6 @@ public sealed class AddCitiesTests : BunitContext
     [Fact]
     public void SaveButton_NameIsEmpty_IsDisabled()
     {
-        // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
-
         // Act
         var cut = Render<AddCities>();
 
@@ -93,12 +131,30 @@ public sealed class AddCitiesTests : BunitContext
     public async Task SaveButton_NoStateSelected_IsDisabled()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
-        // Act — enter a name but leave state unselected
+        // Act
         await cut.Find("input[type='text']")
             .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+
+        // Assert
+        Assert.True(cut.Find("#save-btn").HasAttribute("disabled"));
+    }
+
+    [Fact]
+    public async Task SaveButton_UserIdNullAfterLookupFailure_IsDisabledEvenWhenFormValid()
+    {
+        // Arrange
+        _mockLookup
+            .GetByAccountIdAsync(TestAccountId)
+            .Returns(Task.FromException<RegisteredUserId>(new InvalidOperationException("lookup failed")));
+
+        var cut = Render<AddCities>();
+
+        // Act
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
 
         // Assert
         Assert.True(cut.Find("#save-btn").HasAttribute("disabled"));
@@ -108,7 +164,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task SaveButton_AllRowsHaveNameAndState_IsEnabled()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
         // Act
@@ -129,10 +184,9 @@ public sealed class AddCitiesTests : BunitContext
     )
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
-        // Act — type something then clear to trigger validation
+        // Act
         await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = "x" });
         await cut.Find("input[type='text']").ChangeAsync(new ChangeEventArgs { Value = name });
 
@@ -144,7 +198,6 @@ public sealed class AddCitiesTests : BunitContext
     public async Task ValidationMessage_NameExceeds100Characters_Appears()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
         var longName = new string('A', 101);
 
@@ -159,10 +212,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task ValidationMessage_NoStateSelected_Appears()
     {
         // Arrange
-        Services.AddSingleton(Substitute.For<ISaveCitiesBatchService>());
         var cut = Render<AddCities>();
 
-        // Act — type a name to trigger showing state error
+        // Act
         await cut.Find("input[type='text']")
             .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
 
@@ -174,11 +226,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_ValidInput_CallsServiceShowsSuccessToastAndClearsForm()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        mockService
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+        _mockBatchService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>())
             .Returns(new SaveCitiesBatchResult.Success(1));
-        Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
         await cut.Find("input[type='text']")
@@ -188,15 +238,11 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — service called
-        await mockService
+        // Assert
+        await _mockBatchService
             .Received(1)
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>());
-
-        // Assert — success alert shown
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
         Assert.NotEmpty(cut.FindAll("#success-alert"));
-
-        // Assert — form cleared (back to 1 empty row)
         Assert.Single(cut.FindAll("input[type='text']"));
     }
 
@@ -204,11 +250,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_ValidationFailure_ShowsErrorAlert()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        mockService
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+        _mockBatchService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>())
             .Returns(new SaveCitiesBatchResult.ValidationError("City name is invalid."));
-        Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
         await cut.Find("input[type='text']")
@@ -218,7 +262,7 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — error alert shown, no success alert
+        // Assert
         Assert.NotEmpty(cut.FindAll("#error-alert"));
         Assert.Empty(cut.FindAll("#success-alert"));
         Assert.Contains("City name is invalid.", cut.Markup);
@@ -228,11 +272,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_CrossBatchDuplicate_ShowsErrorAlert()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        mockService
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+        _mockBatchService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>())
             .Returns(new SaveCitiesBatchResult.CrossBatchDuplicate("Springfield", "IL"));
-        Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
         await cut.Find("input[type='text']")
@@ -242,7 +284,7 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — error alert shown
+        // Assert
         Assert.NotEmpty(cut.FindAll("#error-alert"));
         Assert.Empty(cut.FindAll("#success-alert"));
         Assert.Contains("Springfield", cut.Markup);
@@ -252,11 +294,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_InBatchDuplicate_ShowsErrorAlert()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        mockService
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+        _mockBatchService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>())
             .Returns(new SaveCitiesBatchResult.InBatchDuplicate("Springfield", "IL"));
-        Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
         await cut.Find("input[type='text']")
@@ -266,7 +306,7 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — error alert shown, no success alert
+        // Assert
         Assert.NotEmpty(cut.FindAll("#error-alert"));
         Assert.Empty(cut.FindAll("#success-alert"));
         Assert.Contains("Springfield", cut.Markup);
@@ -276,11 +316,9 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Save_ConcurrentDuplicate_ShowsErrorAlert()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        mockService
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>())
+        _mockBatchService
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>())
             .Returns(new SaveCitiesBatchResult.ConcurrentDuplicate());
-        Services.AddSingleton(mockService);
 
         var cut = Render<AddCities>();
         await cut.Find("input[type='text']")
@@ -290,7 +328,7 @@ public sealed class AddCitiesTests : BunitContext
         // Act
         await cut.Find("#save-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — error alert shown, no success alert
+        // Assert
         Assert.NotEmpty(cut.FindAll("#error-alert"));
         Assert.Empty(cut.FindAll("#success-alert"));
         Assert.Contains("duplicate was detected during save", cut.Markup);
@@ -300,22 +338,17 @@ public sealed class AddCitiesTests : BunitContext
     public async Task Cancel_Clicked_NavigatesToHomeWithoutCallingSave()
     {
         // Arrange
-        var mockService = Substitute.For<ISaveCitiesBatchService>();
-        Services.AddSingleton(mockService);
-
         var cut = Render<AddCities>();
 
         // Act
         await cut.Find("#cancel-btn").ClickAsync(new MouseEventArgs());
 
-        // Assert — navigated to Home
+        // Assert
         var navManager = (BunitNavigationManager)Services.GetRequiredService<NavigationManager>();
         Assert.NotEmpty(navManager.History);
         Assert.EndsWith("/", navManager.History.Last().Uri);
-
-        // Assert — service NOT called
-        await mockService
+        await _mockBatchService
             .DidNotReceive()
-            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>(), Arg.Any<RegisteredUserId>());
+            .SaveAsync(Arg.Any<IReadOnlyList<SaveCityRow>>());
     }
 }

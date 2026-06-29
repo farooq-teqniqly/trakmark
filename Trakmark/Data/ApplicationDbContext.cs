@@ -13,6 +13,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     /// <summary>The persisted cities.</summary>
     public DbSet<CityEntity> Cities => Set<CityEntity>();
 
+    /// <summary>The persisted registered users.</summary>
+    public DbSet<RegisteredUserEntity> RegisteredUsers => Set<RegisteredUserEntity>();
+
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -21,6 +24,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(builder);
 
         builder.ApplyConfiguration(new CityConfiguration());
+        builder.ApplyConfiguration(new RegisteredUserConfiguration());
     }
 
     /// <inheritdoc/>

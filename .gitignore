@@ -438,3 +438,7 @@ docs/sonarqube*
 
 # PR review artifacts
 docs/pr-reviews/
+
+# Claude Code agent worktrees (temporary, not project config)
+.claude/worktrees/
+.claire/worktrees/

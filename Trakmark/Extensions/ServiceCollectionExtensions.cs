@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Trakmark.Data;
+using Trakmark.Services;
 
 namespace Trakmark.Extensions;
 
@@ -65,9 +66,12 @@ public static class ServiceCollectionExtensions
                 );
             }
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+
+            services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 options.UseSqlServer(connectionString);
+                options.AddInterceptors(new AuditInterceptor(sp.GetRequiredService<ICurrentUserContext>()));
 
                 if (env.IsDevelopment())
                 {

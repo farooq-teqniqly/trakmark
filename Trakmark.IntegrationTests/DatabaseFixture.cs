@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Testcontainers.MsSql;
 using Trakmark.Data;
+using Trakmark.Services;
 
 namespace Trakmark.IntegrationTests;
 
@@ -62,6 +63,24 @@ public sealed class DatabaseFixture : IAsyncLifetime
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseSqlServer(ConnectionString)
+            .Options;
+
+        return new ApplicationDbContext(options);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ApplicationDbContext"/> with an <see cref="AuditInterceptor"/>
+    /// configured to use <paramref name="userContext"/> for stamping <see cref="IAuditableEntity"/>
+    /// entries. Use this overload for tests that exercise the full save path through
+    /// <see cref="Services.SaveCitiesBatchService"/>.
+    /// </summary>
+    public ApplicationDbContext CreateContext(ICurrentUserContext userContext)
+    {
+        ArgumentNullException.ThrowIfNull(userContext);
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlServer(ConnectionString)
+            .AddInterceptors(new AuditInterceptor(userContext))
             .Options;
 
         return new ApplicationDbContext(options);

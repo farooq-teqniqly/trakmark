@@ -67,7 +67,7 @@ dotnet tool install --global dotnet-ef
 Set the design-time connection string environment variable, then run migrations:
 
 ```powershell
-$env:TRAKMARK_DESIGN_TIME_CONNSTR = "Server=localhost,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;"
+$env:TRAKMARK_DESIGN_TIME_CONNSTR = "Server=127.0.0.1,1433;Database=Trakmark;User Id=sa;Password=<your-password>;TrustServerCertificate=True;"
 dotnet ef database update --project Trakmark --startup-project Trakmark
 ```
 
@@ -101,7 +101,7 @@ IF @UserId IS NULL  THROW 50000, 'User not found — check the email address.', 
 IF @RoleId IS NULL  THROW 50001, 'Admin role not found — ensure the app has been run at least once to seed roles.', 1;
 
 IF NOT EXISTS (SELECT 1 FROM AspNetUserRoles WHERE UserId = @UserId AND RoleId = @RoleId)
-    INSERT INTO AspNetUserRoles (UserId, RoleId) VALUES (@UserId, @RoleId);
+    UPDATE AspNetUserRoles SET RoleId = @RoleId WHERE UserId = @UserId;
 ```
 
 Run this against the `Trakmark` database on `localhost,1433` using any SQL client (SSMS, Azure Data Studio, etc.).

@@ -1,3 +1,5 @@
+using Trakmark.Data;
+
 namespace Trakmark.Data.Entities;
 
 /// <summary>
@@ -5,7 +7,7 @@ namespace Trakmark.Data.Entities;
 /// audit metadata (<see cref="CreatedAt"/>, <see cref="CreatedByUserId"/>) that is
 /// not part of the domain model.
 /// </summary>
-public sealed class CityEntity
+public sealed class CityEntity : IAuditableEntity
 {
     /// <summary>
     /// The DB-generated surrogate key used as the clustered primary key.

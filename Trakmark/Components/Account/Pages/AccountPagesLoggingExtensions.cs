@@ -21,4 +21,14 @@ internal static partial class AccountPagesLoggingExtensions
         this ILogger logger,
         string loginProvider
     );
+
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Failed to create registered user mapping for Identity user {IdentityUserId}."
+    )]
+    internal static partial void LogRegisteredUserMappingFailed(
+        this ILogger logger,
+        Exception exception,
+        string identityUserId
+    );
 }
