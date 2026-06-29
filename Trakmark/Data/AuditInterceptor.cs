@@ -53,6 +53,17 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
 
         if (auditableEntries.Count is 0) { return; }
 
+        var partiallyStamped = auditableEntries
+            .Select(e => (IAuditableEntity)e.Entity)
+            .Where(e => string.IsNullOrEmpty(e.CreatedByUserId) != (e.CreatedAt == default))
+            .ToList();
+
+        if (partiallyStamped.Count > 0)
+        {
+            throw new InvalidOperationException(
+                "One or more auditable entities have only one audit field pre-stamped. Both CreatedByUserId and CreatedAt must be set together or left unset.");
+        }
+
         var unstampedEntries = auditableEntries
             .Where(e => string.IsNullOrEmpty(((IAuditableEntity)e.Entity).CreatedByUserId))
             .ToList();

@@ -76,7 +76,7 @@
     <button id="save-btn"
             class="btn btn-primary"
             @onclick="SaveAsync"
-            disabled="@(!IsFormValid || _isSaving)">
+            disabled="@(!IsFormValid || _isSaving || UserContext.UserId is null)">
         Save
     </button>
     <button id="cancel-btn"
@@ -156,6 +156,12 @@
     {
         if (_isSaving)
         {
+            return;
+        }
+
+        if (UserContext.UserId is null)
+        {
+            _errorMessage = "User context is not available. Please reload the page.";
             return;
         }
 

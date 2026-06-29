@@ -37,19 +37,17 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
         builder.Property(r => r.Id).ValueGeneratedOnAdd();
 
         builder.Property(r => r.RegisteredUserId)
-            .IsRequired()
             .HasMaxLength(RegisteredUserIdMaxLength)
             .ValueGeneratedNever();
 
         builder.HasAlternateKey(r => r.RegisteredUserId);
 
         builder.Property(r => r.AccountId)
-            .IsRequired()
             .HasMaxLength(AccountIdMaxLength);
 
         builder.HasIndex(r => r.AccountId).IsUnique();
 
-        builder.Property(r => r.CreatedByUserId).IsRequired().HasMaxLength(CreatedByUserIdMaxLength);
+        builder.Property(r => r.CreatedByUserId).HasMaxLength(CreatedByUserIdMaxLength);
         builder.Property(r => r.CreatedAt).IsRequired();
     }
 }

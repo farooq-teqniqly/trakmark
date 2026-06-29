@@ -130,6 +130,49 @@ public sealed class AuditInterceptorTests
 #pragma warning restore S6966
     }
 
+    [Theory]
+    [InlineData("OnlyCreatedByUserId")]
+    [InlineData("OnlyCreatedAt")]
+    public async Task SavingChangesAsync_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(string scenario)
+    {
+        // Arrange
+        var userContext = new CurrentUserContext();
+        var interceptor = new AuditInterceptor(userContext);
+        var entity = BuildPartiallyStampedEntity(scenario);
+
+        await using var context = CreateContext(interceptor);
+        context.Auditable.Add(entity);
+
+        // Act / Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => context.SaveChangesAsync());
+    }
+
+    [Theory]
+    [InlineData("OnlyCreatedByUserId")]
+    [InlineData("OnlyCreatedAt")]
+    public void SavingChanges_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(string scenario)
+    {
+        // Arrange
+        var userContext = new CurrentUserContext();
+        var interceptor = new AuditInterceptor(userContext);
+        var entity = BuildPartiallyStampedEntity(scenario);
+
+        using var context = CreateContext(interceptor);
+        context.Auditable.Add(entity);
+
+        // Act / Assert
+#pragma warning disable S6966
+        Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
+#pragma warning restore S6966
+    }
+
+    private static AuditableTestEntity BuildPartiallyStampedEntity(string scenario) => scenario switch
+    {
+        "OnlyCreatedByUserId" => new AuditableTestEntity { CreatedByUserId = "SYSTEM" },
+        "OnlyCreatedAt" => new AuditableTestEntity { CreatedByUserId = string.Empty, CreatedAt = DateTimeOffset.UtcNow },
+        _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
+    };
+
     [Fact]
     public async Task SavingChangesAsync_AddedAuditableEntityWithPreStampedUserId_SkipsStamping()
     {

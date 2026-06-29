@@ -6,7 +6,7 @@ namespace Trakmark.Services;
 internal static partial class RegisteredUserMappingServiceLoggingExtensions
 {
     [LoggerMessage(
-        Level = LogLevel.Debug,
+        Level = LogLevel.Warning,
         Message = "RegisteredUser mapping for Identity user {IdentityUserId} already exists; skipping.")]
     internal static partial void LogDuplicateMappingIgnored(
         this ILogger logger,

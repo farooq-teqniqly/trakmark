@@ -26,6 +26,19 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
     /// <inheritdoc/>
     public Task DisposeAsync() => Task.CompletedTask;
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task CreateAsync_NullOrEmptyIdentityUserId_ThrowsArgumentException(string? identityUserId)
+    {
+        // Arrange
+        await using var context = _fixture.CreateContext();
+        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
+
+        // Act / Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(() => service.CreateAsync(identityUserId!));
+    }
+
     [Fact]
     public async Task CreateAsync_ValidIdentityUserId_PersistsRegisteredUserRow()
     {

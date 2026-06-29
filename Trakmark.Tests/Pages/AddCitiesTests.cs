@@ -142,6 +142,25 @@ public sealed class AddCitiesTests : BunitContext
     }
 
     [Fact]
+    public async Task SaveButton_UserIdNullAfterLookupFailure_IsDisabledEvenWhenFormValid()
+    {
+        // Arrange
+        _mockLookup
+            .GetByAccountIdAsync(TestAccountId)
+            .Returns(Task.FromException<RegisteredUserId>(new InvalidOperationException("lookup failed")));
+
+        var cut = Render<AddCities>();
+
+        // Act
+        await cut.Find("input[type='text']")
+            .ChangeAsync(new ChangeEventArgs { Value = "Springfield" });
+        await cut.Find("select").ChangeAsync(new ChangeEventArgs { Value = "IL" });
+
+        // Assert
+        Assert.True(cut.Find("#save-btn").HasAttribute("disabled"));
+    }
+
+    [Fact]
     public async Task SaveButton_AllRowsHaveNameAndState_IsEnabled()
     {
         // Arrange

@@ -28,7 +28,7 @@ public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
     /// <inheritdoc/>
     public async Task CreateAsync(string identityUserId)
     {
-        ArgumentNullException.ThrowIfNull(identityUserId);
+        ArgumentException.ThrowIfNullOrEmpty(identityUserId);
 
         var registeredUser = RegisteredUser.Create(new UserAccountId(identityUserId));
 
