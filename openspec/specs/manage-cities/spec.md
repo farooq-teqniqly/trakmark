@@ -73,7 +73,7 @@ An authenticated user in the Admin role SHALL be able to submit a batch of 1 to 
 - **THEN** the system SHALL deny access
 
 ### Requirement: City persistence records creation metadata
-When a `City` is persisted, the system SHALL record the UTC creation timestamp, the identifier of the user who created it, and assign a unique identifier.
+When a `City` is persisted, the system SHALL record the UTC creation timestamp, the identifier of the user who created it, and assign a unique identifier. Creation metadata is stamped by `AuditInterceptor` — services SHALL NOT set `CreatedByUserId` or `CreatedAt` manually.
 
 #### Scenario: Created date is set on persistence
 - **WHEN** a city is persisted
@@ -81,4 +81,4 @@ When a `City` is persisted, the system SHALL record the UTC creation timestamp, 
 
 #### Scenario: Creating user is recorded on persistence
 - **WHEN** an Admin submits a batch that is persisted
-- **THEN** the system SHALL record that Admin's user identifier as the creator of each city in the batch
+- **THEN** the system SHALL record that Admin's `RegisteredUserId` as the creator of each city in the batch
