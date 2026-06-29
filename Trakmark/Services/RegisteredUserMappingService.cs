@@ -19,7 +19,10 @@ public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
     private readonly ILogger<RegisteredUserMappingService> _logger;
 
     /// <summary>Initializes a new instance of <see cref="RegisteredUserMappingService"/>.</summary>
-    public RegisteredUserMappingService(ApplicationDbContext context, ILogger<RegisteredUserMappingService> logger)
+    public RegisteredUserMappingService(
+        ApplicationDbContext context,
+        ILogger<RegisteredUserMappingService> logger
+    )
     {
         _context = context;
         _logger = logger;
@@ -32,19 +35,22 @@ public sealed class RegisteredUserMappingService : IRegisteredUserMappingService
 
         var registeredUser = RegisteredUser.Create(new UserAccountId(identityUserId));
 
-        _context.RegisteredUsers.Add(new RegisteredUserEntity
-        {
-            RegisteredUserId = registeredUser.Id.Value,
-            AccountId = registeredUser.AccountId.Value,
-            CreatedByUserId = WellKnownUsers.SystemUserId,
-            CreatedAt = DateTimeOffset.UtcNow,
-        });
+        _context.RegisteredUsers.Add(
+            new RegisteredUserEntity
+            {
+                RegisteredUserId = registeredUser.Id.Value,
+                AccountId = registeredUser.AccountId.Value,
+                CreatedByUserId = WellKnownUsers.SystemUserId,
+                CreatedAt = DateTimeOffset.UtcNow,
+            }
+        );
 
         try
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateException ex) when (ex.InnerException is SqlException { Number: 2601 or 2627 })
+        catch (DbUpdateException ex)
+            when (ex.InnerException is SqlException { Number: 2601 or 2627 })
         {
             _logger.LogDuplicateMappingIgnored(identityUserId);
         }

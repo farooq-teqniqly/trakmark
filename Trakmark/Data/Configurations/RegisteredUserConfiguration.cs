@@ -36,14 +36,14 @@ public sealed class RegisteredUserConfiguration : IEntityTypeConfiguration<Regis
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id).ValueGeneratedOnAdd();
 
-        builder.Property(r => r.RegisteredUserId)
+        builder
+            .Property(r => r.RegisteredUserId)
             .HasMaxLength(RegisteredUserIdMaxLength)
             .ValueGeneratedNever();
 
         builder.HasAlternateKey(r => r.RegisteredUserId);
 
-        builder.Property(r => r.AccountId)
-            .HasMaxLength(AccountIdMaxLength);
+        builder.Property(r => r.AccountId).HasMaxLength(AccountIdMaxLength);
 
         builder.HasIndex(r => r.AccountId).IsUnique();
 

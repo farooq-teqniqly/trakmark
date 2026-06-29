@@ -24,7 +24,8 @@ public sealed class StateTests
     public void State_Equality_ByAbbreviation_CaseInsensitive(
         string firstAbbreviation,
         string secondAbbreviation,
-        bool expectedEqual)
+        bool expectedEqual
+    )
     {
         // Arrange
         var first = StateFromAbbreviation(firstAbbreviation);

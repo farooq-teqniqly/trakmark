@@ -174,13 +174,15 @@ public sealed class State : IEquatable<State>
 
     /// <inheritdoc/>
     public bool Equals(State? other) =>
-        other is not null && string.Equals(Abbreviation, other.Abbreviation, StringComparison.OrdinalIgnoreCase);
+        other is not null
+        && string.Equals(Abbreviation, other.Abbreviation, StringComparison.OrdinalIgnoreCase);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => Equals(obj as State);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Abbreviation.GetHashCode(StringComparison.OrdinalIgnoreCase);
+    public override int GetHashCode() =>
+        Abbreviation.GetHashCode(StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Returns <see langword="true"/> when both states are equal.</summary>
     public static bool operator ==(State? left, State? right) =>

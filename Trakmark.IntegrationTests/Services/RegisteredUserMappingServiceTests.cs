@@ -29,11 +29,16 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task CreateAsync_NullOrEmptyIdentityUserId_ThrowsArgumentException(string? identityUserId)
+    public async Task CreateAsync_NullOrEmptyIdentityUserId_ThrowsArgumentException(
+        string? identityUserId
+    )
     {
         // Arrange
         await using var context = _fixture.CreateContext();
-        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
+        var service = new RegisteredUserMappingService(
+            context,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
 
         // Act / Assert
         await Assert.ThrowsAnyAsync<ArgumentException>(() => service.CreateAsync(identityUserId!));
@@ -45,15 +50,19 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
         // Arrange
         var identityUserId = Guid.NewGuid().ToString();
         await using var context = _fixture.CreateContext();
-        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
+        var service = new RegisteredUserMappingService(
+            context,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
 
         // Act
         await service.CreateAsync(identityUserId);
 
         // Assert
         await using var readContext = _fixture.CreateContext();
-        var entity = await readContext.RegisteredUsers
-            .SingleAsync(r => r.AccountId == identityUserId);
+        var entity = await readContext.RegisteredUsers.SingleAsync(r =>
+            r.AccountId == identityUserId
+        );
         Assert.False(string.IsNullOrEmpty(entity.RegisteredUserId));
     }
 
@@ -64,14 +73,19 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
         var identityUserId = Guid.NewGuid().ToString();
         var before = DateTimeOffset.UtcNow;
         await using var context = _fixture.CreateContext();
-        var service = new RegisteredUserMappingService(context, NullLogger<RegisteredUserMappingService>.Instance);
+        var service = new RegisteredUserMappingService(
+            context,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
 
         // Act
         await service.CreateAsync(identityUserId);
 
         // Assert
         await using var readContext = _fixture.CreateContext();
-        var entity = await readContext.RegisteredUsers.SingleAsync(r => r.AccountId == identityUserId);
+        var entity = await readContext.RegisteredUsers.SingleAsync(r =>
+            r.AccountId == identityUserId
+        );
         Assert.Equal("SYSTEM", entity.CreatedByUserId);
         Assert.True(entity.CreatedAt >= before);
     }
@@ -82,17 +96,26 @@ public sealed class RegisteredUserMappingServiceTests : IAsyncLifetime
         // Arrange
         var identityUserId = Guid.NewGuid().ToString();
         await using var context1 = _fixture.CreateContext();
-        var service1 = new RegisteredUserMappingService(context1, NullLogger<RegisteredUserMappingService>.Instance);
+        var service1 = new RegisteredUserMappingService(
+            context1,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
         await service1.CreateAsync(identityUserId);
 
         // Act
         await using var context2 = _fixture.CreateContext();
-        var service2 = new RegisteredUserMappingService(context2, NullLogger<RegisteredUserMappingService>.Instance);
+        var service2 = new RegisteredUserMappingService(
+            context2,
+            NullLogger<RegisteredUserMappingService>.Instance
+        );
         var exception = await Record.ExceptionAsync(() => service2.CreateAsync(identityUserId));
 
         // Assert
         Assert.Null(exception);
         await using var readContext = _fixture.CreateContext();
-        Assert.Equal(1, await readContext.RegisteredUsers.CountAsync(r => r.AccountId == identityUserId));
+        Assert.Equal(
+            1,
+            await readContext.RegisteredUsers.CountAsync(r => r.AccountId == identityUserId)
+        );
     }
 }

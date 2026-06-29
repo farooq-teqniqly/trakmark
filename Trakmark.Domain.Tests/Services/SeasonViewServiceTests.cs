@@ -46,9 +46,7 @@ public sealed class SeasonViewServiceTests
     {
         // Act / Assert
         Assert.Throws<ArgumentNullException>(() =>
-            SeasonViewService
-                .GetSeasonResults(null!, [], Season2025)
-                .ToList()
+            SeasonViewService.GetSeasonResults(null!, [], Season2025).ToList()
         );
     }
 

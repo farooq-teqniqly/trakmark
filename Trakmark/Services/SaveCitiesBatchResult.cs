@@ -95,7 +95,5 @@ public abstract class SaveCitiesBatchResult
     /// city name and state are not identifiable from the exception; the caller should
     /// treat the entire batch as rejected and advise the user to retry.
     /// </summary>
-    public sealed class ConcurrentDuplicate : SaveCitiesBatchResult
-    {
-    }
+    public sealed class ConcurrentDuplicate : SaveCitiesBatchResult { }
 }

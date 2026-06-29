@@ -25,7 +25,9 @@ public sealed class AuditInterceptorTests
 
     private sealed class TestAuditContext : DbContext
     {
-        public TestAuditContext(DbContextOptions<TestAuditContext> options) : base(options) { }
+        public TestAuditContext(DbContextOptions<TestAuditContext> options)
+            : base(options) { }
+
         public DbSet<AuditableTestEntity> Auditable => Set<AuditableTestEntity>();
         public DbSet<NonAuditableTestEntity> NonAuditable => Set<NonAuditableTestEntity>();
     }
@@ -133,7 +135,9 @@ public sealed class AuditInterceptorTests
     [Theory]
     [InlineData("OnlyCreatedByUserId")]
     [InlineData("OnlyCreatedAt")]
-    public async Task SavingChangesAsync_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(string scenario)
+    public async Task SavingChangesAsync_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(
+        string scenario
+    )
     {
         // Arrange
         var userContext = new CurrentUserContext();
@@ -150,7 +154,9 @@ public sealed class AuditInterceptorTests
     [Theory]
     [InlineData("OnlyCreatedByUserId")]
     [InlineData("OnlyCreatedAt")]
-    public void SavingChanges_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(string scenario)
+    public void SavingChanges_AddedAuditableEntityWithPartialPreStamp_ThrowsInvalidOperationException(
+        string scenario
+    )
     {
         // Arrange
         var userContext = new CurrentUserContext();
@@ -166,12 +172,17 @@ public sealed class AuditInterceptorTests
 #pragma warning restore S6966
     }
 
-    private static AuditableTestEntity BuildPartiallyStampedEntity(string scenario) => scenario switch
-    {
-        "OnlyCreatedByUserId" => new AuditableTestEntity { CreatedByUserId = "SYSTEM" },
-        "OnlyCreatedAt" => new AuditableTestEntity { CreatedByUserId = string.Empty, CreatedAt = DateTimeOffset.UtcNow },
-        _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
-    };
+    private static AuditableTestEntity BuildPartiallyStampedEntity(string scenario) =>
+        scenario switch
+        {
+            "OnlyCreatedByUserId" => new AuditableTestEntity { CreatedByUserId = "SYSTEM" },
+            "OnlyCreatedAt" => new AuditableTestEntity
+            {
+                CreatedByUserId = string.Empty,
+                CreatedAt = DateTimeOffset.UtcNow,
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(scenario), scenario, null),
+        };
 
     [Fact]
     public async Task SavingChangesAsync_AddedAuditableEntityWithPreStampedUserId_SkipsStamping()
@@ -182,11 +193,9 @@ public sealed class AuditInterceptorTests
         var preStampedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
 
         await using var context = CreateContext(interceptor);
-        context.Auditable.Add(new AuditableTestEntity
-        {
-            CreatedByUserId = "SYSTEM",
-            CreatedAt = preStampedAt,
-        });
+        context.Auditable.Add(
+            new AuditableTestEntity { CreatedByUserId = "SYSTEM", CreatedAt = preStampedAt }
+        );
 
         // Act
         await context.SaveChangesAsync();
@@ -206,11 +215,9 @@ public sealed class AuditInterceptorTests
         var preStampedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
 
         using var context = CreateContext(interceptor);
-        context.Auditable.Add(new AuditableTestEntity
-        {
-            CreatedByUserId = "SYSTEM",
-            CreatedAt = preStampedAt,
-        });
+        context.Auditable.Add(
+            new AuditableTestEntity { CreatedByUserId = "SYSTEM", CreatedAt = preStampedAt }
+        );
 
         // Act
 #pragma warning disable S6966

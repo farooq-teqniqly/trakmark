@@ -82,16 +82,22 @@ public sealed class StudentCareerTests
 
     /// <summary>Supplies all four grade level names as serializable test cases.</summary>
     public static TheoryData<string> AllGradeLevelNames =>
-        [nameof(GradeLevel.Freshman), nameof(GradeLevel.Sophomore), nameof(GradeLevel.Junior), nameof(GradeLevel.Senior)];
+        [
+            nameof(GradeLevel.Freshman),
+            nameof(GradeLevel.Sophomore),
+            nameof(GradeLevel.Junior),
+            nameof(GradeLevel.Senior),
+        ];
 
-    private static GradeLevel ToGradeLevel(string name) => name switch
-    {
-        nameof(GradeLevel.Freshman) => GradeLevel.Freshman,
-        nameof(GradeLevel.Sophomore) => GradeLevel.Sophomore,
-        nameof(GradeLevel.Junior) => GradeLevel.Junior,
-        nameof(GradeLevel.Senior) => GradeLevel.Senior,
-        _ => throw new ArgumentOutOfRangeException(nameof(name)),
-    };
+    private static GradeLevel ToGradeLevel(string name) =>
+        name switch
+        {
+            nameof(GradeLevel.Freshman) => GradeLevel.Freshman,
+            nameof(GradeLevel.Sophomore) => GradeLevel.Sophomore,
+            nameof(GradeLevel.Junior) => GradeLevel.Junior,
+            nameof(GradeLevel.Senior) => GradeLevel.Senior,
+            _ => throw new ArgumentOutOfRangeException(nameof(name)),
+        };
 
     [Theory]
     [MemberData(nameof(AllGradeLevelNames))]

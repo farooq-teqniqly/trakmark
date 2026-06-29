@@ -19,9 +19,7 @@ public readonly record struct CityId
     /// <summary>Parses <paramref name="value"/> as a <see cref="CityId"/>.</summary>
     /// <exception cref="FormatException">Thrown when <paramref name="value"/> is ill-formed.</exception>
     public static CityId Parse(string value) =>
-        TryParse(value, out var id)
-            ? id
-            : throw new FormatException($"Invalid CityId: '{value}'.");
+        TryParse(value, out var id) ? id : throw new FormatException($"Invalid CityId: '{value}'.");
 
     /// <summary>
     /// Attempts to parse <paramref name="value"/> as a <see cref="CityId"/>.

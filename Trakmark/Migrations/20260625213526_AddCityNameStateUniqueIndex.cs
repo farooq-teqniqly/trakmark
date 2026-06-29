@@ -14,15 +14,14 @@ namespace Trakmark.Migrations
                 name: "IX_Cities_Name_State",
                 table: "Cities",
                 columns: new[] { "Name", "State" },
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Cities_Name_State",
-                table: "Cities");
+            migrationBuilder.DropIndex(name: "IX_Cities_Name_State", table: "Cities");
         }
     }
 }

@@ -101,7 +101,8 @@ public sealed class CityTests
         string secondName,
         string firstStateAbbreviation,
         string secondStateAbbreviation,
-        bool expectedEqual)
+        bool expectedEqual
+    )
     {
         // Arrange
         var first = City.Create(firstName, StateFromAbbreviation(firstStateAbbreviation));

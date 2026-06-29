@@ -41,10 +41,7 @@ public sealed class City : IEquatable<City>
         var trimmed = name.Trim();
         if (trimmed.Length == 0)
         {
-            throw new ArgumentException(
-                "City name must not be empty or whitespace.",
-                nameof(name)
-            );
+            throw new ArgumentException("City name must not be empty or whitespace.", nameof(name));
         }
 
         if (trimmed.Length > MaxNameLength)
@@ -75,8 +72,7 @@ public sealed class City : IEquatable<City>
     public override string ToString() => $"{Name}, {State}";
 
     /// <summary>Returns true when both instances are equal.</summary>
-    public static bool operator ==(City? left, City? right) =>
-        left?.Equals(right) ?? right is null;
+    public static bool operator ==(City? left, City? right) => left?.Equals(right) ?? right is null;
 
     /// <summary>Returns true when both instances are not equal.</summary>
     public static bool operator !=(City? left, City? right) => !(left == right);

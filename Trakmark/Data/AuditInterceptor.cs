@@ -24,7 +24,8 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
     /// <inheritdoc/>
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
-        InterceptionResult<int> result)
+        InterceptionResult<int> result
+    )
     {
         ArgumentNullException.ThrowIfNull(eventData);
         StampAuditableEntries(eventData.Context);
@@ -35,7 +36,8 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         ArgumentNullException.ThrowIfNull(eventData);
         StampAuditableEntries(eventData.Context);
@@ -44,14 +46,20 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
 
     private void StampAuditableEntries(DbContext? context)
     {
-        if (context is null) { return; }
+        if (context is null)
+        {
+            return;
+        }
 
-        var auditableEntries = context.ChangeTracker
-            .Entries()
+        var auditableEntries = context
+            .ChangeTracker.Entries()
             .Where(e => e.State == EntityState.Added && e.Entity is IAuditableEntity)
             .ToList();
 
-        if (auditableEntries.Count is 0) { return; }
+        if (auditableEntries.Count is 0)
+        {
+            return;
+        }
 
         var partiallyStamped = auditableEntries
             .Select(e => (IAuditableEntity)e.Entity)
@@ -61,19 +69,24 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         if (partiallyStamped.Count > 0)
         {
             throw new InvalidOperationException(
-                "One or more auditable entities have only one audit field pre-stamped. Both CreatedByUserId and CreatedAt must be set together or left unset.");
+                "One or more auditable entities have only one audit field pre-stamped. Both CreatedByUserId and CreatedAt must be set together or left unset."
+            );
         }
 
         var unstampedEntries = auditableEntries
             .Where(e => string.IsNullOrEmpty(((IAuditableEntity)e.Entity).CreatedByUserId))
             .ToList();
 
-        if (unstampedEntries.Count is 0) { return; }
+        if (unstampedEntries.Count is 0)
+        {
+            return;
+        }
 
         if (_userContext.UserId is null)
         {
             throw new InvalidOperationException(
-                "ICurrentUserContext.UserId is null. An authorized component must set UserId before SaveChanges is called.");
+                "ICurrentUserContext.UserId is null. An authorized component must set UserId before SaveChanges is called."
+            );
         }
 
         var userId = _userContext.UserId.Value.Value;

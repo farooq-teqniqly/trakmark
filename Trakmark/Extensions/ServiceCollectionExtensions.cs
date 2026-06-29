@@ -68,16 +68,20 @@ public static class ServiceCollectionExtensions
 
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 
-            services.AddDbContext<ApplicationDbContext>((sp, options) =>
-            {
-                options.UseSqlServer(connectionString);
-                options.AddInterceptors(new AuditInterceptor(sp.GetRequiredService<ICurrentUserContext>()));
-
-                if (env.IsDevelopment())
+            services.AddDbContext<ApplicationDbContext>(
+                (sp, options) =>
                 {
-                    options.EnableSensitiveDataLogging().EnableDetailedErrors();
+                    options.UseSqlServer(connectionString);
+                    options.AddInterceptors(
+                        new AuditInterceptor(sp.GetRequiredService<ICurrentUserContext>())
+                    );
+
+                    if (env.IsDevelopment())
+                    {
+                        options.EnableSensitiveDataLogging().EnableDetailedErrors();
+                    }
                 }
-            });
+            );
 
             if (env.IsDevelopment())
             {

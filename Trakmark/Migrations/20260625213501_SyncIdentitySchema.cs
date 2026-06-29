@@ -10,8 +10,7 @@ namespace Trakmark.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AspNetUserPasskeys");
+            migrationBuilder.DropTable(name: "AspNetUserPasskeys");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
@@ -20,7 +19,8 @@ namespace Trakmark.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(128)",
-                oldMaxLength: 128);
+                oldMaxLength: 128
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "LoginProvider",
@@ -29,7 +29,8 @@ namespace Trakmark.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(128)",
-                oldMaxLength: 128);
+                oldMaxLength: 128
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "PhoneNumber",
@@ -39,7 +40,8 @@ namespace Trakmark.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(256)",
                 oldMaxLength: 256,
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProviderKey",
@@ -48,7 +50,8 @@ namespace Trakmark.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(128)",
-                oldMaxLength: 128);
+                oldMaxLength: 128
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "LoginProvider",
@@ -57,7 +60,8 @@ namespace Trakmark.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(128)",
-                oldMaxLength: 128);
+                oldMaxLength: 128
+            );
         }
 
         /// <inheritdoc />
@@ -70,7 +74,8 @@ namespace Trakmark.Migrations
                 maxLength: 128,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(450)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "LoginProvider",
@@ -79,7 +84,8 @@ namespace Trakmark.Migrations
                 maxLength: 128,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(450)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "PhoneNumber",
@@ -89,7 +95,8 @@ namespace Trakmark.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProviderKey",
@@ -98,7 +105,8 @@ namespace Trakmark.Migrations
                 maxLength: 128,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(450)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "LoginProvider",
@@ -107,15 +115,20 @@ namespace Trakmark.Migrations
                 maxLength: 128,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(450)"
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserPasskeys",
                 columns: table => new
                 {
-                    CredentialId = table.Column<byte[]>(type: "varbinary(1024)", maxLength: 1024, nullable: false),
+                    CredentialId = table.Column<byte[]>(
+                        type: "varbinary(1024)",
+                        maxLength: 1024,
+                        nullable: false
+                    ),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -125,13 +138,16 @@ namespace Trakmark.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserPasskeys_UserId",
                 table: "AspNetUserPasskeys",
-                column: "UserId");
+                column: "UserId"
+            );
         }
     }
 }

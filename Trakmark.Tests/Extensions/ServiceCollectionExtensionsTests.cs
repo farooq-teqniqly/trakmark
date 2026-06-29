@@ -81,7 +81,9 @@ public sealed class ServiceCollectionExtensionsTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void AddAppDatabase_ConnectionStringMissing_ThrowsInvalidOperationException(string? connectionString)
+    public void AddAppDatabase_ConnectionStringMissing_ThrowsInvalidOperationException(
+        string? connectionString
+    )
     {
         // Arrange
         var services = new ServiceCollection();
